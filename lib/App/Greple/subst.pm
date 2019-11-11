@@ -116,6 +116,7 @@ to imagine the useful situation handling ascii.
 
 package App::Greple::subst;
 
+use v5.14;
 use strict;
 use warnings;
 
@@ -136,6 +137,9 @@ our @opt_subst_to;
 our @opt_subst_file;
 our $opt_subst_diffcmd = "diff -u";
 our $opt_U;
+our $opt_stat_correct;
+our $opt_stat_unmatch;
+our $opt_check = 'ng';
 
 my $initialized;
 my $current_file;
@@ -200,20 +204,49 @@ sub subst_begin {
     subst_initialize if not $initialized;
 }
 
+use Text::VisualWidth::PP;
+use Text::VisualPrintf qw(vprintf);
+use List::Util qw(max);
+
+sub vwidth {
+    if (not defined $_[0] or length $_[0] eq 0) {
+	return 0;
+    }
+    Text::VisualWidth::PP::width $_[0];
+}
+
+use App::Greple::Regions;
+
 sub subst_stat {
     my %arg = @_;
     $current_file = delete $arg{&FILELABEL} or die;
 
-    for my $list (@fromto_re) {
-	my($from_re, $to_re) = @$list;
-	if (my $from = (my @match = /$from_re/g)) {
-	    if ($to_re) {
-		my $to = (my @to = /$to_re/g);
-		printf "%4d, %4d %s, %s\n", $from, $to, $from_re, $to_re;
-	    } else {
-		printf "%4d       %s\n", $from, $from_re;
-	    }
+    my $from_max = max map { vwidth $_->[0] } @fromto_re;
+    my   $to_max = max map { vwidth $_->[3] } @fromto_re;
+
+    for my $entry (1 .. @fromto_re) {
+	my $list = $fromto_re[$entry - 1];
+	my($from_re, $to_re, $from, $to) = @$list;
+	my @match;
+	while (/$from_re/gp) {
+	    push @match, ${^MATCH};
 	}
+	next if @match == 0 and not $opt_check eq 'all';
+
+	my %match;
+	for my $match (@match) {
+	    $match{$match}++;
+	}
+	my @keys = sort { $match{$b} <=> $match{$a} } keys %match;
+	if (@keys == 1 and $keys[0] eq $to) {
+	    next if $opt_check eq 'ng';
+	}
+	vprintf("%3d: %${from_max}s => %-${to_max}s",
+		$entry, $from_re, $to // '');
+	for my $key (sort { $match{$b} <=> $match{$a} } keys %match) {
+	    printf " %s[%d]", $key, $match{$key};
+	}
+	print "\n";
     }
 
     $_ = "";
@@ -248,7 +281,7 @@ sub read_file {
 	    unshift @to_re, ${^MATCH} if $1 eq '=';
 	}
 	$to_re = join '', $to_re, @to_re if @to_re;
-	push @fromto_re, [ $from_re, $to_re ];
+	push @fromto_re, [ $from_re, $to_re, $from, $to ];
 
 	set_fromto $from, $to;
     }
@@ -260,6 +293,32 @@ sub subst {
 	s/$fromto->[0]/$fromto->[1]/ and last;
     }
     $_;
+}
+
+sub subst_search {
+    my $text = $_;
+    my %arg = @_;
+    $current_file = delete $arg{&FILELABEL} or die;
+
+    my @region;
+    for my $list (@fromto_re) {
+	my($from_re, $to_re, $from, $to) = @$list;
+	my @r = match_regions(pattern => $from_re);
+	next if @r == 0 and $opt_check ne 'all';
+	my(@ok, @ng);
+	for (@r) {
+	    if (substr($text, $_->[0], $_->[1] - $_->[0]) ne $to) {
+		$_->[2] = 0;
+		push @ng, $_;
+	    } else {
+		$_->[2] = 1;
+		push @ok, $_;
+	    }
+	}
+	push @region,
+	    $opt_check eq 'ng' ? @ng : $opt_check eq 'ok' ? @ok : @r;
+    }
+    merge_regions @region;
 }
 
 sub subst_diff {
@@ -325,6 +384,9 @@ sub subst_create {
 
 __DATA__
 
+builtin check=s $opt_check
+option --dict --begin subst_begin --subst-file $<move(0,1)> --le &__PACKAGE__::subst_search
+
 option --subst --begin subst_begin --colormap &subst
 option --diff --subst --all --need 0 -h --of &subst_diff
 option --create --subst --all --need 0 -h --begin subst_create
@@ -338,3 +400,6 @@ builtin subst-file|subst_file=s @opt_subst_file
 
 builtin diffcmd=s    $opt_subst_diffcmd
 builtin U=i          $opt_U
+
+builtin stat-correct $opt_stat_correct
+builtin stat-unmatch $opt_stat_unmatch
