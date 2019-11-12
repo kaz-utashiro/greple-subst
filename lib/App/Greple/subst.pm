@@ -2,6 +2,10 @@
 
 subst - Greple module for text substitution
 
+=head1 VERSION
+
+Version 1.01
+
 =head1 SYNOPSIS
 
 greple -Msubst [ options ]
@@ -112,16 +116,41 @@ to backup name with ".bak" suffix.
 This module is made for Japanese text processing, and it is difficult
 to imagine the useful situation handling ascii.
 
+=head1 LICENSE
+
+Copyright (C) Kazumasa Utashiro.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<https://github.com/kaz-utashiro/greple-msdoc>
+
+=head1 AUTHOR
+
+Kazumasa Utashiro
+
 =cut
 
+
 package App::Greple::subst;
+
+our $VERSION = '1.01';
 
 use v5.14;
 use strict;
 use warnings;
 
 use Exporter 'import';
-our @EXPORT      = qw(&subst_begin &subst &subst_diff &subst_create &subst_stat);
+our @EXPORT      = qw(
+    &subst
+    &subst_begin
+    &subst_diff
+    &subst_create
+    &subst_stat
+    &subst_search
+    );
 our %EXPORT_TAGS = ( );
 our @EXPORT_OK   = qw();
 
@@ -137,8 +166,6 @@ our @opt_subst_to;
 our @opt_subst_file;
 our $opt_subst_diffcmd = "diff -u";
 our $opt_U;
-our $opt_stat_correct;
-our $opt_stat_unmatch;
 our $opt_check = 'ng';
 
 my $initialized;
@@ -385,13 +412,15 @@ sub subst_create {
 __DATA__
 
 builtin check=s $opt_check
-option --dict --begin subst_begin --subst-file $<move(0,1)> --le &__PACKAGE__::subst_search
 
-option --subst --begin subst_begin --colormap &subst
-option --diff --subst --all --need 0 -h --of &subst_diff
-option --create --subst --all --need 0 -h --begin subst_create
-option --replace --subst --all --need 0 -h --begin subst_create(replace,suffix=.bak)
-option --stat --subst --begin subst_stat
+option --dict    --begin subst_begin --subst-file $<move(0,1)> --le &__PACKAGE__::subst_search
+
+option --subst   --begin subst_begin --colormap &subst
+expand ++dump    --all --need 0 -h
+option --diff    --subst ++dump --of &subst_diff
+option --create  --subst ++dump --begin subst_create
+option --replace --subst ++dump --begin subst_create(replace,suffix=.bak)
+option --stat    --subst --begin subst_stat
 
 # subst_from, subst_to, subst_file will be deplicated.
 builtin subst-from|subst_from=s @opt_subst_from
@@ -400,6 +429,3 @@ builtin subst-file|subst_file=s @opt_subst_file
 
 builtin diffcmd=s    $opt_subst_diffcmd
 builtin U=i          $opt_U
-
-builtin stat-correct $opt_stat_correct
-builtin stat-unmatch $opt_stat_unmatch
