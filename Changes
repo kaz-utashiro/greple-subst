@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.01 2019-11-22T01:20:09Z
+
+    - Spin-off from App::Greple.
+
 1.01 2019-11-26T02:34:42Z
 
     - original version

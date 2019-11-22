@@ -1,116 +1,98 @@
 # NAME
 
-subst - Greple module for text substitution
+subst - Greple module for text search and substitution
 
 # VERSION
 
-Version 1.01
+Version 2.01
 
 # SYNOPSIS
 
-greple -Msubst \[ options \]
+greple -Msubst --dict _dictionary_ \[ options \]
 
-    --subst-file spec_file
-    --subst-from string
-    --subst-to   string
-
+    --check=[ng,ok,any,outstand,all]
+    --select=N
+    --stat
     --diff
     --diffcmd command
-    --create
     --replace
+    --create
 
 # DESCRIPTION
 
-This **greple** module supports word substitution in text data.
+This **greple** module supports search and substitution for text based
+on dictionary file.
 
-Substitution can be indicated by option **--subst-from** and
-**--subst-to**, or specification file.
+Dictionary file is given by **--dict** option and contians pattern and
+correct string pairs.
 
-Next command replaces all string "FROM" to "TO".
+    greple -Msubst --dict DICT
 
-    greple -Msubst --subst-from FROM --subst-to TO FROM
+If the dictionary file cotains following data:
 
-Of course, you should rather use **sed** in this case.  Option
-**--subst-from** and **--subst-to** can be repeated, and substitution is
-done in order.
+    colou?r      color
+    cent(er|re)  center
 
-Using **--subst-file** option, you can prepare these substitution list
-in the file.  Suppose the file cotains following data:
+Then above command find first pattern which does not match to second
+string, that is "colour" and "centre" in this case.
 
-    Monday     Mon.
-    Tuesday    The.
-    Wednesday  Wed.
-    Thursday   Thu.
-    Friday     Fri.
-    Saturday   Sat.
-    Sunday     Sun.
+Field "//" in dictionary file is ignored, so this file can be written
+like this:
 
-Next command converts day-of-week name to abbreviation form.
-
-    greple -Msubst --subst-file SPEC '\b[A-Z][a-z]+' ...
-
-Field "//" in spec file is ignored, so this file can be written like
-this:
-
-    Monday     //  Mon.
-    Tuesday    //  The.
-    Wednesday  //  Wed.
-    Thursday   //  Thu.
-    Friday     //  Fri.
-    Saturday   //  Sat.
-    Sunday     //  Sun.
+    colou?r      //  color
+    cent(er|re)  //  center
 
 You can use same file by **greple**'s **-f** option and string after
 "//" is ignored as a comment in that case.
 
-    greple -Msubst --subst-file SPEC -f SPEC ...
+    greple -f DICT ...
 
-This is equivalent to search next pattern, and replace them.  This is
-bad example, though.
+- **--check**=_ng_|_ok_|_any_|_outstand_|_all_|_none_
 
-    Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday   
+    Option **--check** takes argument from _ng_, _ok_, _any_,
+    _outstand_, _all_ and _none_.
 
-Actually, it takes the second last field as a target, and the last
-field as a substitution string.  All other fields are ignored.  This
-behavior is useful when the pattern requires longer text than the
-string to be converted.  See the next example:
+    With default value _outstand_, command will show information about
+    correct and incorrect words only when incorrect word was found.
 
-    Black-\KMonday  // Monday  Friday
+    With value _ng_, command will show information only about incorrect
+    word.  If you want to get data for correct word, use _ok_ or _any_.
 
-Pattern matches to string "Monday", but requires string "Black-" is
-preceeding to it.  Substitution is done just for string "Monday",
-which does not match to the original pattern.  As a matter of fact,
-look-ahead and look-behind pattern is removed automatically, next
-example works as expected.
+    Value _all_ and _none_ makes sense only when used with **--stat**
+    option.
 
-    (?<=Black-)Monday  // Friday
+- **--select**=_N_
 
-Combining with **greple**'s other options, it is possible to convert
-strings in the specific area of the target files.
+    Select _N_th entry from the dictionary.  Argument is interpreted by
+    [Getopt::EX::Numbers](https://metacpan.org/pod/Getopt::EX::Numbers) module.  Range can be defined like
+    **--select**=_1:3,7:9_.
+
+- **--stat**
+
+    Print statistical information.  By default, it only prints information
+    about incorrect words.  Works with **--check** option.
+
+- **--subst**
+
+    Substitute matched pattern to correct string.
 
 - **--diff**
+- **--diffcmd**=_command_
 
-    Produce diff output of original and converted text.
-
-- **--diffcmd** _command_
+    Option **-diff** produce diff output of original and converted text.
 
     Specify diff command name used by **--diff** option.  Default is "diff
     \-u".
-
-- **--create**
-
-    Create new file and write the result.  Suffix ".new" is appended to
-    original filename.
 
 - **--replace**
 
     Replace the target file by converted result.  Original file is renamed
     to backup name with ".bak" suffix.
 
-# BUGS
+- **--create**
 
-This module is made for Japanese text processing, and it is difficult
-to imagine the useful situation handling ascii.
+    Create new file and write the result.  Suffix ".new" is appended to
+    original filename.
 
 # LICENSE
 
@@ -121,7 +103,9 @@ it under the same terms as Perl itself.
 
 # SEE ALSO
 
-[https://github.com/kaz-utashiro/greple-msdoc](https://github.com/kaz-utashiro/greple-msdoc)
+[https://github.com/kaz-utashiro/greple](https://github.com/kaz-utashiro/greple)
+
+[https://github.com/kaz-utashiro/greple-subst](https://github.com/kaz-utashiro/greple-subst)
 
 # AUTHOR
 

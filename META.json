@@ -1,5 +1,5 @@
 {
-   "abstract" : "Greple module for text substitution",
+   "abstract" : "Greple module for text search and substitution",
    "author" : [
       "Kazumasa Utashiro"
    ],
@@ -42,7 +42,7 @@
       },
       "runtime" : {
          "requires" : {
-            "App::Greple" : "8.35",
+            "App::Greple" : "8.38",
             "Text::VisualPrintf" : "2.03",
             "Text::VisualWidth::PP" : "0.05",
             "perl" : "v5.14.0"
@@ -66,7 +66,7 @@
          "web" : "https://github.com/kaz-utashiro/greple-subst"
       }
    },
-   "version" : "1.01",
+   "version" : "2.01",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Kaz Utashiro <kaz@utashiro.com>"
