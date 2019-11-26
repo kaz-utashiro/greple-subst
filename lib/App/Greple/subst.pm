@@ -212,29 +212,11 @@ our $opt_subst_select;
 my $initialized;
 my $current_file;
 my $contents;
-my %fromto;
 my @fromto;
-my @fromto_re;
 my @subst_diffcmd;
 
 sub debug {
     $debug = 1;
-}
-
-sub set_fromto ($$) {
-    my($from, $to) = @_;
-
-    if (exists $fromto{$from}) {
-	if ($fromto{$from} eq $to) {
-	    warn "[$from -> $to] duplicated\n";
-	    return;
-	} else {
-	    warn "[$from -> $to] ignored\n";
-	}
-    } else {
-	$fromto{$from} = $to;
-    }
-    push @fromto, [ qr/$from/, $to ];
 }
 
 sub subst_initialize {
@@ -253,16 +235,6 @@ sub subst_initialize {
 	read_dict($dict);
     }
 
-    my($from, $to);
-    while (defined ($from = shift @opt_subst_from)) {
-	if (not defined ($to = shift @opt_subst_to)) {
-	    warn __PACKAGE__ . ": ($from) Unmatched parameter.\n";
-	    next;
-	}
-	set_fromto $from, $to;
-    }
-    map { warn __PACKAGE__ . ": ($_) Unmatched parameter.\n" } @opt_subst_to;
-
     if (my $select = $opt_subst_select) {
 	my $max = @fromto;
 	my $numbers = new Getopt::EX::Numbers max => $max;
@@ -273,13 +245,11 @@ sub subst_initialize {
 	    map  { $numbers->parse($_)->sequence }
 	    split /,/, $select;
 	};
-	for my $l (\@fromto, \@fromto_re) {
-	    @$l = sub {
-		my @result = (undef) x @$l;
-		@result[@select] = @$l[@select];
-		@result;
-	    }->(@$l);
-	}
+	@fromto = sub {
+	    my @result = (undef) x $max;
+	    @result[@select] = @fromto[@select];
+	    @result;
+	}->(@fromto);
     }
 
     $initialized = 1;
@@ -311,9 +281,9 @@ sub subst_stat {
     my %arg = @_;
     $current_file = delete $arg{&FILELABEL} or die;
 
-    for my $i (0 .. $#fromto_re) {
-	my $list = $fromto_re[$i] // next;
-	my($from_re, $to_re, $from, $to) = @$list;
+    for my $i (0 .. $#fromto) {
+	my $list = $fromto[$i] // next;
+	my($from_re, $to) = @$list;
 
 	my @match;
 	while (/$from_re/gp) {
@@ -331,12 +301,12 @@ sub subst_stat {
 sub subst_stat_show {
     my %arg = @_;
 
-    my $from_max = max map { vwidth $_->[0] } @fromto_re;
-    my $to_max   = max map { vwidth $_->[3] } @fromto_re;
+    my $from_max = max map { vwidth $_->[0] } @fromto;
+    my $to_max   = max map { vwidth $_->[1] } @fromto;
 
-    for my $i (0 .. $#fromto_re) {
-	my $list = $fromto_re[$i] // next;
-	my($from_re, $to_re, $from, $to) = @$list or next;
+    for my $i (0 .. $#fromto) {
+	my $list = $fromto[$i] // next;
+	my($from_re, $to) = @$list or next;
 
 	my $hash = $match_list[$i];
 	my @keys = keys %{$hash};
@@ -380,13 +350,11 @@ sub read_dict {
 
 	my @param = grep { not m{^//+$} } split ' ';
 	if (@param < 2) {
-	    push @fromto_re, [ @param ] if @param;
+	    push @fromto, [ @param ] if @param;
 	    next;
 	}
 	my($from, $to) = splice @param, -2, 2;
-	my($from_re, $to_re) = ($from, $to);
-	push @fromto_re, [ $from_re, $to_re, $from, $to ];
-	set_fromto $from, $to;
+	push @fromto, [ $from, $to ];
     }
     close DICT;
 }
@@ -399,9 +367,9 @@ sub subst_search {
     $current_file = delete $arg{&FILELABEL} or die;
 
     my @matched;
-    for my $index (0 .. $#fromto_re) {
-	my $list = $fromto_re[$index] // next;
-	my($from_re, $to_re, $from, $to) = @$list;
+    for my $index (0 .. $#fromto) {
+	my $list = $fromto[$index] // next;
+	my($from_re, $to) = @$list;
 	my @r = match_regions(pattern => $from_re);
 	next if @r == 0 and $opt_check ne 'all';
 	my $callback = sub {
@@ -497,8 +465,6 @@ sub subst_create {
 __DATA__
 
 builtin dict|subst-file=s  @opt_dictfile
-builtin subst-from=s       @opt_subst_from
-builtin subst-to=s         @opt_subst_to
 builtin subst-format=s     @opt_format
 builtin subst!             $opt_subst
 builtin diffcmd=s          $opt_subst_diffcmd
