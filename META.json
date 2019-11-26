@@ -1,7 +1,7 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "Greple module for text substitution",
    "author" : [
-      "Kaz Utashiro <kaz@utashiro.com>"
+      "Kazumasa Utashiro"
    ],
    "dynamic_config" : 0,
    "generated_by" : "Minilla/v3.1.6, CPAN::Meta::Converter version 2.143240",
@@ -42,7 +42,10 @@
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.008001"
+            "App::Greple" : "8.35",
+            "Text::VisualPrintf" : "2.03",
+            "Text::VisualWidth::PP" : "0.05",
+            "perl" : "v5.14.0"
          }
       },
       "test" : {
@@ -52,7 +55,21 @@
       }
    },
    "release_status" : "unstable",
-   "version" : "0.01",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/kaz-utashiro/greple-subst/issues"
+      },
+      "homepage" : "https://github.com/kaz-utashiro/greple-subst",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/kaz-utashiro/greple-subst.git",
+         "web" : "https://github.com/kaz-utashiro/greple-subst"
+      }
+   },
+   "version" : "1.01",
    "x_authority" : "cpan:UTASHIRO",
+   "x_contributors" : [
+      "Kaz Utashiro <kaz@utashiro.com>"
+   ],
    "x_static_install" : 1
 }
