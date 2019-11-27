@@ -39,12 +39,12 @@ done in order.
 
 =end comment
 
-Dictionary file is given by B<--dict> option and contians pattern and
+Dictionary file is given by B<--dict> option and contains pattern and
 correct string pairs.
 
     greple -Msubst --dict DICT
 
-If the dictionary file cotains following data:
+If the dictionary file contains following data:
 
     colou?r      color
     cent(er|re)  center
@@ -73,7 +73,7 @@ string to be converted.  See the next example:
     Black-\KMonday  // Monday  Friday
 
 Pattern matches to string "Monday", but requires string "Black-" is
-preceeding to it.  Substitution is done just for string "Monday",
+preceding to it.  Substitution is done just for string "Monday",
 which does not match to the original pattern.  As a matter of fact,
 look-ahead and look-behind pattern is removed automatically, next
 example works as expected.
@@ -538,3 +538,6 @@ option  --subst-color \
         --cm 555D/212,K/545 \
         --cm 555D/221,K/554 \
         --cm 555D/222,K/L23
+
+#  LocalWords:  subst Greple greple ng ok outstand linefold dict diff
+#  LocalWords:  regex Kazumasa Utashiro

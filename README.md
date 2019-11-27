@@ -24,12 +24,12 @@ greple -Msubst --dict _dictionary_ \[ options \]
 This **greple** module supports search and substitution for text based
 on dictionary file.
 
-Dictionary file is given by **--dict** option and contians pattern and
+Dictionary file is given by **--dict** option and contains pattern and
 correct string pairs.
 
     greple -Msubst --dict DICT
 
-If the dictionary file cotains following data:
+If the dictionary file contains following data:
 
     colou?r      color
     cent(er|re)  center
