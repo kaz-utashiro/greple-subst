@@ -4,7 +4,7 @@ subst - Greple module for text search and substitution
 
 # VERSION
 
-Version 2.02
+Version 2.03
 
 # SYNOPSIS
 
@@ -82,7 +82,8 @@ You can use same file by **greple**'s **-f** option and string after
 
 - **--subst**
 
-    Substitute matched pattern to correct string.
+    Substitute matched pattern to correct string.  Pattern without
+    replacement string is not changed.
 
 - **--diff**
 - **--diffcmd**=_command_
