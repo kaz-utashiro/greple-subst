@@ -4,7 +4,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.03
+Version 2.04
 
 =head1 SYNOPSIS
 
@@ -116,8 +116,13 @@ confuses regex behavior somewhat, avoid to use if possible.
 
 =item B<--stat>
 
+=item B<--with-stat>
+
 Print statistical information.  By default, it only prints information
 about incorrect words.  Works with B<--check> option.
+
+Opiton B<--with-stat> print statistics after normal output, while
+B<--stat> print only statistics.
 
 =item B<--subst>
 
@@ -167,7 +172,7 @@ Kazumasa Utashiro
 
 package App::Greple::subst;
 
-our $VERSION = '2.03';
+our $VERSION = '2.04';
 
 use v5.14;
 use strict;
@@ -180,8 +185,7 @@ our @EXPORT      = qw(
     &subst_begin
     &subst_diff
     &subst_create
-    &subst_stat
-    &subst_stat_show
+    &subst_show_stat
     &subst_search
     );
 our %EXPORT_TAGS = ( );
@@ -294,6 +298,23 @@ sub subst_begin {
     subst_initialize if not $initialized;
 }
 
+{
+    my $diverted = 0;
+
+    sub divert_stdout {
+	$diverted = $diverted == 0 ? 1 : return;
+	open  SUBST_STDOUT, '>&', \*STDOUT or die "open: $!";
+	close STDOUT;
+	open  STDOUT, '>/dev/null' or die "open: $!";
+    }
+
+    sub recover_stdout {
+	$diverted = $diverted == 1 ? 0 : return;
+	close STDOUT;
+	open  STDOUT, '>&', \*SUBST_STDOUT or die "open: $!";
+    }
+}
+
 use Text::VisualWidth::PP;
 use Text::VisualPrintf qw(vprintf vsprintf);
 use List::Util qw(max);
@@ -307,29 +328,7 @@ sub vwidth {
 
 my @match_list;
 
-sub subst_stat {
-    my %arg = @_;
-    $current_file = delete $arg{&FILELABEL} or die;
-
-    for my $i (0 .. $#fromto) {
-	my $p = $fromto[$i] // next;
-	my($from_re, $to) = ($p->regex, $p->correct);
-
-	my @match;
-	while (/$from_re/gp) {
-	    push @match, ${^MATCH};
-	}
-	my $hash = $match_list[$i] //= {};
-	for my $match (@match) {
-	    $match =~ s/\R//g;
-	    $hash->{$match}++;
-	}
-    }
-
-    $_ = "";
-}
-
-sub subst_stat_show {
+sub subst_show_stat {
     my %arg = @_;
 
     my $from_max = max map { vwidth $_->string  } grep { defined } @fromto;
@@ -339,7 +338,7 @@ sub subst_stat_show {
 	my $p = $fromto[$i] // next;
 	my($from_re, $to) = ($p->string, $p->correct // '');
 
-	my $hash = $match_list[$i];
+	my $hash = $match_list[$i] // {};
 	my @keys = keys %{$hash};
 	my @ng = grep { $_ ne $to } @keys;
 	my @ok = grep { $_ eq $to } @keys;
@@ -400,17 +399,19 @@ sub subst_search {
     for my $index (0 .. $#fromto) {
 	my $p = $fromto[$index] // next;
 	my($from_re, $to) = ($p->string, $p->correct // '');
-	my @r = match_regions(pattern => $p->regex);
-	next if @r == 0 and $opt_check ne 'all';
+	my @match = match_regions(pattern => $p->regex);
+	next if @match == 0 and $opt_check ne 'all';
 	my $callback = sub {
-	    my($ms, $me, $i, $s) = @_;
+	    my($ms, $me, $i, $matched) = @_;
+	    my $s = $matched =~ s/\R//rg;
+	    $match_list[$index]->{$s}++;
 	    my $format = @opt_format[ $i % @opt_format ];
 	    sprintf($format,
-		    ($opt_subst && $to ne '' && $s =~ s/\R//gr ne $to) ?
-		    $to : $s);
+		    ($opt_subst && $to ne '' && $s ne $to) ?
+		    $to : $matched);
 	};
 	my(@ok, @ng);
-	for (@r) {
+	for (@match) {
 	    my $matched = substr($text, $_->[0], $_->[1] - $_->[0]);
 	    if ($matched =~ s/\R//gr ne $to) {
 		$_->[2] = $index * 2;
@@ -426,9 +427,9 @@ sub subst_search {
 	} elsif (is $ss_check 'ok') {
 	    push @matched, @ok;
 	} elsif (is $ss_check 'any', 'all') {
-	    push @matched, @r;
+	    push @matched, @match;
 	} elsif (is $ss_check 'outstand') {
-	    push @matched, @r if @ng;
+	    push @matched, @match if @ng;
 	}
     }
     merge_regions { nojoin => 1 }, @matched;
@@ -505,16 +506,22 @@ builtin U=i                $opt_U
 builtin check=s            $opt_check
 builtin select=s           $opt_subst_select
 builtin linefold!          $opt_linefold
+builtin remember!          $remember_data
 
 option default \
 	--begin subst_begin \
 	--le &subst_search --no-regioncolor \
 	--subst-color
-option --stat    --begin subst_stat --epilogue subst_stat_show
+
 expand ++dump    --all --need 0 -h --nocolor
 option --diff    --subst ++dump --of &subst_diff
 option --create  --subst ++dump --begin subst_create
 option --replace --subst ++dump --begin subst_create(replace,suffix=.bak)
+
+option --divert-stdout --prologue __PACKAGE__::divert_stdout \
+		       --epilogue __PACKAGE__::recover_stdout
+option --with-stat     --epilogue subst_show_stat
+option --stat          --divert-stdout --with-stat
 
 option  --subst-color \
         --cm 555D/100,K/433 \

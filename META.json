@@ -67,7 +67,7 @@
          "web" : "https://github.com/kaz-utashiro/greple-subst"
       }
    },
-   "version" : "2.03",
+   "version" : "2.04",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Kaz Utashiro <kaz@utashiro.com>"

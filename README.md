@@ -4,7 +4,7 @@ subst - Greple module for text search and substitution
 
 # VERSION
 
-Version 2.03
+Version 2.04
 
 # SYNOPSIS
 
@@ -76,9 +76,13 @@ You can use same file by **greple**'s **-f** option and string after
     confuses regex behavior somewhat, avoid to use if possible.
 
 - **--stat**
+- **--with-stat**
 
     Print statistical information.  By default, it only prints information
     about incorrect words.  Works with **--check** option.
+
+    Opiton **--with-stat** print statistics after normal output, while
+    **--stat** print only statistics.
 
 - **--subst**
 

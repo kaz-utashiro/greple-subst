@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.04 2019-12-13T06:22:21Z
+
+    - Upgrade statistics strategy.
+
 2.03 2019-11-28T11:57:35Z
 
     - Change to use --no-regioncolor option.
