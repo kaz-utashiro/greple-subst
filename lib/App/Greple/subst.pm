@@ -4,7 +4,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.04
+Version 2.05
 
 =head1 SYNOPSIS
 
@@ -18,6 +18,8 @@ greple -Msubst --dict I<dictionary> [ options ]
   --diffcmd command
   --replace
   --create
+  --[no-]warn-overlap
+  --[no-]warn-include
 
 =head1 DESCRIPTION
 
@@ -85,6 +87,18 @@ strings in the specific area of the target files.
 
 =end comment
 
+=head2 Overlapped pattern
+
+When the matched string is same or shorter than previously matched
+string by another pattern, it is simply ignored (B<--no-warn-include>
+by default).  So, if you have to declare conflicted patterns, put the
+longer pattern in front.
+
+If the matched string overlaps with previously matched string, it is
+warned (B<--warn-overlap> by default) and ignored.
+
+=head1 OPTIONS
+
 =over 7
 
 =item B<--check>=I<ng>|I<ok>|I<any>|I<outstand>|I<all>|I<none>
@@ -148,6 +162,16 @@ to backup name with ".bak" suffix.
 Create new file and write the result.  Suffix ".new" is appended to
 original filename.
 
+=item B<--[no-]warn-overlap>
+
+Warn overlapped pattern.
+Default on.
+
+=item B<--[no-]warn-include>
+
+Warn included pattern.
+Default off.
+
 =back
 
 =head1 LICENSE
@@ -172,7 +196,7 @@ Kazumasa Utashiro
 
 package App::Greple::subst;
 
-our $VERSION = '2.04';
+our $VERSION = '2.05';
 
 use v5.14;
 use strict;
@@ -242,6 +266,8 @@ our @opt_format;
 our @default_opt_format = ( '%s' );
 our $opt_subst_select;
 our $opt_linefold;
+our $opt_warn_overlap = 1;
+our $opt_warn_include = 0;
 
 my $initialized;
 my $current_file;
@@ -388,7 +414,40 @@ sub read_dict {
     close DICT;
 }
 
-use App::Greple::Regions qw(match_regions merge_regions);
+sub mix_regions {
+    my $option = ref $_[0] eq 'HASH' ? shift : {};
+    my($old, $new) = @_;
+    return () if @$new == 0;
+    my @old = $option->{destructive} ? @_ : map { [ @$_ ] } @{$old};
+    my @new = $option->{destructive} ? @_ : map { [ @$_ ] } @{$new};
+    unless ($option->{nosort}) {
+	@new = sort({$a->[0] <=> $b->[0] || $b->[1] <=> $a->[1]
+			 ||  (@$a > 2 ? $a->[2] <=> $b->[2] : 0)
+		    } @new);
+    }
+    my @out;
+    my($include, $overlap) = @{$option}{qw(include overlap)};
+    while (@old and @new) {
+	while (@old and $old[0][1] <= $new[0][0]) {
+	    push @out, shift @old;
+	}
+	last if @old == 0;
+	while (@new and $new[0][1] <= $old[0][0]) {
+	    push @out, shift @new;
+	}
+	while (@new and $new[0][0] < $old[0][1]) {
+	    if ($old[0][0] <= $new[0][0] and $new[0][1] <= $old[0][1]) {
+		push @$include, [ $new[0], $old[0] ] if $include;
+	    } else {
+		push @$overlap, [ $new[0], $old[0] ] if $overlap;
+	    }
+	    shift @new;
+	}
+    }
+    @$old = ( @out, @old, @new );
+}
+
+use App::Greple::Regions qw(match_regions);
 
 sub subst_search {
     my $text = $_;
@@ -422,17 +481,40 @@ sub subst_search {
 	    }
 	    $_->[3] = $callback;
 	}
-	if      (is $ss_check 'ng') {
-	    push @matched, @ng;
-	} elsif (is $ss_check 'ok') {
-	    push @matched, @ok;
-	} elsif (is $ss_check 'any', 'all') {
-	    push @matched, @match;
-	} elsif (is $ss_check 'outstand') {
-	    push @matched, @match if @ng;
+	my $mix =
+	    (is $ss_check 'ng')         ? \@ng :
+	    (is $ss_check 'ok')         ? \@ok :
+	    (is $ss_check 'any', 'all') ? \@match :
+	    (is $ss_check 'outstand')   ? ( @ng ? \@match : [] ) :
+	    die "Invalid parameter: $opt_check\n";
+	mix_regions {
+	    overlap => ( my $overlap = [] ),
+	    include => ( my $include = [] ),
+	    nosort => 1
+	}, \@matched, $mix;
+	##
+	## Warning
+	##
+	for my $warn (
+	    [ "Overlap", $overlap, $opt_warn_overlap ],
+	    [ "Include", $include, $opt_warn_include ],
+	    ) {
+	    my($kind, $list, $show) = @$warn;
+	    next unless $show;
+	    for my $info (@$list) {
+		my($new, $old) = @$info;
+		warn sprintf("%s \"%s\" with \"%s\" by #%d /%s/ in %s at %d\n",
+			     $kind,
+			     substr($_, $new->[0], $new->[1] - $new->[0]),
+			     substr($_, $old->[0], $old->[1] - $old->[0]),
+			     $index + 1, $p->string,
+			     $current_file,
+			     $new->[0],
+		    );
+	    }
 	}
     }
-    merge_regions { nojoin => 1 }, @matched;
+    @matched;
 }
 
 sub subst_diff {
@@ -507,6 +589,8 @@ builtin check=s            $opt_check
 builtin select=s           $opt_subst_select
 builtin linefold!          $opt_linefold
 builtin remember!          $remember_data
+builtin warn-overlap!      $opt_warn_overlap
+builtin warn-include!      $opt_warn_include
 
 option default \
 	--begin subst_begin \

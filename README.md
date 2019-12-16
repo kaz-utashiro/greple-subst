@@ -4,7 +4,7 @@ subst - Greple module for text search and substitution
 
 # VERSION
 
-Version 2.04
+Version 2.05
 
 # SYNOPSIS
 
@@ -18,6 +18,8 @@ greple -Msubst --dict _dictionary_ \[ options \]
     --diffcmd command
     --replace
     --create
+    --[no-]warn-overlap
+    --[no-]warn-include
 
 # DESCRIPTION
 
@@ -47,6 +49,18 @@ You can use same file by **greple**'s **-f** option and string after
 "//" is ignored as a comment in that case.
 
     greple -f DICT ...
+
+## Overlapped pattern
+
+When the matched string is same or shorter than previously matched
+string by another pattern, it is simply ignored (**--no-warn-include**
+by default).  So, if you have to declare conflicted patterns, put the
+longer pattern in front.
+
+If the matched string overlaps with previously matched string, it is
+warned (**--warn-overlap** by default) and ignored.
+
+# OPTIONS
 
 - **--check**=_ng_|_ok_|_any_|_outstand_|_all_|_none_
 
@@ -106,6 +120,16 @@ You can use same file by **greple**'s **-f** option and string after
 
     Create new file and write the result.  Suffix ".new" is appended to
     original filename.
+
+- **--\[no-\]warn-overlap**
+
+    Warn overlapped pattern.
+    Default on.
+
+- **--\[no-\]warn-include**
+
+    Warn included pattern.
+    Default off.
 
 # LICENSE
 
