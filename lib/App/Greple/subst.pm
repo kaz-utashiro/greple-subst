@@ -4,7 +4,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.05
+Version 2.06
 
 =head1 SYNOPSIS
 
@@ -107,13 +107,14 @@ Option B<--check> takes argument from I<ng>, I<ok>, I<any>,
 I<outstand>, I<all> and I<none>.
 
 With default value I<outstand>, command will show information about
-correct and incorrect words only when incorrect word was found.
+correct and incorrect words only when incorrect word was found in the
+same file.
 
 With value I<ng>, command will show information only about incorrect
 word.  If you want to get data for correct word, use I<ok> or I<any>.
 
-Value I<all> and I<none> makes sense only when used with B<--stat>
-option.
+Value I<all> and I<none> make sense only when used with B<--stat>
+option, and display information about never matched pattern.
 
 =item B<--select>=I<N>
 
@@ -135,7 +136,7 @@ confuses regex behavior somewhat, avoid to use if possible.
 Print statistical information.  By default, it only prints information
 about incorrect words.  Works with B<--check> option.
 
-Opiton B<--with-stat> print statistics after normal output, while
+Option B<--with-stat> print statistics after normal output, while
 B<--stat> print only statistics.
 
 =item B<--subst>
@@ -196,7 +197,7 @@ Kazumasa Utashiro
 
 package App::Greple::subst;
 
-our $VERSION = '2.05';
+our $VERSION = '2.06';
 
 use v5.14;
 use strict;
@@ -240,7 +241,7 @@ our @ISA = 'App::Greple::Pattern';
     }
 }
 
-package SmartString {
+package App::Greple::subst::SmartString {
     use List::Util qw(any);
     sub new {
 	my($class, $var) = @_;
@@ -281,7 +282,7 @@ sub debug {
 
 sub subst_initialize {
 
-    $ss_check = bless \$opt_check, "SmartString";
+    $ss_check = bless \$opt_check, "App::Greple::subst::SmartString";
 
     @subst_diffcmd = shellwords $opt_subst_diffcmd;
 
@@ -370,7 +371,8 @@ sub subst_show_stat {
 	my @ok = grep { $_ eq $to } @keys;
 	if      (is $ss_check 'none') {
 	    next if @keys;
-	} elsif (is $ss_check 'any') {
+	}
+	elsif (is $ss_check 'any') {
 	    next unless @keys;
 	} elsif (is $ss_check 'ng', 'outstand') {
 	    next unless @ng;
@@ -482,10 +484,10 @@ sub subst_search {
 	    $_->[3] = $callback;
 	}
 	my $mix =
-	    (is $ss_check 'ng')         ? \@ng :
-	    (is $ss_check 'ok')         ? \@ok :
-	    (is $ss_check 'any', 'all') ? \@match :
-	    (is $ss_check 'outstand')   ? ( @ng ? \@match : [] ) :
+	    (is $ss_check qw(ng))           ? \@ng :
+	    (is $ss_check qw(ok))           ? \@ok :
+	    (is $ss_check qw(outstand))     ? ( @ng ? \@match : [] ) :
+	    (is $ss_check qw(any all none)) ? \@match :
 	    die "Invalid parameter: $opt_check\n";
 	mix_regions {
 	    overlap => ( my $overlap = [] ),

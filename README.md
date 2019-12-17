@@ -4,7 +4,7 @@ subst - Greple module for text search and substitution
 
 # VERSION
 
-Version 2.05
+Version 2.06
 
 # SYNOPSIS
 
@@ -68,13 +68,14 @@ warned (**--warn-overlap** by default) and ignored.
     _outstand_, _all_ and _none_.
 
     With default value _outstand_, command will show information about
-    correct and incorrect words only when incorrect word was found.
+    correct and incorrect words only when incorrect word was found in the
+    same file.
 
     With value _ng_, command will show information only about incorrect
     word.  If you want to get data for correct word, use _ok_ or _any_.
 
-    Value _all_ and _none_ makes sense only when used with **--stat**
-    option.
+    Value _all_ and _none_ make sense only when used with **--stat**
+    option, and display information about never matched pattern.
 
 - **--select**=_N_
 
@@ -95,7 +96,7 @@ warned (**--warn-overlap** by default) and ignored.
     Print statistical information.  By default, it only prints information
     about incorrect words.  Works with **--check** option.
 
-    Opiton **--with-stat** print statistics after normal output, while
+    Option **--with-stat** print statistics after normal output, while
     **--stat** print only statistics.
 
 - **--subst**
