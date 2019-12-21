@@ -175,6 +175,14 @@ Default off.
 
 =back
 
+=head1 INSTALL
+
+=head2 CPANMINUS
+
+    $ cpanm App::Greple::subst
+    or
+    $ curl -sL http://cpanmin.us | perl - App::Greple::subst
+
 =head1 LICENSE
 
 Copyright (C) Kazumasa Utashiro.
@@ -347,7 +355,7 @@ use Text::VisualPrintf qw(vprintf vsprintf);
 use List::Util qw(max);
 
 sub vwidth {
-    if (not defined $_[0] or length $_[0] eq 0) {
+    if (not defined $_[0] or length $_[0] == 0) {
 	return 0;
     }
     Text::VisualWidth::PP::width $_[0];
@@ -424,8 +432,8 @@ sub mix_regions {
     my @new = $option->{destructive} ? @_ : map { [ @$_ ] } @{$new};
     unless ($option->{nosort}) {
 	@new = sort({$a->[0] <=> $b->[0] || $b->[1] <=> $a->[1]
-			 ||  (@$a > 2 ? $a->[2] <=> $b->[2] : 0)
-		    } @new);
+			 ||  (@$a > 2 ? $a->[2] <=> $b->[2] : 0) }
+		    @new);
     }
     my @out;
     my($include, $overlap) = @{$option}{qw(include overlap)};
@@ -460,11 +468,11 @@ sub subst_search {
     for my $index (0 .. $#fromto) {
 	my $p = $fromto[$index] // next;
 	my($from_re, $to) = ($p->string, $p->correct // '');
-	my @match = match_regions(pattern => $p->regex);
+	my @match = match_regions pattern => $p->regex;
 	next if @match == 0 and $opt_check ne 'all';
 	my $callback = sub {
 	    my($ms, $me, $i, $matched) = @_;
-	    my $s = $matched =~ s/\R//rg;
+	    my $s = $matched =~ s/\R//gr;
 	    $match_list[$index]->{$s}++;
 	    my $format = @opt_format[ $i % @opt_format ];
 	    sprintf($format,
@@ -473,7 +481,7 @@ sub subst_search {
 	};
 	my(@ok, @ng);
 	for (@match) {
-	    my $matched = substr($text, $_->[0], $_->[1] - $_->[0]);
+	    my $matched = substr $text, $_->[0], $_->[1] - $_->[0];
 	    if ($matched =~ s/\R//gr ne $to) {
 		$_->[2] = $index * 2;
 		push @ng, $_;
@@ -492,7 +500,7 @@ sub subst_search {
 	mix_regions {
 	    overlap => ( my $overlap = [] ),
 	    include => ( my $include = [] ),
-	    nosort => 1
+	    nosort  => 1,
 	}, \@matched, $mix;
 	##
 	## Warning
