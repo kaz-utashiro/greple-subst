@@ -23,26 +23,11 @@ greple -Msubst --dict I<dictionary> [ options ]
 
 =head1 DESCRIPTION
 
-This B<greple> module supports search and substitution for text based
-on dictionary file.
-
-=begin comment
-
-Substitution can be indicated by option B<--subst-from> and
-B<--subst-to>, or specification file.
-
-Next command replaces all string "FROM" to "TO".
-
-  greple -Msubst --subst-from FROM --subst-to TO FROM
-
-Of course, you should rather use B<sed> in this case.  Option
-B<--subst-from> and B<--subst-to> can be repeated, and substitution is
-done in order.
-
-=end comment
+This B<greple> module supports check and substitution of text file
+using dictionary file.
 
 Dictionary file is given by B<--dict> option and contains pattern and
-correct string pairs.
+expected string pairs.
 
     greple -Msubst --dict DICT
 
@@ -65,28 +50,6 @@ You can use same file by B<greple>'s B<-f> option and string after
 
     greple -f DICT ...
 
-=begin comment
-
-Actually, it takes the second last field as a target, and the last
-field as a substitution string.  All other fields are ignored.  This
-behavior is useful when the pattern requires longer text than the
-string to be converted.  See the next example:
-
-    Black-\KMonday  // Monday  Friday
-
-Pattern matches to string "Monday", but requires string "Black-" is
-preceding to it.  Substitution is done just for string "Monday",
-which does not match to the original pattern.  As a matter of fact,
-look-ahead and look-behind pattern is removed automatically, next
-example works as expected.
-
-    (?<=Black-)Monday  // Friday
-
-Combining with B<greple>'s other options, it is possible to convert
-strings in the specific area of the target files.
-
-=end comment
-
 =head2 Overlapped pattern
 
 When the matched string is same or shorter than previously matched
@@ -101,17 +64,18 @@ warned (B<--warn-overlap> by default) and ignored.
 
 =over 7
 
-=item B<--check>=I<ng>|I<ok>|I<any>|I<outstand>|I<all>|I<none>
+=item B<--check>=I<outstand>|I<ng>|I<ok>|I<any>|I<all>|I<none>
 
 Option B<--check> takes argument from I<ng>, I<ok>, I<any>,
 I<outstand>, I<all> and I<none>.
 
 With default value I<outstand>, command will show information about
-correct and incorrect words only when incorrect word was found in the
-same file.
+both expected and unexpected words only when unexpected word was found
+in the same file.
 
-With value I<ng>, command will show information only about incorrect
-word.  If you want to get data for correct word, use I<ok> or I<any>.
+With value I<ng>, command will show information about unexpected
+words.  With value I<ok>, you will get information about expected
+words.  Both with value I<any>.
 
 Value I<all> and I<none> make sense only when used with B<--stat>
 option, and display information about never matched pattern.
@@ -120,7 +84,7 @@ option, and display information about never matched pattern.
 
 Select I<N>th entry from the dictionary.  Argument is interpreted by
 L<Getopt::EX::Numbers> module.  Range can be defined like
-B<--select>=I<1:3,7:9>.
+B<--select>=I<1:3,7:9>.  You can get numbers by B<--stat> option.
 
 =item B<--linefold>
 
@@ -133,15 +97,15 @@ confuses regex behavior somewhat, avoid to use if possible.
 
 =item B<--with-stat>
 
-Print statistical information.  By default, it only prints information
-about incorrect words.  Works with B<--check> option.
+Print statistical information.  Works with B<--check> option.
 
 Option B<--with-stat> print statistics after normal output, while
 B<--stat> print only statistics.
 
 =item B<--subst>
 
-Substitute matched pattern to correct string.  Pattern without
+Substitute unexpected matched pattern to expected string.  Newline
+character in the matched string is ignored.  Pattern without
 replacement string is not changed.
 
 =item B<--diff>
