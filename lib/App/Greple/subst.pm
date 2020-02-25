@@ -392,8 +392,8 @@ sub mix_regions {
     my $option = ref $_[0] eq 'HASH' ? shift : {};
     my($old, $new) = @_;
     return () if @$new == 0;
-    my @old = $option->{destructive} ? @_ : map { [ @$_ ] } @{$old};
-    my @new = $option->{destructive} ? @_ : map { [ @$_ ] } @{$new};
+    my @old = $option->{destructive} ? @{$old} : map [ @$_ ], @{$old};
+    my @new = $option->{destructive} ? @{$new} : map [ @$_ ], @{$new};
     unless ($option->{nosort}) {
 	@new = sort({$a->[0] <=> $b->[0] || $b->[1] <=> $a->[1]
 			 ||  (@$a > 2 ? $a->[2] <=> $b->[2] : 0) }
