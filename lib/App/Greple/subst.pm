@@ -24,7 +24,7 @@ greple -Msubst --dict I<dictionary> [ options ]
 =head1 DESCRIPTION
 
 This B<greple> module supports check and substitution of text file
-using dictionary file.
+using a dictionary file.
 
 Dictionary file is given by B<--dict> option and contains pattern and
 expected string pairs.
@@ -36,8 +36,8 @@ If the dictionary file contains following data:
     colou?r      color
     cent(er|re)  center
 
-Then above command find first pattern which does not match to second
-string, that is "colour" and "centre" in this case.
+Then above command find the first pattern which does not match the
+second string, that is "colour" and "centre" in this case.
 
 Field "//" in dictionary file is ignored, so this file can be written
 like this:
@@ -297,6 +297,9 @@ sub subst_begin {
     subst_initialize if not $initialized;
 }
 
+#
+# define &divert_stdout and &recover_stdout
+#
 {
     my $diverted = 0;
 
@@ -304,7 +307,7 @@ sub subst_begin {
 	$diverted = $diverted == 0 ? 1 : return;
 	open  SUBST_STDOUT, '>&', \*STDOUT or die "open: $!";
 	close STDOUT;
-	open  STDOUT, '>/dev/null' or die "open: $!";
+	open  STDOUT, '>', '/dev/null' or die "open: $!";
     }
 
     sub recover_stdout {
@@ -343,8 +346,7 @@ sub subst_show_stat {
 	my @ok = grep { $_ eq $to } @keys;
 	if      (is $ss_check 'none') {
 	    next if @keys;
-	}
-	elsif (is $ss_check 'any') {
+	} elsif (is $ss_check 'any') {
 	    next unless @keys;
 	} elsif (is $ss_check 'ng', 'outstand') {
 	    next unless @ng;
