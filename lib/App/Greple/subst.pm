@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.06
+Version 2.07
 
 =head1 SYNOPSIS
 
@@ -208,7 +208,7 @@ Kazumasa Utashiro
 
 package App::Greple::subst;
 
-our $VERSION = '2.06';
+our $VERSION = '2.07';
 
 use v5.14;
 use strict;
