@@ -325,11 +325,11 @@ sub subst_initialize {
 	    map  { $numbers->parse($_)->sequence }
 	    split /,/, $select;
 	};
-	@fromto = sub {
-	    my @result = (undef) x $max;
-	    @result[@select] = @fromto[@select];
-	    @result;
-	}->(@fromto);
+	@fromto = do {
+	    my @tmp = (undef) x $max;
+	    @tmp[@select] = @fromto[@select];
+	    @tmp;
+	};
     }
 }
 
