@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.07
+Version 2.08
 
 =head1 SYNOPSIS
 
@@ -178,6 +178,15 @@ Created from following guideline document.
     Japan Technical Communicators Association
     https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf
 
+=item B<--exdict> sccc2.dict
+
+=item B<--sccc2>
+
+Dictionary used for "C/C++ セキュアコーディング 第2版" published in
+2014.
+
+https://www.jpcert.or.jp/securecoding_book_2nd.html
+
 =back
 
 =head1 INSTALL
@@ -210,7 +219,7 @@ Kazumasa Utashiro
 
 package App::Greple::subst;
 
-our $VERSION = '2.07';
+our $VERSION = '2.08';
 
 use v5.14;
 use strict;
@@ -680,6 +689,8 @@ option --exdict  --dict $ENV{GREPLE_SUBST_DICT}/$<shift>
 option --exdictdir --prologue 'sub{ say "$ENV{GREPLE_SUBST_DICT}"; exit }'
 
 option --jtca-katakana-guide --exdict jtca-katakana-guide-3.dict
+
+option --sccc2 --exdict sccc2.dict
 
 option --dumpdict --printdict --prologue 'sub{exit}'
 
