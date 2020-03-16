@@ -180,12 +180,25 @@ Created from following guideline document.
 
 =item B<--exdict> sccc2.dict
 
+=item B<--exdict> jtf-style-guide-3.dict
+
+=item B<--jtf-style-guide>
+
+Created from following guideline document.
+
+    JTF日本語標準スタイルガイド（翻訳用）
+    第3.0版
+    2019年8月20日
+    一般社団法人 日本翻訳連盟（JTF）
+    翻訳品質委員会
+    https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf
+
 =item B<--sccc2>
 
 Dictionary used for "C/C++ セキュアコーディング 第2版" published in
 2014.
 
-https://www.jpcert.or.jp/securecoding_book_2nd.html
+    https://www.jpcert.or.jp/securecoding_book_2nd.html
 
 =back
 
@@ -209,6 +222,11 @@ it under the same terms as Perl itself.
 L<https://github.com/kaz-utashiro/greple>
 
 L<https://github.com/kaz-utashiro/greple-subst>
+
+L<https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf>
+
+L<https://www.jtf.jp/jp/style_guide/styleguide_top.html>,
+L<https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf>
 
 =head1 AUTHOR
 
@@ -243,29 +261,12 @@ use Carp;
 use Data::Dumper;
 use Text::ParseWords qw(shellwords);
 use Getopt::EX::Numbers;
-use Getopt::EX::Module; # to avoid error. why?
 use App::Greple::Common;
 use App::Greple::Pattern;
+use App::Greple::subst::Dict;
 
 use File::Share qw(:all);
 $ENV{GREPLE_SUBST_DICT} //= dist_dir 'App-Greple-subst';
-
-# oo interface
-our @ISA = 'App::Greple::Pattern';
-{
-    sub new {
-	my $class = shift;
-	die if @_ < 2;
-	my($pattern, $correct) = splice @_, 0, 2;
-	my $obj = $class->SUPER::new($pattern, @_);
-	$obj->correct($correct);
-	$obj;
-    }
-    sub correct {
-	my $obj = shift;
-	@_ ? $obj->{CORRECT} = shift : $obj->{CORRECT};
-    }
-}
 
 package App::Greple::subst::SmartString {
     use List::Util qw(any);
@@ -299,6 +300,7 @@ our $opt_ignore_space = 1;
 our $opt_warn_overlap = 1;
 our $opt_warn_include = 0;
 our $opt_stat_style = "default";
+our $opt_show_comment = 0;
 
 my $current_file;
 my $contents;
@@ -395,6 +397,10 @@ sub subst_show_stat {
 
     for my $i (0 .. $#fromto) {
 	my $p = $fromto[$i] // next;
+	if ($p->is_comment) {
+	    say $p->comment if $opt_show_comment;
+	    next;
+	}
 	my($from_re, $to) = ($p->string, $p->correct // '');
 
 	my $hash = $match_list[$i] // {};
@@ -432,6 +438,7 @@ sub subst_show_stat {
 
 sub read_dict {
     my $dict = shift;
+    my $dict_class = __PACKAGE__ . "::Dict";
 
     say $dict if $opt_dictname;
 
@@ -443,13 +450,14 @@ sub read_dict {
     while (<DICT>) {
 	print if $opt_printdict;
 	chomp;
-	s/^\s*#.*//;
-	/\S/ or next;
-
+	if (not /^\s*[^#]/) {
+	    push @fromto, $dict_class->new_comment($_);
+	    next;
+	}
 	my @param = grep { not m{^//+$} } split ' ';
 	splice @param, 0, -2; # leave last one or two
 	my($pattern, $correct) = @param;
-	push @fromto, __PACKAGE__->new($pattern, $correct, flag => $flag);
+	push @fromto, $dict_class->new($pattern, $correct, flag => $flag);
     }
     close DICT;
 }
@@ -497,6 +505,7 @@ sub subst_search {
     my @matched;
     for my $index (0 .. $#fromto) {
 	my $p = $fromto[$index] // next;
+	next if $p->is_comment;
 	my($from_re, $to) = ($p->string, $p->correct // '');
 	my @match = match_regions pattern => $p->regex;
 	next if @match == 0 and $opt_check ne 'all';
@@ -635,6 +644,7 @@ builtin remember!      $remember_data
 builtin warn-overlap!  $opt_warn_overlap
 builtin warn-include!  $opt_warn_include
 builtin ignore-space!  $opt_ignore_space
+builtin show-comment!  $opt_show_comment
 
 option default \
 	--prologue subst_initialize \
@@ -689,8 +699,8 @@ option --exdict  --dict $ENV{GREPLE_SUBST_DICT}/$<shift>
 option --exdictdir --prologue 'sub{ say "$ENV{GREPLE_SUBST_DICT}"; exit }'
 
 option --jtca-katakana-guide --exdict jtca-katakana-guide-3.dict
-
-option --sccc2 --exdict sccc2.dict
+option --jtf-style-guide     --exdict jtf-style-guide-3.dict
+option --sccc2               --exdict sccc2.dict
 
 option --dumpdict --printdict --prologue 'sub{exit}'
 
