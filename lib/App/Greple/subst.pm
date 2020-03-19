@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.08
+Version 2.09
 
 =head1 SYNOPSIS
 
@@ -210,34 +210,34 @@ Dictionary used for "C/C++ セキュアコーディング 第2版" published in
     or
     $ curl -sL http://cpanmin.us | perl - App::Greple::subst
 
-=head1 LICENSE
-
-Copyright (C) Kazumasa Utashiro.
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
 =head1 SEE ALSO
 
 L<https://github.com/kaz-utashiro/greple>
 
 L<https://github.com/kaz-utashiro/greple-subst>
 
-L<https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf>
+https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf
 
-L<https://www.jtf.jp/jp/style_guide/styleguide_top.html>,
-L<https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf>
+https://www.jtf.jp/jp/style_guide/styleguide_top.html,
+https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf
 
 =head1 AUTHOR
 
 Kazumasa Utashiro
+
+=head1 LICENSE
+
+Copyright (C) 2017-2020 Kazumasa Utashiro.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 =cut
 
 
 package App::Greple::subst;
 
-our $VERSION = '2.08';
+our $VERSION = '2.09';
 
 use v5.14;
 use strict;
