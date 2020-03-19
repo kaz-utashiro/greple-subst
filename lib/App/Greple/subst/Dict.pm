@@ -20,6 +20,10 @@ package App::Greple::subst::Dict {
 	bless [], $class;
     }
 
+    sub dictionary {
+	@{+shift};
+    }
+
     sub add {
 	my $obj = shift;
 	push @$obj, App::Greple::subst::Dict::Ent->new(@_);
@@ -69,6 +73,28 @@ package App::Greple::subst::Dict {
 	};
 	decode 'utf8', $text;
     }
+
+    sub select {
+	my $obj = shift;
+	my $select = shift;
+	my $max = @$obj;
+	use Getopt::EX::Numbers;
+	my $numbers = Getopt::EX::Numbers->new(max => $max);
+	my @select = do {
+	    map  { $_ - 1 }
+	    sort { $a <=> $b }
+	    grep { $_ <= $max }
+	    map  { $numbers->parse($_)->sequence }
+	    split /,/, $select;
+	};
+	@$obj = do {
+	    my @tmp = (undef) x $max;
+	    @tmp[@select] = @{$obj}[@select];
+	    @tmp;
+	};
+	$obj;
+    }
+
 }
 
 package App::Greple::subst::Dict::Ent {

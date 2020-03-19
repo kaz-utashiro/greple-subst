@@ -260,7 +260,6 @@ our @EXPORT_OK   = qw();
 use Carp;
 use Data::Dumper;
 use Text::ParseWords qw(shellwords);
-use Getopt::EX::Numbers;
 use App::Greple::Common;
 use App::Greple::Pattern;
 use App::Greple::subst::Dict;
@@ -304,9 +303,9 @@ our $opt_show_comment = 0;
 
 my $current_file;
 my $contents;
-my @fromto;
 my @subst_diffcmd;
 my $ignorechar_re;
+my $dict = new App::Greple::subst::Dict;
 
 sub debug {
     $debug = 1;
@@ -333,20 +332,7 @@ sub subst_initialize {
     }
 
     if (my $select = $opt_subst_select) {
-	my $max = @fromto;
-	my $numbers = Getopt::EX::Numbers->new(max => $max);
-	my @select = do {
-	    map  { $_ - 1 }
-	    sort { $a <=> $b }
-	    grep { $_ <= $max }
-	    map  { $numbers->parse($_)->sequence }
-	    split /,/, $select;
-	};
-	@fromto = do {
-	    my @tmp = (undef) x $max;
-	    @tmp[@select] = @fromto[@select];
-	    @tmp;
-	};
+	$dict->select($select);
     }
 }
 
@@ -392,6 +378,7 @@ my @match_list;
 sub subst_show_stat {
     my %arg = @_;
 
+    my @fromto = $dict->dictionary;
     my $from_max = max map { vwidth $_->string  } grep { defined } @fromto;
     my $to_max   = max map { vwidth $_->correct } grep { defined } @fromto;
 
@@ -437,12 +424,10 @@ sub subst_show_stat {
 }
 
 sub read_dict {
-    my $dict = shift;
-    my $dict_class = __PACKAGE__ . "::Dict";
+    my $dictfile = shift;
+    say $dictfile if $opt_dictname;
 
-    say $dict if $opt_dictname;
-
-    open DICT, $dict or die "$dict: $!\n";
+    open DICT, $dictfile or die "$dictfile: $!\n";
 
     local $_;
     my $flag = FLAG_REGEX;
@@ -451,13 +436,13 @@ sub read_dict {
 	print if $opt_printdict;
 	chomp;
 	if (not /^\s*[^#]/) {
-	    push @fromto, $dict_class->new_comment($_);
+	    $dict->add_comment($_);
 	    next;
 	}
 	my @param = grep { not m{^//+$} } split ' ';
 	splice @param, 0, -2; # leave last one or two
 	my($pattern, $correct) = @param;
-	push @fromto, $dict_class->new($pattern, $correct, flag => $flag);
+	$dict->add($pattern, $correct, flag => $flag);
     }
     close DICT;
 }
@@ -503,16 +488,19 @@ sub subst_search {
     $current_file = delete $arg{&FILELABEL} or die;
 
     my @matched;
-    for my $index (0 .. $#fromto) {
-	my $p = $fromto[$index] // next;
+    my $index = -1;
+    for my $p ($dict->dictionary) {
+	$index++;
+	$p // next;
 	next if $p->is_comment;
 	my($from_re, $to) = ($p->string, $p->correct // '');
 	my @match = match_regions pattern => $p->regex;
 	next if @match == 0 and $opt_check ne 'all';
+	my $hash = $match_list[$index] //= {};
 	my $callback = sub {
 	    my($ms, $me, $i, $matched) = @_;
 	    my $s = $matched =~ s/$ignorechar_re//gr;
-	    $match_list[$index]->{$s}++;
+	    $hash->{$s}++;
 	    my $format = @opt_format[ $i % @opt_format ];
 	    sprintf($format,
 		    ($opt_subst && $to ne '' && $s ne $to) ?
