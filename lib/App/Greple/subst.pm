@@ -328,6 +328,10 @@ sub subst_initialize {
     }
 
     for my $dict (@opt_dictfile) {
+	if (-d $dict) {
+	    warn "$dict is directory\n";
+	    next;
+	}
 	read_dict($dict);
     }
 
@@ -489,6 +493,9 @@ sub subst_search {
 
     my @matched;
     my $index = -1;
+    my @effective;
+    my $ng = is $ss_check qw(ng any all none);
+    my $ok = is $ss_check qw(ok any all none);
     for my $p ($dict->dictionary) {
 	$index++;
 	$p // next;
@@ -518,17 +525,16 @@ sub subst_search {
 	    }
 	    $_->[3] = $callback;
 	}
-	my $mix =
-	    (is $ss_check qw(ng))           ? \@ng :
-	    (is $ss_check qw(ok))           ? \@ok :
-	    (is $ss_check qw(outstand))     ? ( @ng ? \@match : [] ) :
-	    (is $ss_check qw(any all none)) ? \@match :
-	    die "Invalid parameter: $opt_check\n";
+	{
+	    my $outstand = @ng && is $ss_check qw(outstand);
+	    $effective[ $index * 2     ] = 1 if $ng || $outstand;
+	    $effective[ $index * 2 + 1 ] = 1 if $ok || $outstand;
+	}
 	mix_regions {
 	    overlap => ( my $overlap = [] ),
 	    include => ( my $include = [] ),
 	    nosort  => 1,
-	}, \@matched, $mix;
+	}, \@matched, \@match;
 	##
 	## Warning
 	##
@@ -551,6 +557,7 @@ sub subst_search {
 	    }
 	}
     }
+    @matched = grep $effective[$_->[2]], @matched;
     @matched;
 }
 

@@ -73,7 +73,7 @@
    "version" : "2.09",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
-      "Kaz Utashiro <kaz@utashiro.com>"
+      "Kazumasa Utashiro <kaz@utashiro.com>"
    ],
    "x_static_install" : 1
 }
