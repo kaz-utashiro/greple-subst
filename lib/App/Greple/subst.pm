@@ -381,19 +381,16 @@ my @match_list;
 
 sub subst_show_stat {
     my %arg = @_;
-
     my @fromto = $dict->dictionary;
-    my $from_max = max map { vwidth $_->string  } grep { defined } @fromto;
-    my $to_max   = max map { vwidth $_->correct } grep { defined } @fromto;
-
+    my($from_max, $to_max) = (0, 0);
+    my @show;
     for my $i (0 .. $#fromto) {
 	my $p = $fromto[$i] // next;
 	if ($p->is_comment) {
-	    say $p->comment if $opt_show_comment;
+	    push @show, [ $i, $p, {} ];
 	    next;
 	}
 	my($from_re, $to) = ($p->string, $p->correct // '');
-
 	my $hash = $match_list[$i] // {};
 	my @keys = keys %{$hash};
 	my @ng = grep { $_ ne $to } @keys;
@@ -407,11 +404,23 @@ sub subst_show_stat {
 	} elsif (is $ss_check 'ok') {
 	    next unless @ok;
 	}
+	$from_max = max $from_max, vwidth $from_re;
+	$to_max   = max $to_max  , vwidth $to;
+	push @show, [ $i, $p, $hash ];
+    }
+    for my $show (@show) {
+	my($i, $p, $hash) = @$show;
+	if ($p->is_comment) {
+	    say $p->comment if $opt_show_comment;
+	    next;
+	}
+	my($from_re, $to) = ($p->string, $p->correct // '');
+	my @keys = keys %{$hash};
 	if ($opt_stat_style eq 'dict') {
 	    vprintf("%-${from_max}s // %s", $from_re // '', $to // '');
 	} else {
-	    vprintf("%3d: %${from_max}s => %-${to_max}s",
-		    $i + 1, $from_re // '', $to // '');
+	    vprintf("%${from_max}s => %-${to_max}s %4d:",
+		    $from_re // '', $to // '', $i + 1);
 	    for my $key ((sort { $hash->{$b} <=> $hash->{$a} }
 			  grep { $_ ne $to } @keys),
 			 (grep { $_ eq $to } @keys)) {
@@ -423,7 +432,6 @@ sub subst_show_stat {
 	}
 	print "\n";
     }
-
     $_ = "";
 }
 
@@ -496,6 +504,7 @@ sub subst_search {
     my @effective;
     my $ng = is $ss_check qw(ng any all none);
     my $ok = is $ss_check qw(ok any all none);
+    my $outstand = is $ss_check qw(outstand);
     for my $p ($dict->dictionary) {
 	$index++;
 	$p // next;
@@ -525,11 +534,8 @@ sub subst_search {
 	    }
 	    $_->[3] = $callback;
 	}
-	{
-	    my $outstand = @ng && is $ss_check qw(outstand);
-	    $effective[ $index * 2     ] = 1 if $ng || $outstand;
-	    $effective[ $index * 2 + 1 ] = 1 if $ok || $outstand;
-	}
+	$effective[ $index * 2     ] = 1 if $ng || ( @ng && $outstand );
+	$effective[ $index * 2 + 1 ] = 1 if $ok || ( @ng && $outstand );
 	mix_regions {
 	    overlap => ( my $overlap = [] ),
 	    include => ( my $include = [] ),
@@ -557,8 +563,7 @@ sub subst_search {
 	    }
 	}
     }
-    @matched = grep $effective[$_->[2]], @matched;
-    @matched;
+    grep $effective[$_->[2]], @matched;
 }
 
 sub subst_diff {
