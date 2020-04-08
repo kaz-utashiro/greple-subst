@@ -687,7 +687,9 @@ option --divert-stdout --prologue __PACKAGE__::divert_stdout \
 option --with-stat     --epilogue subst_show_stat
 option --stat          --divert-stdout --with-stat
 
-option  --subst-color \
+option  --subst-color --subst-color-light
+
+option  --subst-color-light \
         --cm 555D/100,K/433 \
         --cm 555D/010,K/343 \
         --cm 555D/001,K/334 \
@@ -714,6 +716,34 @@ option  --subst-color \
         --cm 555D/212,K/545 \
         --cm 555D/221,K/554 \
         --cm 555D/222,K/L23
+
+option  --subst-color-dark \
+        --cm KD/433,555/100 \
+        --cm KD/343,555/010 \
+        --cm KD/334,555/001 \
+        --cm KD/344,555/011 \
+        --cm KD/434,555/101 \
+        --cm KD/443,555/110 \
+        --cm KD/444,555/111 \
+        --cm KD/354,555/021 \
+        --cm KD/534,555/201 \
+        --cm KD/543,555/210 \
+        --cm KD/345,555/012 \
+        --cm KD/435,555/102 \
+        --cm KD/453,555/120 \
+        --cm KD/533,555/200 \
+        --cm KD/353,555/020 \
+        --cm KD/335,555/002 \
+        --cm KD/355,555/022 \
+        --cm KD/535,555/202 \
+        --cm KD/553,555/220 \
+        --cm KD/544,555/211 \
+        --cm KD/454,555/121 \
+        --cm KD/445,555/112 \
+        --cm KD/455,555/122 \
+        --cm KD/545,555/212 \
+        --cm KD/554,555/221 \
+        --cm KD/L23,555/222
 
 ##
 ## Handle included sample dictionaries.
