@@ -300,6 +300,7 @@ our $opt_warn_overlap = 1;
 our $opt_warn_include = 0;
 our $opt_stat_style = "default";
 our $opt_show_comment = 0;
+our $opt_show_numbers = 1;
 
 my $current_file;
 my $contents;
@@ -380,6 +381,7 @@ sub subst_show_stat {
     my @fromto = $dict->dictionary;
     my($from_max, $to_max) = (0, 0);
     my @show;
+    my %stat;
     for my $i (0 .. $#fromto) {
 	my $p = $fromto[$i] // next;
 	if ($p->is_comment) {
@@ -391,6 +393,12 @@ sub subst_show_stat {
 	my @keys = keys %{$hash};
 	my @ng = grep { $_ ne $to } @keys;
 	my @ok = grep { $_ eq $to } @keys;
+	if ($opt_show_numbers) {
+	    $stat{total}++;
+	    $stat{hit}++ if @ng || @ok;
+	    $stat{ng} += $hash->{$_} for @ng;
+	    $stat{ok} += $hash->{$_} for @ok;
+	}
 	if      (is $ss_check 'none') {
 	    next if @keys;
 	} elsif (is $ss_check 'any') {
@@ -403,6 +411,10 @@ sub subst_show_stat {
 	$from_max = max $from_max, vwidth $from_re;
 	$to_max   = max $to_max  , vwidth $to;
 	push @show, [ $i, $p, $hash ];
+    }
+    if ($opt_show_numbers) {
+	printf "HIT: %d/%d, NG: %d, OK: %d\n",
+	    $stat{hit}, $stat{total}, $stat{ng}, $stat{ok};
     }
     for my $show (@show) {
 	my($i, $p, $hash) = @$show;
@@ -567,7 +579,7 @@ sub subst_search {
 	use Getopt::EX::Numbers;
 	my $numbers = Getopt::EX::Numbers->new(max => $max);
 	my %select = do {
-	    map  { ( $_*2 => 1) , ( $_*2 + 1 => 1) }
+	    map  { ($_*2 => 1) , ($_*2 + 1 => 1) }
 	    map  { $_ - 1 }
 	    sort { $a <=> $b }
 	    grep { $_ <= $max }
