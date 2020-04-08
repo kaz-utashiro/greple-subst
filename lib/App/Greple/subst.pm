@@ -327,16 +327,12 @@ sub subst_initialize {
 	@subst_diffcmd = ("diff", "-U$opt_U");
     }
 
-    for my $dict (@opt_dictfile) {
+    for my $dictfile (@opt_dictfile) {
 	if (-d $dict) {
 	    warn "$dict is directory\n";
 	    next;
 	}
-	read_dict($dict);
-    }
-
-    if (my $select = $opt_subst_select) {
-	$dict->select($select);
+	read_dict($dictfile);
     }
 }
 
@@ -562,6 +558,23 @@ sub subst_search {
 		    );
 	    }
 	}
+    }
+    ##
+    ## --select
+    ##
+    if (my $select = $opt_subst_select) {
+	my $max = $dict->dictionary;
+	use Getopt::EX::Numbers;
+	my $numbers = Getopt::EX::Numbers->new(max => $max);
+	my %select = do {
+	    map  { ( $_*2 => 1) , ( $_*2 + 1 => 1) }
+	    map  { $_ - 1 }
+	    sort { $a <=> $b }
+	    grep { $_ <= $max }
+	    map  { $numbers->parse($_)->sequence }
+	    split /,/, $select;
+	};
+	@matched = grep $select{$_->[2]}, @matched;
     }
     grep $effective[$_->[2]], @matched;
 }
