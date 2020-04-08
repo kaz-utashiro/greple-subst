@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.09
+Version 2.10
 
 =head1 SYNOPSIS
 
@@ -237,7 +237,7 @@ it under the same terms as Perl itself.
 
 package App::Greple::subst;
 
-our $VERSION = '2.09';
+our $VERSION = '2.10';
 
 use v5.14;
 use strict;
@@ -533,14 +533,14 @@ sub subst_search {
 	    if ($matched =~ s/$ignorechar_re//gr ne $to) {
 		$_->[2] = $index * 2;
 		push @ng, $_;
-		$stat{ng}++;
 	    } else {
 		$_->[2] = $index * 2 + 1;
 		push @ok, $_;
-		$stat{ok}++;
 	    }
 	    $_->[3] = $callback;
 	}
+	$stat{ng} += @ng;
+	$stat{ok} += @ok;
 	$effective[ $index * 2     ] = 1 if $ng || ( @ng && $outstand );
 	$effective[ $index * 2 + 1 ] = 1 if $ok || ( @ng && $outstand );
 	mix_regions {
@@ -578,9 +578,8 @@ sub subst_search {
 	use Getopt::EX::Numbers;
 	my $numbers = Getopt::EX::Numbers->new(max => $max);
 	my %select = do {
-	    map  { ($_*2 => 1) , ($_*2 + 1 => 1) }
+	    map  { ($_ * 2 => 1) , ($_ * 2 + 1 => 1) }
 	    map  { $_ - 1 }
-	    sort { $a <=> $b }
 	    grep { $_ <= $max }
 	    map  { $numbers->parse($_)->sequence }
 	    split /,/, $select;
