@@ -670,10 +670,10 @@ builtin ignore-space!  $opt_ignore_space
 builtin show-comment!  $opt_show_comment
 
 option default \
+	-Mautocolor \
 	--prologue subst_initialize \
 	--begin subst_begin \
-	--le &subst_search --no-regioncolor \
-	--subst-color
+	--le &subst_search --no-regioncolor
 
 expand ++dump    --all --need 0 -h --nocolor
 option --diff    --subst ++dump --of &subst_diff
@@ -685,7 +685,8 @@ option --divert-stdout --prologue __PACKAGE__::divert_stdout \
 option --with-stat     --epilogue subst_show_stat
 option --stat          --divert-stdout --with-stat
 
-option  --subst-color --subst-color-light
+option  --light-terminal --subst-color-light
+option  --dark-terminal  --subst-color-dark
 
 option	--subst-color-light \
 	--cm 555D/100,000/433 \

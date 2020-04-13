@@ -46,6 +46,7 @@
             "Data::Section" : "0.200007",
             "File::Share" : "0",
             "Getopt::EX" : "v1.15.5",
+            "Getopt::EX::autocolor" : "0",
             "Regexp::Assemble" : "0",
             "Text::VisualPrintf" : "2.03",
             "Text::VisualWidth::PP" : "0.05",

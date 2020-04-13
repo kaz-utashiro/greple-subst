@@ -167,7 +167,6 @@ directory and accessed by **--exdict** option.
         Japan Technical Communicators Association
         https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf
 
-- **--exdict** sccc2.dict
 - **--exdict** jtf-style-guide-3.dict
 - **--jtf-style-guide**
 
@@ -180,6 +179,7 @@ directory and accessed by **--exdict** option.
         翻訳品質委員会
         https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf
 
+- **--exdict** sccc2.dict
 - **--sccc2**
 
     Dictionary used for "C/C++ セキュアコーディング 第2版" published in
