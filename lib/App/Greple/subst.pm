@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.10
+Version 2.11
 
 =head1 SYNOPSIS
 
@@ -63,6 +63,17 @@ longer pattern in front.
 
 If the matched string overlaps with previously matched string, it is
 warned (B<--warn-overlap> by default) and ignored.
+
+=head2 Terminal color
+
+This version uses L<Getopt::EX::autocolor> module.  It sets option
+B<--light-screen> or B<--dark-screen> depending on the terminal on
+which the command run, or B<BRIGHTNESS> environment variable.
+
+Some terminals (eg: "Apple_Terminal" or "iTerm") are detected
+automatically and no action is required.  Otherwise set B<BRIGHTNESS>
+environment to 0 (black) to 100 (white) digit depending on terminal
+background color.
 
 =head1 OPTIONS
 
@@ -237,7 +248,7 @@ it under the same terms as Perl itself.
 
 package App::Greple::subst;
 
-our $VERSION = '2.10';
+our $VERSION = '2.11';
 
 use v5.14;
 use strict;
@@ -749,6 +760,8 @@ option --exdictdir --prologue 'sub{ say "$ENV{GREPLE_SUBST_DICT}"; exit }'
 option --jtca-katakana-guide --exdict jtca-katakana-guide-3.dict
 option --jtf-style-guide     --exdict jtf-style-guide-3.dict
 option --sccc2               --exdict sccc2.dict
+
+option --all-katakana	     --exdict all-katakana.dict
 
 option --dumpdict --printdict --prologue 'sub{exit}'
 
