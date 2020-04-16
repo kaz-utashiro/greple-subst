@@ -2,7 +2,7 @@ requires 'perl', '5.014';
 
 requires 'App::Greple', '8.39';
 requires 'Getopt::EX', 'v1.16.0';
-requires 'Getopt::EX::autocolor', '0.04';
+requires 'Getopt::EX::termcolor', '1.01';
 requires 'File::Share';
 requires 'Regexp::Assemble';
 requires 'Data::Section', '0.200007';
