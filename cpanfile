@@ -1,8 +1,8 @@
 requires 'perl', '5.014';
 
 requires 'App::Greple', '8.39';
-requires 'Getopt::EX', 'v1.15.6';
-requires 'Getopt::EX::autocolor';
+requires 'Getopt::EX', 'v1.16.0';
+requires 'Getopt::EX::autocolor', '0.04';
 requires 'File::Share';
 requires 'Regexp::Assemble';
 requires 'Data::Section', '0.200007';

@@ -681,7 +681,7 @@ builtin ignore-space!  $opt_ignore_space
 builtin show-comment!  $opt_show_comment
 
 option default \
-	-Mautocolor \
+	-MGetopt::EX::autocolor::set(default=100,light=--subst-color-light,dark=--subst-color-dark) \
 	--prologue subst_initialize \
 	--begin subst_begin \
 	--le &subst_search --no-regioncolor
@@ -695,9 +695,6 @@ option --divert-stdout --prologue __PACKAGE__::divert_stdout \
 		       --epilogue __PACKAGE__::recover_stdout
 option --with-stat     --epilogue subst_show_stat
 option --stat          --divert-stdout --with-stat
-
-option  --light-terminal --subst-color-light
-option  --dark-terminal  --subst-color-dark
 
 option	--subst-color-light \
 	--cm 555D/100,000/433 \
