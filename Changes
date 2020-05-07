@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.14 2020-05-07T07:07:39Z
+
+    - Implement dynamic colormap generator.
+
 2.13 2020-04-27T05:18:26Z
 
     - Use Getopt::EX::termcolor new interface.
