@@ -441,6 +441,7 @@ sub subst_show_stat {
 	push @show, [ $i, $p, $hash ];
     }
     if ($opt_show_numbers) {
+	no warnings 'uninitialized';
 	printf "HIT_PATTERN=%d/%d NG=%d, OK=%d, TOTAL=%d\n",
 	    $stat{hit}, $stat{total},
 	    $stat{ng}, $stat{ok}, $stat{ng} + $stat{ok};
@@ -725,8 +726,6 @@ option --divert-stdout --prologue __PACKAGE__::divert_stdout \
 		       --epilogue __PACKAGE__::recover_stdout
 option --with-stat     --epilogue subst_show_stat
 option --stat          --divert-stdout --with-stat
-
-#mode function
 
 autoload -Msubst::dyncmap --dyncmap
 
