@@ -715,7 +715,7 @@ option default \
 	-Mtermcolor::bg(default=100,light=--subst-color-light,dark=--subst-color-dark) \
 	--prologue subst_initialize \
 	--begin subst_begin \
-	--le &subst_search --no-regioncolor
+	--le +&subst_search --no-regioncolor
 
 expand ++dump    --all --need 0 -h --nocolor
 option --diff    --subst ++dump --of &subst_diff

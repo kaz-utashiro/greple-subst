@@ -42,7 +42,7 @@
       },
       "runtime" : {
          "requires" : {
-            "App::Greple" : "8.3902",
+            "App::Greple" : "8.4001",
             "Data::Section" : "0.200007",
             "File::Share" : "0",
             "Getopt::EX" : "v1.16.0",
