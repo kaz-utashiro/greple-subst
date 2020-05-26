@@ -280,6 +280,7 @@ use Carp;
 use Data::Dumper;
 use Text::ParseWords qw(shellwords);
 use Encode;
+use Getopt::EX::Colormap qw(colorize);
 use App::Greple::Common;
 use App::Greple::Pattern;
 use App::Greple::subst::Dict;
@@ -463,9 +464,10 @@ sub subst_show_stat {
 			  grep { $_ ne $to } @keys),
 			 (grep { $_ eq $to } @keys)) {
 		my $index = $key eq $to ? $i * 2 + 1 : $i * 2;
-		printf(" %s(%d)",
+		printf(" %s(%s)",
 		       main::index_color($index, $key),
-		       $hash->{$key});
+		       colorize($key eq $to ? 'B' : 'RD', $hash->{$key})
+		    );
 	    }
 	}
 	print "\n";
