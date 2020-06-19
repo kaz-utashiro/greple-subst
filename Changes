@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.15 2020-06-19T03:31:59Z
+
+    - Update --replace/create mechanism to touch modified files only.
+
 2.1403 2020-06-16T16:09:00Z
 
     - Use App::Greple 8.4002, otherwise --need 0 --all produces

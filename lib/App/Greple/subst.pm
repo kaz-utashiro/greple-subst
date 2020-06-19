@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.1403
+Version 2.15
 
 =head1 SYNOPSIS
 
@@ -256,7 +256,7 @@ it under the same terms as Perl itself.
 
 package App::Greple::subst;
 
-our $VERSION = '2.1403';
+our $VERSION = '2.15';
 
 use v5.14;
 use strict;
@@ -269,7 +269,8 @@ our @EXPORT      = qw(
     &subst_initialize
     &subst_begin
     &subst_diff
-    &subst_create
+    &subst_divert
+    &subst_update
     &subst_show_stat
     &subst_search
     );
@@ -384,12 +385,14 @@ sub subst_begin {
 #
 {
     my $diverted = 0;
+    my $buffer;
 
     sub divert_stdout {
+	$buffer = @_ ? shift : '/dev/null';
 	$diverted = $diverted == 0 ? 1 : return;
 	open  SUBST_STDOUT, '>&', \*STDOUT or die "open: $!";
 	close STDOUT;
-	open  STDOUT, '>', '/dev/null' or die "open: $!";
+	open  STDOUT, '>', $buffer or die "open: $!";
     }
 
     sub recover_stdout {
@@ -661,9 +664,26 @@ sub subst_diff {
     die "exec: $!\n";
 }
 
-sub subst_create {
+my $divert_buffer;
+
+sub subst_divert {
     my %arg = @_;
     my $filename = delete $arg{&FILELABEL};
+
+    $divert_buffer = '';
+    divert_stdout(\$divert_buffer);
+}
+
+sub subst_update {
+    my %arg = @_;
+    my $filename = delete $arg{&FILELABEL};
+
+    recover_stdout() or die;
+    $divert_buffer = decode 'utf8', $divert_buffer;
+
+    if ($_ eq $divert_buffer) {
+	return;
+    }
 
     my $suffix = $arg{suffix} || '.new';
 
@@ -687,8 +707,9 @@ sub subst_create {
 	}
     };
 	
-    close STDOUT;
-    open  STDOUT, ">", $create or die "open: $!\n";
+    open my $fh, ">", $create or die "open: $create $!\n";
+    $fh->print($divert_buffer);
+    $fh->close;
 }
 
 1;
@@ -719,10 +740,10 @@ option default \
 	--begin subst_begin \
 	--le +&subst_search --no-regioncolor
 
-expand ++dump    --all --need 0 -h --nocolor
+expand ++dump    --all --need 0 -h --color=never
 option --diff    --subst ++dump --of &subst_diff
-option --create  --subst ++dump --begin subst_create
-option --replace --subst ++dump --begin subst_create(replace,suffix=.bak)
+option --create  --subst ++dump --begin subst_divert --end subst_update
+option --replace --subst ++dump --begin subst_divert --end subst_update(replace,suffix=.bak)
 
 option --divert-stdout --prologue __PACKAGE__::divert_stdout \
 		       --epilogue __PACKAGE__::recover_stdout
