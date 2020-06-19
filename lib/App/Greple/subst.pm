@@ -240,10 +240,10 @@ L<https://github.com/kaz-utashiro/greple>
 
 L<https://github.com/kaz-utashiro/greple-subst>
 
-https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf
+L<https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf>
 
-https://www.jtf.jp/jp/style_guide/styleguide_top.html,
-https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf
+L<https://www.jtf.jp/jp/style_guide/styleguide_top.html>,
+L<https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf>
 
 =head1 AUTHOR
 
