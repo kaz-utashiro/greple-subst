@@ -4,7 +4,7 @@ subst - Greple module for text search and substitution
 
 # VERSION
 
-Version 2.15
+Version 2.16
 
 # SYNOPSIS
 
@@ -21,8 +21,9 @@ greple -Msubst --dict _dictionary_ \[ options \]
     --stat-style=[default,dict]
     --diff
     --diffcmd command
-    --replace
     --create
+    --replace
+    --overwrite
     --[no-]warn-overlap
     --[no-]warn-include
 
@@ -139,15 +140,19 @@ digit depending on terminal background color.
     Specify diff command name used by **--diff** option.  Default is "diff
     \-u".
 
+- **--create**
+
+    Create new file and write the result.  Suffix ".new" is appended to
+    original filename.
+
 - **--replace**
 
     Replace the target file by converted result.  Original file is renamed
     to backup name with ".bak" suffix.
 
-- **--create**
+- **--overwrite**
 
-    Create new file and write the result.  Suffix ".new" is appended to
-    original filename.
+    Overwrite the target file by converted result with no backup.
 
 - **--\[no-\]warn-overlap**
 

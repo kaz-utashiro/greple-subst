@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.15
+Version 2.16
 
 =head1 SYNOPSIS
 
@@ -23,8 +23,9 @@ greple -Msubst --dict I<dictionary> [ options ]
   --stat-style=[default,dict]
   --diff
   --diffcmd command
-  --replace
   --create
+  --replace
+  --overwrite
   --[no-]warn-overlap
   --[no-]warn-include
 
@@ -145,15 +146,19 @@ Option B<-diff> produce diff output of original and converted text.
 Specify diff command name used by B<--diff> option.  Default is "diff
 -u".
 
+=item B<--create>
+
+Create new file and write the result.  Suffix ".new" is appended to
+original filename.
+
 =item B<--replace>
 
 Replace the target file by converted result.  Original file is renamed
 to backup name with ".bak" suffix.
 
-=item B<--create>
+=item B<--overwrite>
 
-Create new file and write the result.  Suffix ".new" is appended to
-original filename.
+Overwrite the target file by converted result with no backup.
 
 =item B<--[no-]warn-overlap>
 
@@ -256,7 +261,7 @@ it under the same terms as Perl itself.
 
 package App::Greple::subst;
 
-our $VERSION = '2.15';
+our $VERSION = '2.16';
 
 use v5.14;
 use strict;
@@ -677,6 +682,7 @@ sub subst_divert {
 sub subst_update {
     my %arg = @_;
     my $filename = delete $arg{&FILELABEL};
+    my $newname = '';
 
     recover_stdout() or die;
     $divert_buffer = decode 'utf8', $divert_buffer;
@@ -685,21 +691,22 @@ sub subst_update {
 	return;
     }
 
-    my $suffix = $arg{suffix} || '.new';
-
-    my $newname = do {
-	my $tmp = $filename . $suffix;
-	for (my $i = 1; -f $tmp; $i++) {
-	    $tmp = $filename . $suffix . "_$i";
+    if (my $suffix = $arg{suffix}) {
+	$newname = $filename . $suffix;
+	for (my $i = 1; -f $newname; $i++) {
+	    $newname = $filename . $suffix . "_$i";
 	}
-	$tmp;
-    };
+    }
 
     my $create = do {
 	if ($arg{replace}) {
-	    warn "rename $filename -> $newname\n";
-	    rename $filename, $newname or die "rename: $!\n";
-	    die if -f $filename;
+	    if ($newname ne '') {
+		warn "rename $filename -> $newname\n";
+		rename $filename, $newname or die "rename: $!\n";
+		die if -f $filename;
+	    } else {
+		warn "overwrite $filename\n";
+	    }
 	    $filename;
 	} else {
 	    warn "create $newname\n";
@@ -740,10 +747,11 @@ option default \
 	--begin subst_begin \
 	--le +&subst_search --no-regioncolor
 
-expand ++dump    --all --need 0 -h --color=never
-option --diff    --subst ++dump --of &subst_diff
-option --create  --subst ++dump --begin subst_divert --end subst_update
-option --replace --subst ++dump --begin subst_divert --end subst_update(replace,suffix=.bak)
+expand ++dump      --all --need 0 -h --color=never
+option --diff      --subst ++dump --of &subst_diff
+option --create    --subst ++dump --begin subst_divert --end subst_update(suffix=.new)
+option --replace   --subst ++dump --begin subst_divert --end subst_update(replace,suffix=.bak)
+option --overwrite --subst ++dump --begin subst_divert --end subst_update(replace,suffix=)
 
 option --divert-stdout --prologue __PACKAGE__::divert_stdout \
 		       --epilogue __PACKAGE__::recover_stdout

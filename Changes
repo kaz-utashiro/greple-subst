@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.16 2020-06-19T08:32:56Z
+
+    - Introduce --overwrite option.
+
 2.15 2020-06-19T03:31:59Z
 
     - Update --replace/create mechanism to touch modified files only.
