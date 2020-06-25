@@ -225,10 +225,13 @@ directory and accessed by **--exdict** option.
 
 [https://github.com/kaz-utashiro/greple-subst](https://github.com/kaz-utashiro/greple-subst)
 
-https://www.jtca.org/standardization/katakana\_guide\_3\_20171222.pdf
+[https://www.jtca.org/standardization/katakana\_guide\_3\_20171222.pdf](https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf)
 
-https://www.jtf.jp/jp/style\_guide/styleguide\_top.html,
-https://www.jtf.jp/jp/style\_guide/pdf/jtf\_style\_guide.pdf
+[https://www.jtf.jp/jp/style\_guide/styleguide\_top.html](https://www.jtf.jp/jp/style_guide/styleguide_top.html),
+[https://www.jtf.jp/jp/style\_guide/pdf/jtf\_style\_guide.pdf](https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf)
+
+[https://www.microsoft.com/ja-jp/language/styleguides](https://www.microsoft.com/ja-jp/language/styleguides),
+[https://www.atmarkit.co.jp/news/200807/25/microsoft.html](https://www.atmarkit.co.jp/news/200807/25/microsoft.html)
 
 # AUTHOR
 

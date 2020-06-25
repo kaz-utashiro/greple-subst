@@ -245,6 +245,9 @@ L<https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf>
 L<https://www.jtf.jp/jp/style_guide/styleguide_top.html>,
 L<https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf>
 
+L<https://www.microsoft.com/ja-jp/language/styleguides>,
+L<https://www.atmarkit.co.jp/news/200807/25/microsoft.html>
+
 =head1 AUTHOR
 
 Kazumasa Utashiro
