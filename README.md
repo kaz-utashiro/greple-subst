@@ -4,7 +4,7 @@ subst - Greple module for text search and substitution
 
 # VERSION
 
-Version 2.16
+Version 2.17
 
 # SYNOPSIS
 
@@ -210,6 +210,17 @@ directory and accessed by **--exdict** option.
     2014.
 
         https://www.jpcert.or.jp/securecoding_book_2nd.html
+
+- **--exdict** microsoft.dict
+- **--microsoft**
+
+    Dictionary generated from Microsoft localization style guide.
+
+        https://www.microsoft.com/ja-jp/language/styleguides
+
+    Data is generated from this article:
+
+        https://www.atmarkit.co.jp/news/200807/25/microsoft.html
 
 # INSTALL
 
