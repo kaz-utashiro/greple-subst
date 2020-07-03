@@ -274,12 +274,11 @@ it under the same terms as Perl itself.
 =cut
 
 
+use v5.14;
 package App::Greple::subst;
 
 our $VERSION = '2.17';
 
-use v5.14;
-use strict;
 use warnings;
 use utf8;
 use open IO => ':utf8';
@@ -350,7 +349,7 @@ my $current_file;
 my $contents;
 my @subst_diffcmd;
 my $ignorechar_re;
-my $dict = new App::Greple::subst::Dict;
+my $dict = App::Greple::subst::Dict->new;
 
 sub debug {
     $debug = 1;
@@ -660,7 +659,7 @@ sub subst_diff {
 
     if ($remember_data) {
 	use IO::Pipe;
-	$io = new IO::Pipe;
+	$io = IO::Pipe->new;
 	my $pid = fork() // die "fork: $!\n";
 	if ($pid == 0) {
 	    $io->writer;
