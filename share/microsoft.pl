@@ -121,9 +121,7 @@ sub mkpat {
 	)
     {
 	my($re, $sub) = @$op;
-	if ($en =~ $re) {
-	    $sub->();
-	}
+	$en =~ $re and $sub->()
     }
     $_;
 }
@@ -132,8 +130,8 @@ if ($opt->{reorder}) {
     use List::Util qw(first);
     for my $i (1 .. $#data) {
 	my $match =
-	    first { $data[$i]->{kana} =~ $data[$_]->{regex} } 0 .. $i - 1
-	    or next;
+	    (first { $data[$i]->{kana} =~ $data[$_]->{regex} } 0 .. $i - 1)
+	    // next;
 	splice @data, $match, 0 => splice @data, $i, 1;
     }
 }
