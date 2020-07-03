@@ -489,7 +489,7 @@ sub subst_show_stat {
 		my $index = $key eq $to ? $i * 2 + 1 : $i * 2;
 		printf(" %s(%s)",
 		       main::index_color($index, $key),
-		       colorize($key eq $to ? 'B' : 'RD', $hash->{$key})
+		       colorize($key eq $to ? 'DB' : 'DR', $hash->{$key})
 		    );
 	    }
 	}
