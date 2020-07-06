@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.18
+Version 2.19
 
 =head1 SYNOPSIS
 
@@ -277,7 +277,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.18';
+our $VERSION = '2.19';
 
 use warnings;
 use utf8;
@@ -332,7 +332,6 @@ our $opt_dictname;
 our $opt_subst_diffcmd = "diff -u";
 our $opt_U;
 our $opt_check = 'outstand';
-my  $ss_check;
 our @opt_format;
 our @default_opt_format = ( '%s' );
 our $opt_subst_select;
@@ -358,8 +357,6 @@ sub debug {
 sub subst_initialize {
 
     state $once_called++ and return;
-
-    $ss_check = bless \$opt_check, "App::Greple::subst::SmartString";
 
     @subst_diffcmd = shellwords $opt_subst_diffcmd;
 
@@ -423,7 +420,7 @@ sub subst_begin {
 
 use Text::VisualWidth::PP;
 use Text::VisualPrintf qw(vprintf vsprintf);
-use List::Util qw(max);
+use List::Util qw(max any);
 
 sub vwidth {
     if (not defined $_[0] or length $_[0] == 0) {
@@ -450,15 +447,11 @@ sub subst_show_stat {
 	my @keys = keys %{$hash};
 	my @ng = grep { $_ ne $to } @keys;
 	my @ok = grep { $_ eq $to } @keys;
-	if      (is $ss_check 'none') {
-	    next if @keys;
-	} elsif (is $ss_check 'any') {
-	    next unless @keys;
-	} elsif (is $ss_check 'ng', 'outstand') {
-	    next unless @ng;
-	} elsif (is $ss_check 'ok') {
-	    next unless @ok;
-	}
+	if    ($opt_check eq 'none'    ) { next if @keys != 0 }
+	elsif ($opt_check eq 'any'     ) { next if @keys == 0 }
+	elsif ($opt_check eq 'ok'      ) { next if @ok   == 0 }
+	elsif ($opt_check eq 'ng'      ) { next if @ng   == 0 }
+	elsif ($opt_check eq 'outstand') { next if @ng   == 0 }
 	$from_max = max $from_max, vwidth $from_re;
 	$to_max   = max $to_max  , vwidth $to;
 	push @show, [ $i, $p, $hash ];
@@ -556,7 +549,40 @@ sub mix_regions {
     @$old = ( @out, @old, @new );
 }
 
-use App::Greple::Regions qw(match_regions);
+sub sieve_regions {
+    my $option = ref $_[0] eq 'HASH' ? shift : {};
+    my($old, $new) = @_;
+    return () if @$new == 0;
+    my @old = $option->{destructive} ? @{$old} : map [ @$_ ], @{$old};
+    my @new = $option->{destructive} ? @{$new} : map [ @$_ ], @{$new};
+    unless ($option->{nosort}) {
+	@new = sort({$a->[0] <=> $b->[0] || $b->[1] <=> $a->[1]
+			 ||  (@$a > 2 ? $a->[2] <=> $b->[2] : 0) }
+		    @new);
+    }
+    my @out;
+    my($include, $overlap) = @{$option}{qw(include overlap)};
+    while (@old and @new) {
+	while (@old and $old[0][1] <= $new[0][0]) {
+	    shift @old;
+	}
+	last if @old == 0;
+	while (@new and $new[0][1] <= $old[0][0]) {
+	    push @out, shift @new;
+	}
+	while (@new and $new[0][0] < $old[0][1]) {
+	    if ($old[0][0] <= $new[0][0] and $new[0][1] <= $old[0][1]) {
+		push @$include, [ $new[0], $old[0] ] if $include;
+	    } else {
+		push @$overlap, [ $new[0], $old[0] ] if $overlap;
+	    }
+	    shift @new;
+	}
+    }
+    ( @out, @new );
+}
+
+use App::Greple::Regions qw(match_regions merge_regions);
 
 sub subst_search {
     my $text = $_;
@@ -566,18 +592,47 @@ sub subst_search {
     my @matched;
     my $index = -1;
     my @effective;
-    my $ng = is $ss_check qw(ng any all none);
-    my $ok = is $ss_check qw(ok any all none);
-    my $outstand = is $ss_check qw(outstand);
+    my $ng = any { $opt_check eq $_ } qw(ng any all none);
+    my $ok = any { $opt_check eq $_ } qw(ok any all none);
+    my $outstand = $opt_check eq 'outstand';
     for my $p ($dict->words) {
 	$index++;
 	$p // next;
 	next if $p->is_comment;
 	my($from_re, $to) = ($p->string, $p->correct // '');
 	my @match = match_regions pattern => $p->regex;
+
+	##
+	## Remove all overlapped matches.
+	##
+	@match = sieve_regions {
+	    overlap => ( my $overlap = [] ),
+	    include => ( my $include = [] ),
+	    nosort  => 1,
+	}, \@matched, \@match;
+	for my $warn (
+	    [ "Overlap", $overlap, $opt_warn_overlap ],
+	    [ "Include", $include, $opt_warn_include ],
+	    ) {
+	    my($kind, $list, $show) = @$warn;
+	    next unless $show;
+	    for my $info (@$list) {
+		my($new, $old) = @$info;
+		warn sprintf("%s \"%s\" with \"%s\" by #%d /%s/ in %s at %d\n",
+			     $kind,
+			     substr($_, $new->[0], $new->[1] - $new->[0]),
+			     substr($_, $old->[0], $old->[1] - $old->[0]),
+			     $index + 1, $p->string,
+			     $current_file,
+			     $new->[0],
+		    );
+	    }
+	}
+
 	$stat{total}++;
 	$stat{hit}++ if @match;
 	next if @match == 0 and $opt_check ne 'all';
+
 	my $hash = $match_list[$index] //= {};
 	my $callback = sub {
 	    my($ms, $me, $i, $matched) = @_;
@@ -604,32 +659,8 @@ sub subst_search {
 	$stat{ok} += @ok;
 	$effective[ $index * 2     ] = 1 if $ng || ( @ng && $outstand );
 	$effective[ $index * 2 + 1 ] = 1 if $ok || ( @ng && $outstand );
-	mix_regions {
-	    overlap => ( my $overlap = [] ),
-	    include => ( my $include = [] ),
-	    nosort  => 1,
-	}, \@matched, \@match;
-	##
-	## Warning
-	##
-	for my $warn (
-	    [ "Overlap", $overlap, $opt_warn_overlap ],
-	    [ "Include", $include, $opt_warn_include ],
-	    ) {
-	    my($kind, $list, $show) = @$warn;
-	    next unless $show;
-	    for my $info (@$list) {
-		my($new, $old) = @$info;
-		warn sprintf("%s \"%s\" with \"%s\" by #%d /%s/ in %s at %d\n",
-			     $kind,
-			     substr($_, $new->[0], $new->[1] - $new->[0]),
-			     substr($_, $old->[0], $old->[1] - $old->[0]),
-			     $index + 1, $p->string,
-			     $current_file,
-			     $new->[0],
-		    );
-	    }
-	}
+
+	@matched = merge_regions { nojoin => 1 }, @matched, @match;
     }
     ##
     ## --select

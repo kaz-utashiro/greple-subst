@@ -4,7 +4,7 @@ subst - Greple module for text search and substitution
 
 # VERSION
 
-Version 2.18
+Version 2.19
 
 # SYNOPSIS
 
