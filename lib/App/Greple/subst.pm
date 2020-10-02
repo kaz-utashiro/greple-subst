@@ -308,18 +308,6 @@ use App::Greple::subst::Dict;
 use File::Share qw(:all);
 $ENV{GREPLE_SUBST_DICT} //= dist_dir 'App-Greple-subst';
 
-package App::Greple::subst::SmartString {
-    use List::Util qw(any);
-    sub new {
-	my($class, $var) = @_;
-	bless ref $var ? $var : \$var, $class;
-    }
-    sub is {
-	my $obj = shift;
-	any { $_ eq $$obj } @_;
-    }
-}
-
 our $debug = 0;
 our $remember_data = 1;
 our $opt_subst = 0;
