@@ -795,11 +795,11 @@ autoload -Msubst::dyncmap --dyncmap
 
 help	--subst-color-light light terminal color
 option	--subst-color-light --colormap --dyncmap \
-	range=0-2,except=000:111:222,shift=3,even="555D/%s",odd="I;000/%s"
+	range=0-2,except=000:111:222,shift=3,even="555D/%s",odd="IU;000/%s"
 
 help	--subst-color-dark dark terminal color
 option	--subst-color-dark --colormap --dyncmap \
-	range=2-4,except=222:333:444,shift=1,even="DS;%s",odd="I;%s/L01"
+	range=2-4,except=222:333:444,shift=1,even="DS;%s",odd="IU;%s/L01"
 
 ##
 ## Handle included sample dictionaries.
