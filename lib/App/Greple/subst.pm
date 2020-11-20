@@ -260,13 +260,15 @@ L<https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf>
 L<https://www.microsoft.com/ja-jp/language/styleguides>,
 L<https://www.atmarkit.co.jp/news/200807/25/microsoft.html>
 
+L<https://qiita.com/kaz-utashiro/items/85add653a71a7e01c415>
+
 =head1 AUTHOR
 
 Kazumasa Utashiro
 
 =head1 LICENSE
 
-Copyright (C) 2017-2020 Kazumasa Utashiro.
+Copyright 2017-2020 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
