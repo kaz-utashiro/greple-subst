@@ -15,7 +15,7 @@ greple -Msubst --dict I<dictionary> [ options ]
   --dict      dictionary file
   --dictdata  dictionary data
 
-  --check=[ng,ok,any,outstand,all]
+  --check=[ng,ok,any,outstand,all,none]
   --select=N
   --linefold
   --stat
@@ -31,11 +31,11 @@ greple -Msubst --dict I<dictionary> [ options ]
 
 =head1 DESCRIPTION
 
-This B<greple> module supports check and substitution of text file
-using a dictionary file.
+This B<greple> module supports check and substitution of text files
+based on dictionary data.
 
-Dictionary file is given by B<--dict> option and contains pattern and
-expected string pairs.
+Dictionary file is given by B<--dict> option and each line contains
+pattern and expected string pairs.
 
     greple -Msubst --dict DICT
 
@@ -44,10 +44,10 @@ If the dictionary file contains following data:
     colou?r      color
     cent(er|re)  center
 
-Then above command find the first pattern which does not match the
-second string, that is "colour" and "centre" in this case.
+above command find the first pattern which does not match the second
+string, that is "colour" and "centre" in this case.
 
-Field "//" in dictionary file is ignored, so this file can be written
+Field "//" in dictionary data is ignored, so this file can be written
 like this:
 
     colou?r      //  color
@@ -268,7 +268,7 @@ Kazumasa Utashiro
 
 =head1 LICENSE
 
-Copyright 2017-2020 Kazumasa Utashiro.
+Copyright 2017-2021 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
