@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.19
+Version 2.20
 
 =head1 SYNOPSIS
 
@@ -279,7 +279,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.19';
+our $VERSION = '2.20';
 
 use warnings;
 use utf8;

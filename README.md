@@ -4,7 +4,7 @@ subst - Greple module for text search and substitution
 
 # VERSION
 
-Version 2.19
+Version 2.20
 
 # SYNOPSIS
 
@@ -13,7 +13,7 @@ greple -Msubst --dict _dictionary_ \[ options \]
     --dict      dictionary file
     --dictdata  dictionary data
 
-    --check=[ng,ok,any,outstand,all]
+    --check=[ng,ok,any,outstand,all,none]
     --select=N
     --linefold
     --stat
@@ -29,11 +29,11 @@ greple -Msubst --dict _dictionary_ \[ options \]
 
 # DESCRIPTION
 
-This **greple** module supports check and substitution of text file
-using a dictionary file.
+This **greple** module supports check and substitution of text files
+based on dictionary data.
 
-Dictionary file is given by **--dict** option and contains pattern and
-expected string pairs.
+Dictionary file is given by **--dict** option and each line contains
+pattern and expected string pairs.
 
     greple -Msubst --dict DICT
 
@@ -42,10 +42,10 @@ If the dictionary file contains following data:
     colou?r      color
     cent(er|re)  center
 
-Then above command find the first pattern which does not match the
-second string, that is "colour" and "centre" in this case.
+above command find the first pattern which does not match the second
+string, that is "colour" and "centre" in this case.
 
-Field "//" in dictionary file is ignored, so this file can be written
+Field "//" in dictionary data is ignored, so this file can be written
 like this:
 
     colou?r      //  color
@@ -244,13 +244,15 @@ directory and accessed by **--exdict** option.
 [https://www.microsoft.com/ja-jp/language/styleguides](https://www.microsoft.com/ja-jp/language/styleguides),
 [https://www.atmarkit.co.jp/news/200807/25/microsoft.html](https://www.atmarkit.co.jp/news/200807/25/microsoft.html)
 
+[https://qiita.com/kaz-utashiro/items/85add653a71a7e01c415](https://qiita.com/kaz-utashiro/items/85add653a71a7e01c415)
+
 # AUTHOR
 
 Kazumasa Utashiro
 
 # LICENSE
 
-Copyright (C) 2017-2020 Kazumasa Utashiro.
+Copyright 2017-2021 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

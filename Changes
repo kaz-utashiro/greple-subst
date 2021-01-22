@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.20 2021-01-22T03:10:14Z
+
+    - Small cosmetic updates.
+
 2.19 2020-07-06T16:03:05Z
 
     - Fixed behavior of overlapped pattern.
