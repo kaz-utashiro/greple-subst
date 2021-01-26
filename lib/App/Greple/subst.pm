@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.20
+Version 2.21
 
 =head1 SYNOPSIS
 
@@ -279,7 +279,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.20';
+our $VERSION = '2.21';
 
 use warnings;
 use utf8;
@@ -626,6 +626,7 @@ sub subst_search {
 	my $hash = $match_list[$index] //= {};
 	my $callback = sub {
 	    my($ms, $me, $i, $matched) = @_;
+	    $stat{$i % 2 ? 'ok' : 'ng'}++;
 	    my $s = $matched =~ s/$ignorechar_re//gr;
 	    $hash->{$s}++;
 	    my $format = @opt_format[ $i % @opt_format ];
@@ -645,8 +646,6 @@ sub subst_search {
 	    }
 	    $_->[3] = $callback;
 	}
-	$stat{ng} += @ng;
-	$stat{ok} += @ok;
 	$effective[ $index * 2     ] = 1 if $ng || ( @ng && $outstand );
 	$effective[ $index * 2 + 1 ] = 1 if $ok || ( @ng && $outstand );
 
