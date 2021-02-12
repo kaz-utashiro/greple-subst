@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.23 2021-02-12T07:38:09Z
+
+    - Update dictionary and options to make them more practical.
+
 2.22 2021-02-04T06:47:11Z
 
     - Reduce to use S (stand-out) effect in dark mode.
