@@ -154,7 +154,7 @@
   chapter       チャプター?                             チャプター
   challenger    チャレンジャー?                         チャレンジャー
   tuner         チューナー?                             チューナー
-  dither        ディザー?                               ディザー
+# dither        ディザー?                               ディザー
   distributor   ディストリビューター?                   ディストリビューター
   dispatcher    ディスパッチャー?                       ディスパッチャー
   dispenser     ディスペンサー?                         ディスペンサー
@@ -410,7 +410,7 @@
   owner         オーナー?                               オーナー
   failover      フェ[イー]ルオー(?:バ|ヴァ)ー?          フェールオーバー
   over          オー(?:バ|ヴァ)ー?                      オーバー
-  offer         オファー?                               オファー
+# offer         オファー?                               オファー
   oliver        オリ(?:バ|ヴァ)ー?                      オリバー
   gardener      ガードナー?                             ガードナー
   counselor     カウンセラー?                           カウンセラー
@@ -484,15 +484,15 @@
   seesaw        シーソー?                               シーソー
   scenery       シーナリー?                             シーナリー
   signaler      シグナラー?                             シグナラー
-  stew          シチュー?                               シチュー
+# stew          シチュー?                               シチュー
   jitter        ジッター?                               ジッター
   synergy       シナジー?                               シナジー
   scimitar      シミター?                               シミター
-  jaguar        ジャガー?                               ジャガー
-  shower        シャ[アワ]ー?                           シャワー
+# jaguar        ジャガー?                               ジャガー
+# shower        シャ[アワ]ー?                           シャワー
   shampoo       シャンプー?                             シャンプー
   jewelry       ジュエリー?                             ジュエリー
-  sugar         シュガー?                               シュガー
+# sugar         シュガー?                               シュガー
   shocker       ショッカー?                             ショッカー
 # show          ショー?                                 ショー
   joker         ジョーカー?                             ジョーカー
@@ -557,7 +557,7 @@
   damper        ダンパー?                               ダンパー
   cheetah       チーター?                               チーター
   checker       チェッカー?                             チェッカー
-  cherry        チェリー?                               チェリー
+# cherry        チェリー?                               チェリー
   charter       チャーター?                             チャーター
   chowder       チャウダー?                             チャウダー
   channeler     チャネラー?                             チャネラー
@@ -575,7 +575,7 @@
   launcher      ランチャー?                             ランチャー
 # tea           (?:チ|ティ)ー?                          ティー
   dealer        ディーラー?                             ディーラー
-  dinner        ディナー?                               ディナー
+# dinner        ディナー?                               ディナー
   defender      ディフェンダー?                         ディフェンダー
   daily         デ[イー]リー?                           デイリー
   deskbar       デスクバー?                             デスクバー
@@ -597,7 +597,7 @@
   needler       ニードラー?                             ニードラー
   newsreader    ニュースリーダー?                       ニュースリーダー
   newsletter    ニュースレター?                         ニュースレター
-  menu          メニュー?                               メニュー
+# menu          メニュー?                               メニュー
 # new           ニュー?                                 ニュー
   navy          ネ[イー]ビー?                           ネービー
   berserker     バーサーカー?                           バーサーカー
@@ -612,7 +612,7 @@
   buckler       バックラー?                             バックラー
   basher        バッシャー?                             バッシャー
 # banner        バナー?                                 バナー
-  value         (?:バ|ヴァ)リュー?                      バリュー
+# value         (?:バ|ヴァ)リュー?                      バリュー
   balcony       バルコニー?                             バルコニー
   bunker        バンカー?                               バンカー
   bumper        バンパー?                               バンパー
@@ -646,9 +646,9 @@
   visitor       (?:ビ|ヴィ)ジター?                      ビジター
 # busy          ビジー?                                 ビジー
 # pitot         ピトー?                                 ピトー
-  before        ビフォー?                               ビフォー
+# before        ビフォー?                               ビフォー
   preview       プレ(?:ビ[ユュ]|ヴュ)ー?                プレビュー
-  review        レ(?:ビ[ユュ]|ヴュ)ー?                  レビュー
+# review        レ(?:ビ[ユュ]|ヴュ)ー?                  レビュー
 # view          (?:ビ[ユュ]|ヴュ)ー?                    ビュー
   fuser         ヒューザー?                             ヒューザー
   purifier      ピューリファイ[アヤ]ー?                 ピューリファイアー
@@ -656,11 +656,11 @@
   fancy         ファンシー?                             ファンシー
   fantasy       ファンタジー?                           ファンタジー
   fisher        フィッシャー?                           フィッシャー
-  feather       フェザー?                               フェザー
-  ferry         フェリー?                               フェリー
+# feather       フェザー?                               フェザー
+# ferry         フェリー?                               フェリー
   fokker        フォッカー?                             フォッカー
   photography   フォトグラフィー?                       フォトグラフィー
-  follow        フォロー?                               フォロー
+# follow        フォロー?                               フォロー
 # buzzer        ブザー?                                 ブザー
   flyer         フライ[アヤ]ー?                         フライヤー
   flower        フラ[アワ]ー?                           フラワー
@@ -711,7 +711,7 @@
   maker         メ[イー]カー?                           メーカー
   meter         メ[イー]ター?                           メーター
   mailer        メ[イー]ラー?                           メーラー
-  major         メジャー?                               メジャー
+# major         メジャー?                               メジャー
   motor         モーター?                               モーター
   motto         モットー?                               モットー
   user          ユーザー?                               ユーザー
@@ -738,7 +738,7 @@
   regular       レギュラー?                             レギュラー
   lexer         レクサー?                               レクサー
 # leather       レザー?                                 レザー
-  leisure       レジャー?                               レジャー
+# leisure       レジャー?                               レジャー
 # letter        レター?                                 レター
   wrecker       レッカー?                               レッカー
   lesser        レッサー?                               レッサー

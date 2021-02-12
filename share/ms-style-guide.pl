@@ -64,8 +64,15 @@ sub pushdict {
 	}
     }
     $data->{regex} = qr/$data->{pattern}/;
-    $data->{ignore}++ if length($data->{kana} =~ s/ー$//r) < $opt->{minimum};
+    $data->{ignore}++ if get_length($data->{kana}) < $opt->{minimum};
     $data->{fixed}++ if $data->{pattern} eq $data->{kana};
+}
+
+sub get_length {
+    local $_ = shift;
+    s/ー$//;
+    s/[ァィゥェォャュョヮ]//g; # 拗音は一字として数える
+    length $_;
 }
 
 sub mkpat {
