@@ -202,6 +202,12 @@ Created from following guideline document.
     Japan Technical Communicators Association
     https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf
 
+=item B<--jtca>
+
+Customized B<--jtca-katakana-guide>.  Original dictionary is
+automatically generated from published data.  This dictionary is
+customized for practical use.
+
 =item B<--exdict> jtf-style-guide-3.dict
 
 =item B<--jtf-style-guide>
@@ -215,6 +221,12 @@ Created from following guideline document.
     翻訳品質委員会
     https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf
 
+=item B<--jtf>
+
+Customized B<--jtf-style-guide>.  Original dictionary is automatically
+generated from published data.  This dictionary is customized for
+practical use.
+
 =item B<--exdict> sccc2.dict
 
 =item B<--sccc2>
@@ -224,9 +236,9 @@ Dictionary used for "C/C++ セキュアコーディング 第2版" published in
 
     https://www.jpcert.or.jp/securecoding_book_2nd.html
 
-=item B<--exdict> microsoft.dict
+=item B<--exdict> ms-style-guide.dict
 
-=item B<--microsoft>
+=item B<--ms-style-guide>
 
 Dictionary generated from Microsoft localization style guide.
 
@@ -235,6 +247,12 @@ Dictionary generated from Microsoft localization style guide.
 Data is generated from this article:
 
     https://www.atmarkit.co.jp/news/200807/25/microsoft.html
+
+=item B<--ms>
+
+Customized B<--ms-style-guide>.  Original dictionary is automatically
+generated from published data.  This dictionary is customized for
+practical use.
 
 =back
 
@@ -812,8 +830,17 @@ option --exdictdir --prologue 'sub{ say "$ENV{GREPLE_SUBST_DICT}"; exit }'
 
 option --jtca-katakana-guide --exdict jtca-katakana-guide-3.dict
 option --jtf-style-guide     --exdict jtf-style-guide-3.dict
-option --sccc2               --exdict sccc2.dict
-option --microsoft           --exdict microsoft.dict
+option --ms-style-guide      --exdict ms-style-guide.dict
+
+option --sccc2 --exdict sccc2.dict
+option --jtca  --exdict jtca.dict
+option --jtf   --exdict jtf.dict
+option --ms    --exdict ms-amend.dict --exdict ms-style-guide.dict
+
+# deprecated. don't use.
+option --microsoft --ms
+
+option --all-sample-dict --jtf --jtca --ms
 
 option --all-katakana	     --exdict all-katakana.dict
 

@@ -191,6 +191,12 @@ directory and accessed by **--exdict** option.
         Japan Technical Communicators Association
         https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf
 
+- **--jtca**
+
+    Customized **--jtca-katakana-guide**.  Original dictionary is
+    automatically generated from published data.  This dictionary is
+    customized for practical use.
+
 - **--exdict** jtf-style-guide-3.dict
 - **--jtf-style-guide**
 
@@ -203,6 +209,12 @@ directory and accessed by **--exdict** option.
         翻訳品質委員会
         https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf
 
+- **--jtf**
+
+    Customized **--jtf-style-guide**.  Original dictionary is automatically
+    generated from published data.  This dictionary is customized for
+    practical use.
+
 - **--exdict** sccc2.dict
 - **--sccc2**
 
@@ -211,8 +223,8 @@ directory and accessed by **--exdict** option.
 
         https://www.jpcert.or.jp/securecoding_book_2nd.html
 
-- **--exdict** microsoft.dict
-- **--microsoft**
+- **--exdict** ms-style-guide.dict
+- **--ms-style-guide**
 
     Dictionary generated from Microsoft localization style guide.
 
@@ -221,6 +233,12 @@ directory and accessed by **--exdict** option.
     Data is generated from this article:
 
         https://www.atmarkit.co.jp/news/200807/25/microsoft.html
+
+- **--ms**
+
+    Customized **--ms-style-guide**.  Original dictionary is automatically
+    generated from published data.  This dictionary is customized for
+    practical use.
 
 # INSTALL
 
