@@ -2,6 +2,13 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.24 2021-02-26T05:27:51Z
+
+    - Add --stat-item option.
+    - Rename option --ms to --microsoft.
+    - Update ms-amend.dict
+    - Apply rule to count 拗音 (contracted sound) as one.
+
 2.23 2021-02-12T07:38:09Z
 
     - Update dictionary and options to make them more practical.
