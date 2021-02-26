@@ -858,13 +858,13 @@ option --jtca-katakana-guide --exdict jtca-katakana-guide-3.dict
 option --jtf-style-guide     --exdict jtf-style-guide-3.dict
 option --ms-style-guide      --exdict ms-style-guide.dict
 
-option --sccc2 --exdict sccc2.dict
-option --jtca  --exdict jtca.dict
-option --jtf   --exdict jtf.dict
-option --ms    --exdict ms-amend.dict --exdict ms-style-guide.dict
+option --sccc2     --exdict sccc2.dict
+option --jtca      --exdict jtca.dict
+option --jtf       --exdict jtf.dict
+option --microsoft --exdict ms-amend.dict --exdict ms-style-guide.dict
 
 # deprecated. don't use.
-option --microsoft --ms
+option --ms --microsoft
 
 option --all-sample-dict --jtf --jtca --ms
 
