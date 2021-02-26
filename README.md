@@ -1,3 +1,4 @@
+[![Actions Status](https://github.com/kaz-utashiro/greple-subst/workflows/test/badge.svg)](https://github.com/kaz-utashiro/greple-subst/actions) [![MetaCPAN Release](https://badge.fury.io/pl/App-Greple-subst.svg)](https://metacpan.org/release/App-Greple-subst)
 # NAME
 
 subst - Greple module for text search and substitution
