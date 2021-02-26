@@ -21,6 +21,7 @@ greple -Msubst --dict I<dictionary> [ options ]
   --stat
   --with-stat
   --stat-style=[default,dict]
+  --stat-item={pattern,expect,ok,ng,none}=[0,1]
   --diff
   --diffcmd command
   --create
@@ -130,6 +131,22 @@ B<--stat> print only statistics.
 
 Using B<--stat-style=dict> option with B<--stat> and B<--check=any>,
 you can get dictionary style output for your working document.
+
+=item B<--stat-item>=I<item>=[0,1]
+
+Specify which item is shown up in stat information.  Default values
+are:
+
+    pattern=1
+    expect=1
+    number=1
+    ng=1
+    ok=1
+    none=0
+
+If you don't need to see pattern field, use like this:
+
+    --stat-item pattern=0
 
 =item B<--subst>
 
@@ -278,6 +295,9 @@ L<https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf>
 L<https://www.microsoft.com/ja-jp/language/styleguides>,
 L<https://www.atmarkit.co.jp/news/200807/25/microsoft.html>
 
+文化庁 国語施策・日本語教育 国語施策情報 内閣告示・内閣訓令 外来語の表記
+L<https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai/index.html>
+
 L<https://qiita.com/kaz-utashiro/items/85add653a71a7e01c415>
 
 =head1 AUTHOR
@@ -348,6 +368,7 @@ our $opt_ignore_space = 1;
 our $opt_warn_overlap = 1;
 our $opt_warn_include = 0;
 our $opt_stat_style = "default";
+our %opt_stat_item = map { $_ => 1 } qw(pattern expect number ng ok);
 our $opt_show_comment = 0;
 our $opt_show_numbers = 1;
 my %stat;
@@ -481,11 +502,15 @@ sub subst_show_stat {
 	if ($opt_stat_style eq 'dict') {
 	    vprintf("%-${from_max}s // %s", $from_re // '', $to // '');
 	} else {
-	    vprintf("%${from_max}s => %-${to_max}s %4d:",
-		    $from_re // '', $to // '', $i + 1);
-	    for my $key ((sort { $hash->{$b} <=> $hash->{$a} }
-			  grep { $_ ne $to } @keys),
-			 (grep { $_ eq $to } @keys)) {
+	    my @ng = sort { $hash->{$b} <=> $hash->{$a} } grep { $_ ne $to } @keys
+		if $opt_stat_item{ng};
+	    my @ok = grep { $_ eq $to } @keys
+		if $opt_stat_item{ok};
+	    next unless @ng or @ok or $opt_stat_item{none};
+	    vprintf("%${from_max}s => ", $from_re // '') if $opt_stat_item{pattern};
+	    vprintf("%-${to_max}s",      $to // '')      if $opt_stat_item{expect};
+	    vprintf(" %4d:",             $i + 1)         if $opt_stat_item{number};
+	    for my $key (@ng, @ok) {
 		my $index = $key eq $to ? $i * 2 + 1 : $i * 2;
 		printf(" %s(%s)",
 		       main::index_color($index, $key),
@@ -778,6 +803,7 @@ __DATA__
 builtin dict=s         @opt_dictfile
 builtin dictdata=s     @opt_dictdata
 builtin stat-style=s   $opt_stat_style
+builtin stat-item=s    %opt_stat_item
 builtin printdict!     $opt_printdict
 builtin dictname!      $opt_dictname
 builtin subst-format=s @opt_format

@@ -19,6 +19,7 @@ greple -Msubst --dict _dictionary_ \[ options \]
     --stat
     --with-stat
     --stat-style=[default,dict]
+    --stat-item={pattern,expect,ok,ng,none}=[0,1]
     --diff
     --diffcmd command
     --create
@@ -125,6 +126,22 @@ digit depending on terminal background color.
 
     Using **--stat-style=dict** option with **--stat** and **--check=any**,
     you can get dictionary style output for your working document.
+
+- **--stat-item**=_item_=\[0,1\]
+
+    Specify which item is shown up in stat information.  Default values
+    are:
+
+        pattern=1
+        expect=1
+        number=1
+        ng=1
+        ok=1
+        none=0
+
+    If you don't need to see pattern field, use like this:
+
+        --stat-item pattern=0
 
 - **--subst**
 
@@ -261,6 +278,9 @@ directory and accessed by **--exdict** option.
 
 [https://www.microsoft.com/ja-jp/language/styleguides](https://www.microsoft.com/ja-jp/language/styleguides),
 [https://www.atmarkit.co.jp/news/200807/25/microsoft.html](https://www.atmarkit.co.jp/news/200807/25/microsoft.html)
+
+文化庁 国語施策・日本語教育 国語施策情報 内閣告示・内閣訓令 外来語の表記
+[https://www.bunka.go.jp/kokugo\_nihongo/sisaku/joho/joho/kijun/naikaku/gairai/index.html](https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai/index.html)
 
 [https://qiita.com/kaz-utashiro/items/85add653a71a7e01c415](https://qiita.com/kaz-utashiro/items/85add653a71a7e01c415)
 
