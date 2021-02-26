@@ -7,6 +7,8 @@ use warnings;
 use utf8;
 use open IO => ':utf8', ':std';
 
+do 'common.pl' or die;
+
 use Data::Dumper;
 {
     no warnings 'redefine';
@@ -180,7 +182,7 @@ while (<DATA>) {
 	next;
     };
     local %_ = ( '_' => $_, %+ );
-    next if length($_{kana} =~ s/ー$//r) < $opt->{minimum};
+    next if get_length($_{kana}) < $opt->{minimum};
 
     $_{categories} = [ split /,/, $_{category} ];
     $_{pattern} = $_{kana};

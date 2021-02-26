@@ -7,6 +7,8 @@ use warnings;
 use utf8;
 use open IO => ':utf8', ':std';
 
+do 'common.pl' or die;
+
 use Data::Dumper;
 {
     no warnings 'redefine';
@@ -66,13 +68,6 @@ sub pushdict {
     $data->{regex} = qr/$data->{pattern}/;
     $data->{ignore}++ if get_length($data->{kana}) < $opt->{minimum};
     $data->{fixed}++ if $data->{pattern} eq $data->{kana};
-}
-
-sub get_length {
-    local $_ = shift;
-    s/ー$//;
-    s/[ァィゥェォャュョヮ]//g; # 拗音は一字として数える
-    length $_;
 }
 
 sub mkpat {
