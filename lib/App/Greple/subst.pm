@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.24
+Version 2.25
 
 =head1 SYNOPSIS
 
@@ -21,7 +21,7 @@ greple -Msubst --dict I<dictionary> [ options ]
   --stat
   --with-stat
   --stat-style=[default,dict]
-  --stat-item={pattern,expect,ok,ng,none}=[0,1]
+  --stat-item={pattern,expect,number,ok,ng,none}=[0,1]
   --diff
   --diffcmd command
   --create
@@ -265,7 +265,7 @@ Data is generated from this article:
 
     https://www.atmarkit.co.jp/news/200807/25/microsoft.html
 
-=item B<--ms>
+=item B<--microsoft>
 
 Customized B<--ms-style-guide>.  Original dictionary is automatically
 generated from published data.  This dictionary is customized for
@@ -317,7 +317,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.24';
+our $VERSION = '2.25';
 
 use warnings;
 use utf8;
@@ -341,6 +341,7 @@ use Data::Dumper;
 use Text::ParseWords qw(shellwords);
 use Encode;
 use Getopt::EX::Colormap qw(colorize);
+use Getopt::EX::LabeledParam;
 use App::Greple::Common;
 use App::Greple::Pattern;
 use App::Greple::subst::Dict;
@@ -368,6 +369,7 @@ our $opt_ignore_space = 1;
 our $opt_warn_overlap = 1;
 our $opt_warn_include = 0;
 our $opt_stat_style = "default";
+our @opt_stat_item;
 our %opt_stat_item = map { $_ => 1 } qw(pattern expect number ng ok);
 our $opt_show_comment = 0;
 our $opt_show_numbers = 1;
@@ -386,6 +388,10 @@ sub debug {
 sub subst_initialize {
 
     state $once_called++ and return;
+
+    Getopt::EX::LabeledParam
+	->new(HASH => \%opt_stat_item)
+	->load_params(@opt_stat_item);
 
     @subst_diffcmd = shellwords $opt_subst_diffcmd;
 
@@ -481,6 +487,7 @@ sub subst_show_stat {
 	elsif ($opt_check eq 'ok'      ) { next if @ok   == 0 }
 	elsif ($opt_check eq 'ng'      ) { next if @ng   == 0 }
 	elsif ($opt_check eq 'outstand') { next if @ng   == 0 }
+	elsif ($opt_check eq 'all')      { $opt_stat_item{none} = 1 }
 	$from_max = max $from_max, vwidth $from_re;
 	$to_max   = max $to_max  , vwidth $to;
 	push @show, [ $i, $p, $hash ];
@@ -803,7 +810,7 @@ __DATA__
 builtin dict=s         @opt_dictfile
 builtin dictdata=s     @opt_dictdata
 builtin stat-style=s   $opt_stat_style
-builtin stat-item=s    %opt_stat_item
+builtin stat-item=s    @opt_stat_item
 builtin printdict!     $opt_printdict
 builtin dictname!      $opt_dictname
 builtin subst-format=s @opt_format

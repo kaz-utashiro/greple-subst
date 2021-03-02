@@ -5,7 +5,7 @@ subst - Greple module for text search and substitution
 
 # VERSION
 
-Version 2.24
+Version 2.25
 
 # SYNOPSIS
 
@@ -20,7 +20,7 @@ greple -Msubst --dict _dictionary_ \[ options \]
     --stat
     --with-stat
     --stat-style=[default,dict]
-    --stat-item={pattern,expect,ok,ng,none}=[0,1]
+    --stat-item={pattern,expect,number,ok,ng,none}=[0,1]
     --diff
     --diffcmd command
     --create
@@ -252,7 +252,7 @@ directory and accessed by **--exdict** option.
 
         https://www.atmarkit.co.jp/news/200807/25/microsoft.html
 
-- **--ms**
+- **--microsoft**
 
     Customized **--ms-style-guide**.  Original dictionary is automatically
     generated from published data.  This dictionary is customized for
