@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.25
+Version 2.26
 
 =head1 SYNOPSIS
 
@@ -21,7 +21,7 @@ greple -Msubst --dict I<dictionary> [ options ]
   --stat
   --with-stat
   --stat-style=[default,dict]
-  --stat-item={pattern,expect,number,ok,ng,none}=[0,1]
+  --stat-item={match,expect,number,ok,ng}=[0,1]
   --diff
   --diffcmd command
   --create
@@ -127,26 +127,29 @@ Print statistical information.  Works with B<--check> option.
 Option B<--with-stat> print statistics after normal output, while
 B<--stat> print only statistics.
 
-=item B<--stat-style>=[I<default>|I<dict>]
+=item B<--stat-style> [I<default>|I<dict>]
 
 Using B<--stat-style=dict> option with B<--stat> and B<--check=any>,
 you can get dictionary style output for your working document.
 
-=item B<--stat-item>=I<item>=[0,1]
+=item B<--stat-item> I<item>=[0,1]
 
 Specify which item is shown up in stat information.  Default values
 are:
 
-    pattern=1
+    match=1
     expect=1
     number=1
     ng=1
     ok=1
-    none=0
 
 If you don't need to see pattern field, use like this:
 
-    --stat-item pattern=0
+    --stat-item match=0
+
+Multiple parameters can be set at once:
+
+    --stat-item match=number=0,ng=1,ok=1
 
 =item B<--subst>
 
@@ -317,7 +320,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.25';
+our $VERSION = '2.26';
 
 use warnings;
 use utf8;
@@ -370,7 +373,7 @@ our $opt_warn_overlap = 1;
 our $opt_warn_include = 0;
 our $opt_stat_style = "default";
 our @opt_stat_item;
-our %opt_stat_item = map { $_ => 1 } qw(pattern expect number ng ok);
+our %opt_stat_item = map { $_ => 1 } qw(match expect number ng ok);
 our $opt_show_comment = 0;
 our $opt_show_numbers = 1;
 my %stat;
@@ -487,7 +490,8 @@ sub subst_show_stat {
 	elsif ($opt_check eq 'ok'      ) { next if @ok   == 0 }
 	elsif ($opt_check eq 'ng'      ) { next if @ng   == 0 }
 	elsif ($opt_check eq 'outstand') { next if @ng   == 0 }
-	elsif ($opt_check eq 'all')      { $opt_stat_item{none} = 1 }
+	elsif ($opt_check eq 'all')      { }
+	else { die }
 	$from_max = max $from_max, vwidth $from_re;
 	$to_max   = max $to_max  , vwidth $to;
 	push @show, [ $i, $p, $hash ];
@@ -513,8 +517,7 @@ sub subst_show_stat {
 		if $opt_stat_item{ng};
 	    my @ok = grep { $_ eq $to } @keys
 		if $opt_stat_item{ok};
-	    next unless @ng or @ok or $opt_stat_item{none};
-	    vprintf("%${from_max}s => ", $from_re // '') if $opt_stat_item{pattern};
+	    vprintf("%${from_max}s => ", $from_re // '') if $opt_stat_item{match};
 	    vprintf("%-${to_max}s",      $to // '')      if $opt_stat_item{expect};
 	    vprintf(" %4d:",             $i + 1)         if $opt_stat_item{number};
 	    for my $key (@ng, @ok) {

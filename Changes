@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.26 2021-03-02T16:37:37Z
+
+    - Update --stat-item option fields.
+
 2.25 2021-03-02T04:23:38Z
 
     - Make --stat-item to take multiple parameters.

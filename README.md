@@ -5,7 +5,7 @@ subst - Greple module for text search and substitution
 
 # VERSION
 
-Version 2.25
+Version 2.26
 
 # SYNOPSIS
 
@@ -20,7 +20,7 @@ greple -Msubst --dict _dictionary_ \[ options \]
     --stat
     --with-stat
     --stat-style=[default,dict]
-    --stat-item={pattern,expect,number,ok,ng,none}=[0,1]
+    --stat-item={match,expect,number,ok,ng}=[0,1]
     --diff
     --diffcmd command
     --create
@@ -123,26 +123,29 @@ digit depending on terminal background color.
     Option **--with-stat** print statistics after normal output, while
     **--stat** print only statistics.
 
-- **--stat-style**=\[_default_|_dict_\]
+- **--stat-style** \[_default_|_dict_\]
 
     Using **--stat-style=dict** option with **--stat** and **--check=any**,
     you can get dictionary style output for your working document.
 
-- **--stat-item**=_item_=\[0,1\]
+- **--stat-item** _item_=\[0,1\]
 
     Specify which item is shown up in stat information.  Default values
     are:
 
-        pattern=1
+        match=1
         expect=1
         number=1
         ng=1
         ok=1
-        none=0
 
     If you don't need to see pattern field, use like this:
 
-        --stat-item pattern=0
+        --stat-item match=0
+
+    Multiple parameters can be set at once:
+
+        --stat-item match=number=0,ng=1,ok=1
 
 - **--subst**
 
