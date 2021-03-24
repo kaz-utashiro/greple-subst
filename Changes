@@ -2,6 +2,11 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.27 2021-03-24T09:03:14Z
+
+    - Update microsoft pattern rule and dictionary.
+      「デ」「ディ」「ジ」の変化に対応。
+
 2.26 2021-03-02T16:37:37Z
 
     - Update --stat-item option fields.
