@@ -26,7 +26,7 @@
   imagesetter   イメ[イー]ジセッター?                   イメージセッター
   inserter      インサーター?                           インサーター
   injector      インジェクター?                         インジェクター
-  indicator     インジケ[イー]ター?                     インジケーター
+  indicator     イン(?:ディ|ジ)ケ[イー]ター?            インジケーター
   installer     インストーラー?                         インストーラー
   inspector     インスペクター?                         インスペクター
   interceptor   インターセプター?                       インターセプター
@@ -46,7 +46,7 @@
   exporter      エクスポーター?                         エクスポーター
   escalator     エスカレ[イー]ター?                     エスカレーター
   ejector       エゼクター?                             エゼクター
-  editor        エディター?                             エディター
+  editor        エ(?:ディ|ジ)ター?                      エディター
   evaluator     エ(?:バ|ヴァ)リュエ[イー]ター?          エバリュエーター
   emulator      エミュレ[イー]ター?                     エミュレーター
   elevator      エレ(?:ベ|ヴェ)[イー]ター?              エレベーター
@@ -74,7 +74,7 @@
   cleaner       クリーナー?                             クリーナー
   creator       クリエ[イー]ター?                       クリエーター
   crawler       クローラー?                             クローラー
-  coordinator   コーディネ[イー]ター?                   コーディネーター
+  coordinator   コー(?:ディ|ジ)ネ[イー]ター?            コーディネーター
   collector     コレクター?                             コレクター
   consumer      コンシューマー?                         コンシューマー
   constructor   コンストラクター?                       コンストラクター
@@ -154,20 +154,20 @@
   chapter       チャプター?                             チャプター
   challenger    チャレンジャー?                         チャレンジャー
   tuner         チューナー?                             チューナー
-# dither        ディザー?                               ディザー
-  distributor   ディストリビューター?                   ディストリビューター
-  dispatcher    ディスパッチャー?                       ディスパッチャー
-  dispenser     ディスペンサー?                         ディスペンサー
-  divider       ディバイダー?                           ディバイダー
-  diffuser      ディフューザー?                         ディフューザー
-  director      ディレクター?                           ディレクター
+  designer      デザイナー?                             デザイナー
+# dither        ディ?ザー?                              ディザー
+  distributor   ディ?ストリビューター?                  ディストリビューター
+  dispatcher    ディ?スパッチャー?                      ディスパッチャー
+  dispenser     ディ?スペンサー?                        ディスペンサー
+  divider       ディ?バイダー?                          ディバイダー
+  diffuser      ディ?フューザー?                        ディフューザー
+  director      ディ?レクター?                          ディレクター
   texturizer    テクスチャライザー?                     テクスチャライザー
   decoder       デコーダー?                             デコーダー
-  designer      デザイナー?                             デザイナー
-  digitizer     デジタイザー?                           デジタイザー
+  digitizer     ディ?ジタイザー?                        デジタイザー
   tester        テスター?                               テスター
   destructor    デストラクター?                         デストラクター
-  divisor       デバイザー?                             デバイザー
+  divisor       ディ?バイザー?                          デバイザー
   debugger      デバッガー?                             デバッガー
   developer     デ(?:ベ|ヴェ)ロッパー?                  デベロッパー
   demultiplexer デマル(?:チ|ティ)プレクサー?            デマルチプレクサー
@@ -284,11 +284,11 @@
   mixer         ミキサー?                               ミキサー
   mutator       ミューテ[イー]ター?                     ミューテーター
   messenger     メッセンジャー?                         メッセンジャー
-  mediator      メディエ[イー]ター?                     メディエイター
+  mediator      メ(?:ディ|ジ)エ[イー]ター?              メディエイター
   membership    メンバーシップ                          メンバーシップ
   member        メンバー?                               メンバー
   modular       モジュラー?                             モジュラー
-  modifier      モディファイ[アヤ]ー?                   モディファイヤー
+  modifier      モ(?:ディ|ジ)ファイ[アヤ]ー?            モディファイヤー
   moderator     モデレ[イー]ター?                       モデレーター
   moniker       モニカー?                               モニカー
   monitor       モニター?                               モニター
@@ -360,7 +360,7 @@
   millimeter    ミリメ[イー]トル                        ミリメートル
   meter         メ[イー]トル                            メートル
   humor         ユーモ[アヤ]ー?                         ユーモア
-  radiator      ラジエ[イー]ター?                       ラジエータ
+  radiator      ラ(?:ディ|ジ)エ[イー]ター?              ラジエータ
 # rear          リ[アヤ]ー?                             リア
   linear        リニ[アヤ]ー?                           リニア
   register      レジスター?                             レジスタ
@@ -416,7 +416,7 @@
   counselor     カウンセラー?                           カウンセラー
   cutter        カッター?                               カッター
 # canoe         カヌー?                                 カヌー
-  discover      ディスカ(?:バ|ヴァ)ー?                  ディスカバー
+  discover      ディ?スカ(?:バ|ヴァ)ー?                 ディスカバー
 # cover         カ(?:バ|ヴァ)ー?                        カバー
 # color         カラー?                                 カラー
 # curry         カレ[イー]                              カレー
@@ -575,7 +575,7 @@
   launcher      ランチャー?                             ランチャー
 # tea           (?:チ|ティ)ー?                          ティー
   dealer        ディーラー?                             ディーラー
-# dinner        ディナー?                               ディナー
+# dinner        ディ?ナー?                              ディナー
   defender      ディフェンダー?                         ディフェンダー
   daily         デ[イー]リー?                           デイリー
   deskbar       デスクバー?                             デスクバー
