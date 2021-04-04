@@ -559,73 +559,7 @@ sub read_dict_fh {
     }
 }
 
-sub mix_regions {
-    my $option = ref $_[0] eq 'HASH' ? shift : {};
-    my($old, $new) = @_;
-    return () if @$new == 0;
-    my @old = $option->{destructive} ? @{$old} : map [ @$_ ], @{$old};
-    my @new = $option->{destructive} ? @{$new} : map [ @$_ ], @{$new};
-    unless ($option->{nosort}) {
-	@new = sort({$a->[0] <=> $b->[0] || $b->[1] <=> $a->[1]
-			 ||  (@$a > 2 ? $a->[2] <=> $b->[2] : 0) }
-		    @new);
-    }
-    my @out;
-    my($include, $overlap) = @{$option}{qw(include overlap)};
-    while (@old and @new) {
-	while (@old and $old[0][1] <= $new[0][0]) {
-	    push @out, shift @old;
-	}
-	last if @old == 0;
-	while (@new and $new[0][1] <= $old[0][0]) {
-	    push @out, shift @new;
-	}
-	while (@new and $new[0][0] < $old[0][1]) {
-	    if ($old[0][0] <= $new[0][0] and $new[0][1] <= $old[0][1]) {
-		push @$include, [ $new[0], $old[0] ] if $include;
-	    } else {
-		push @$overlap, [ $new[0], $old[0] ] if $overlap;
-	    }
-	    shift @new;
-	}
-    }
-    @$old = ( @out, @old, @new );
-}
-
-sub sieve_regions {
-    my $option = ref $_[0] eq 'HASH' ? shift : {};
-    my($old, $new) = @_;
-    return () if @$new == 0;
-    my @old = $option->{destructive} ? @{$old} : map [ @$_ ], @{$old};
-    my @new = $option->{destructive} ? @{$new} : map [ @$_ ], @{$new};
-    unless ($option->{nosort}) {
-	@new = sort({$a->[0] <=> $b->[0] || $b->[1] <=> $a->[1]
-			 ||  (@$a > 2 ? $a->[2] <=> $b->[2] : 0) }
-		    @new);
-    }
-    my @out;
-    my($include, $overlap) = @{$option}{qw(include overlap)};
-    while (@old and @new) {
-	while (@old and $old[0][1] <= $new[0][0]) {
-	    shift @old;
-	}
-	last if @old == 0;
-	while (@new and $new[0][1] <= $old[0][0]) {
-	    push @out, shift @new;
-	}
-	while (@new and $new[0][0] < $old[0][1]) {
-	    if ($old[0][0] <= $new[0][0] and $new[0][1] <= $old[0][1]) {
-		push @$include, [ $new[0], $old[0] ] if $include;
-	    } else {
-		push @$overlap, [ $new[0], $old[0] ] if $overlap;
-	    }
-	    shift @new;
-	}
-    }
-    ( @out, @new );
-}
-
-use App::Greple::Regions qw(match_regions merge_regions);
+use App::Greple::Regions qw(match_regions merge_regions filter_regions);
 
 sub subst_search {
     my $text = $_;
@@ -648,19 +582,16 @@ sub subst_search {
 	##
 	## Remove all overlapped matches.
 	##
-	@match = sieve_regions {
-	    overlap => ( my $overlap = [] ),
-	    include => ( my $include = [] ),
-	    nosort  => 1,
-	}, \@matched, \@match;
+	my($in, $over, $out, $im, $om) = filter_regions \@match, \@matched;
+	@match = @$out;
 	for my $warn (
-	    [ "Overlap", $overlap, $opt_warn_overlap ],
-	    [ "Include", $include, $opt_warn_include ],
+	    [ "Include", $in,   $im, $opt_warn_include ],
+	    [ "Overlap", $over, $om, $opt_warn_overlap ],
 	    ) {
-	    my($kind, $list, $show) = @$warn;
+	    my($kind, $list, $match, $show) = @$warn;
 	    next unless $show;
-	    for my $info (@$list) {
-		my($new, $old) = @$info;
+	    for my $i (0 .. $#{$list}) {
+		my($new, $old) = ($list->[$i], $match->[$i]);
 		warn sprintf("%s \"%s\" with \"%s\" by #%d /%s/ in %s at %d\n",
 			     $kind,
 			     substr($_, $new->[0], $new->[1] - $new->[0]),

@@ -1,7 +1,7 @@
 requires 'perl', '5.014';
 
-requires 'App::Greple', '8.4004';
-requires 'Getopt::EX', 'v1.19.1';
+requires 'App::Greple', '8.43';
+requires 'Getopt::EX';
 requires 'Getopt::EX::termcolor', '1.07';
 requires 'File::Share';
 requires 'Regexp::Assemble';
