@@ -5,6 +5,8 @@ requires 'Getopt::EX';
 requires 'Getopt::EX::termcolor', '1.07';
 requires 'File::Share';
 requires 'Regexp::Assemble';
+requires 'List::Util';
+requires 'List::MoreUtils';
 
 requires 'Text::VisualWidth::PP', '0.05';
 requires 'Text::VisualPrintf', '3.02';

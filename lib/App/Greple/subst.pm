@@ -560,6 +560,7 @@ sub read_dict_fh {
 }
 
 use App::Greple::Regions qw(match_regions merge_regions filter_regions);
+use List::MoreUtils qw(pairwise);
 
 sub subst_search {
     my $text = $_;
@@ -589,18 +590,17 @@ sub subst_search {
 	    [ "Overlap", $over, $om, $opt_warn_overlap ],
 	    ) {
 	    my($kind, $list, $match, $show) = @$warn;
-	    next unless $show;
-	    for my $i (0 .. $#{$list}) {
-		my($new, $old) = ($list->[$i], $match->[$i]);
+	    $show and @$list or next;
+	    pairwise {
 		warn sprintf("%s \"%s\" with \"%s\" by #%d /%s/ in %s at %d\n",
 			     $kind,
-			     substr($_, $new->[0], $new->[1] - $new->[0]),
-			     substr($_, $old->[0], $old->[1] - $old->[0]),
+			     substr($_, $a->[0], $a->[1] - $a->[0]),
+			     substr($_, $b->[0], $b->[1] - $b->[0]),
 			     $index + 1, $p->string,
 			     $current_file,
-			     $new->[0],
+			     $a->[0],
 		    );
-	    }
+	    } @$list, @$match;
 	}
 
 	$stat{total}++;

@@ -48,6 +48,8 @@
             "File::Share" : "0",
             "Getopt::EX" : "0",
             "Getopt::EX::termcolor" : "1.07",
+            "List::MoreUtils" : "0",
+            "List::Util" : "0",
             "Regexp::Assemble" : "0",
             "Text::VisualPrintf" : "3.02",
             "Text::VisualWidth::PP" : "0.05",
