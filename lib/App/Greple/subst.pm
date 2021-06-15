@@ -22,6 +22,7 @@ greple -Msubst --dict I<dictionary> [ options ]
   --with-stat
   --stat-style=[default,dict]
   --stat-item={match,expect,number,ok,ng}=[0,1]
+  --subst
   --diff
   --diffcmd command
   --create
