@@ -64,6 +64,9 @@ line.
 
     greple --dictdata $'colou?r color\ncent(er|re) center\n'
 
+Dictionary entry starting with a sharp sign (`#`) is comment and
+ignored.
+
 ## Overlapped pattern
 
 When the matched string is same or shorter than previously matched
