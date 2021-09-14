@@ -9,7 +9,6 @@ subst::Dict - Dictionary object for App::Greple::subst
 package App::Greple::subst::Dict {
 
     use v5.14;
-    use strict;
     use warnings;
     use utf8;
     use open IO => ':utf8', ':std';
@@ -17,12 +16,17 @@ package App::Greple::subst::Dict {
 
     sub new {
 	my $class = shift;
-	bless [], $class;
+	bless {
+	    VERSION => undef,
+	    NAME    => undef,
+	    FILE    => undef,
+	    WORDS   => [],
+	}, $class;
     }
 
     sub words_ref {
 	my $obj = shift;
-	$obj;
+	$obj->{WORDS};
     }
 
     sub words {
@@ -108,10 +112,9 @@ package App::Greple::subst::Dict {
 }
 
 package App::Greple::subst::Dict::Ent {
+
     use v5.14;
-    use strict;
     use warnings;
-    use utf8;
 
     use Exporter 'import';
     our @EXPORT_OK = qw(print_dict);
@@ -156,6 +159,7 @@ package App::Greple::subst::Dict::Ent {
 	my $obj = shift;
 	defined $obj->{COMMENT};
     }
+
 }
 
 1;
