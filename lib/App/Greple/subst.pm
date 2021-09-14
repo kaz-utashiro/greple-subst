@@ -574,8 +574,8 @@ sub subst_search {
     my @matched;
     my $index = -1;
     my @effective;
-    my $ng = any { $opt_check eq $_ } qw(ng any all none);
-    my $ok = any { $opt_check eq $_ } qw(ok any all none);
+    my $ng = {ng=>1, any=>1, all=>1, none=>1}->{$opt_check} ;
+    my $ok = {ok=>1, any=>1, all=>1, none=>1}->{$opt_check} ;
     my $outstand = $opt_check eq 'outstand';
     for my $p ($dict->words) {
 	$index++;
