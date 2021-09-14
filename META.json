@@ -51,7 +51,7 @@
             "List::MoreUtils" : "0",
             "List::Util" : "0",
             "Regexp::Assemble" : "0",
-            "Text::VisualPrintf" : "3.02",
+            "Text::VisualPrintf" : "4.01",
             "Text::VisualWidth::PP" : "0.05",
             "perl" : "v5.14.0"
          }

@@ -9,7 +9,7 @@ requires 'List::Util';
 requires 'List::MoreUtils';
 
 requires 'Text::VisualWidth::PP', '0.05';
-requires 'Text::VisualPrintf', '3.02';
+requires 'Text::VisualPrintf', '4.01';
 
 on 'develop' => sub {
     requires 'Data::Section', '0.200007';
