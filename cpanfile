@@ -7,6 +7,7 @@ requires 'File::Share';
 requires 'Regexp::Assemble';
 requires 'List::Util';
 requires 'List::MoreUtils';
+requires 'Mo';
 
 requires 'Text::VisualWidth::PP', '0.05';
 requires 'Text::VisualPrintf', '4.01';

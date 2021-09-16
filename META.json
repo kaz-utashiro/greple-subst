@@ -50,6 +50,7 @@
             "Getopt::EX::termcolor" : "1.07",
             "List::MoreUtils" : "0",
             "List::Util" : "0",
+            "Mo" : "0",
             "Regexp::Assemble" : "0",
             "Text::VisualPrintf" : "4.01",
             "Text::VisualWidth::PP" : "0.05",

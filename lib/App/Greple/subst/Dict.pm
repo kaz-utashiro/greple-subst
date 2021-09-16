@@ -13,39 +13,70 @@ package App::Greple::subst::Dict {
     use utf8;
     use open IO => ':utf8', ':std';
     use Encode qw(decode);
+    use Data::Dumper;
 
-    sub new {
-	my $class = shift;
-	bless {
-	    VERSION => undef,
-	    NAME    => undef,
-	    FILE    => undef,
-	    WORDS   => [],
-	}, $class;
-    }
-
-    sub words_ref {
-	my $obj = shift;
-	$obj->{WORDS};
-    }
+    use Mo qw(is default build); {
+	has VERSION => is => 'rw' ;
+	has NAME    => is => 'rw' ;
+	has FILE    => is => 'rw' ;
+	has LIST    => is => 'rw' , default => [] ;
+	has CONFIG  => is => 'rw' , default => {} ;
+	sub BUILD {
+	    my($obj, $args) = @_;
+	    if (my $file = $obj->FILE) {
+		$obj->read_file($file);
+	    }
+	}
+    } no Mo;
 
     sub words {
 	my $obj = shift;
-	my $ref = $obj->words_ref;
-	@{$ref};
+	@{$obj->LIST};
     }
 
     sub add {
 	my $obj = shift;
-	my $ref = $obj->words_ref;
-	push @$ref, App::Greple::subst::Dict::Ent->new(@_);
+	push @{$obj->LIST}, App::Greple::subst::Dict::Ent->new(@_);
 	$obj;
     }
 
     sub add_comment {
 	my $obj = shift;
-	my $ref = $obj->words_ref;
-	push @$ref, App::Greple::subst::Dict::Ent->new_comment(@_);
+	push @{$obj->LIST}, App::Greple::subst::Dict::Ent->new_comment(@_);
+	$obj;
+    }
+
+    sub read_file {
+	my $obj = shift or die;
+	my $file = shift;
+	$obj->FILE($file);
+	say $file if $obj->CONFIG->{dictname};
+	open my $fh, "<", $file or die "$file: $!\n";
+	$obj->read_fh($fh);
+	$obj;
+    }
+
+    use App::Greple::Pattern;
+
+    sub read_fh {
+	my $obj = shift or die;
+	my $conf = $obj->CONFIG;
+	my $fh = shift;
+	local $_;
+	my $flag = FLAG_REGEX;
+	$flag |= FLAG_COOK if $conf->{linefold};
+	while (<$fh>) {
+	    chomp;
+	    say if $conf->{printdict};
+	    if (not /^\s*[^#]/) {
+		$obj->add_comment($_);
+		next;
+	    }
+	    my @param = grep { not m{^//+$} } split ' ';
+	    splice @param, 0, -2; # leave last one or two
+	    my($pattern, $correct) = @param;
+	    $obj->add($pattern, $correct, flag => $flag);
+	}
 	$obj;
     }
 

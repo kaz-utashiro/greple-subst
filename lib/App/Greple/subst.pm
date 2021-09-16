@@ -386,7 +386,8 @@ my $current_file;
 my $contents;
 my @subst_diffcmd;
 my $ignorechar_re;
-my $dict = App::Greple::subst::Dict->new;
+my @dicts;
+my $dict;
 
 sub debug {
     $debug = 1;
@@ -410,6 +411,11 @@ sub subst_initialize {
 	@subst_diffcmd = ("diff", "-U$opt_U");
     }
 
+    $dict = App::Greple::subst::Dict->new(
+	CONFIG => { linefold  => $opt_linefold,
+		    dictname  => $opt_dictname,
+		    printdict => $opt_printdict }
+	);
     for my $data (@opt_dictdata) {
 	if (utf8::is_utf8 $data) {
 	    $data = encode 'utf8', $data;
@@ -422,7 +428,15 @@ sub subst_initialize {
 	    warn "$file is directory\n";
 	    next;
 	}
-	read_dict($file);
+	if (1) {
+	    push @dicts, App::Greple::subst::Dict->new(
+		FILE => $file,
+		CONFIG => { linefold  => $opt_linefold,
+			    dictname  => $opt_dictname,
+			    printdict => $opt_printdict }
+		);
+	}
+	$dict->read_file($file);
     }
 
     if ($dict->words == 0) {
@@ -535,32 +549,6 @@ sub subst_show_stat {
 	print "\n";
     }
     $_ = "";
-}
-
-sub read_dict {
-    my $file = shift;
-    say $file if $opt_dictname;
-    open my $fh, "<", $file or die "$file: $!\n";
-    read_dict_fh($fh);
-}
-
-sub read_dict_fh {
-    my $fh = shift;
-    local $_;
-    my $flag = FLAG_REGEX;
-    $flag |= FLAG_COOK if $opt_linefold;
-    while (<$fh>) {
-	chomp;
-	say if $opt_printdict;
-	if (not /^\s*[^#]/) {
-	    $dict->add_comment($_);
-	    next;
-	}
-	my @param = grep { not m{^//+$} } split ' ';
-	splice @param, 0, -2; # leave last one or two
-	my($pattern, $correct) = @param;
-	$dict->add($pattern, $correct, flag => $flag);
-    }
 }
 
 use App::Greple::Regions qw(match_regions merge_regions filter_regions);
