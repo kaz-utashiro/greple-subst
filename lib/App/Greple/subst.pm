@@ -387,7 +387,6 @@ my $contents;
 my @subst_diffcmd;
 my $ignorechar_re;
 my @dicts;
-my $dict;
 
 sub debug {
     $debug = 1;
@@ -411,11 +410,6 @@ sub subst_initialize {
 	@subst_diffcmd = ("diff", "-U$opt_U");
     }
 
-    $dict = App::Greple::subst::Dict->new(
-	CONFIG => { linefold  => $opt_linefold,
-		    dictname  => $opt_dictname,
-		    printdict => $opt_printdict }
-	);
     for my $data (@opt_dictdata) {
 	if (utf8::is_utf8 $data) {
 	    $data = encode 'utf8', $data;
@@ -428,18 +422,15 @@ sub subst_initialize {
 	    warn "$file is directory\n";
 	    next;
 	}
-	if (1) {
-	    push @dicts, App::Greple::subst::Dict->new(
-		FILE => $file,
-		CONFIG => { linefold  => $opt_linefold,
-			    dictname  => $opt_dictname,
-			    printdict => $opt_printdict }
-		);
-	}
-	$dict->read_file($file);
+	push @dicts, App::Greple::subst::Dict->new(
+	    FILE => $file,
+	    CONFIG => { linefold  => $opt_linefold,
+			dictname  => $opt_dictname,
+			printdict => $opt_printdict }
+	    );
     }
 
-    if ($dict->words == 0) {
+    if (@dicts == 0) {
 	warn "Module -Msubst requires dictionary data.\n";
 	main::usage();
 	die;
@@ -476,7 +467,7 @@ sub subst_begin {
 
 use Text::VisualWidth::PP;
 use Text::VisualPrintf qw(vprintf vsprintf);
-use List::Util qw(max any);
+use List::Util qw(max any sum);
 
 sub vwidth {
     if (not defined $_[0] or length $_[0] == 0) {
@@ -489,7 +480,7 @@ my @match_list;
 
 sub subst_show_stat {
     my %arg = @_;
-    my @fromto = $dict->words;
+    my @fromto = map { $_->words } @dicts;
     my($from_max, $to_max) = (0, 0);
     my @show;
     for my $i (0 .. $#fromto) {
@@ -565,73 +556,75 @@ sub subst_search {
     my $ng = {ng=>1, any=>1, all=>1, none=>1}->{$opt_check} ;
     my $ok = {ok=>1, any=>1, all=>1, none=>1}->{$opt_check} ;
     my $outstand = $opt_check eq 'outstand';
-    for my $p ($dict->words) {
-	$index++;
-	$p // next;
-	next if $p->is_comment;
-	my($from_re, $to) = ($p->string, $p->correct // '');
-	my @match = match_regions pattern => $p->regex;
+    for my $dict (@dicts) {
+	for my $p ($dict->words) {
+	    $index++;
+	    $p // next;
+	    next if $p->is_comment;
+	    my($from_re, $to) = ($p->string, $p->correct // '');
+	    my @match = match_regions pattern => $p->regex;
 
-	##
-	## Remove all overlapped matches.
-	##
-	my($in, $over, $out, $im, $om) = filter_regions \@match, \@matched;
-	@match = @$out;
-	for my $warn (
-	    [ "Include", $in,   $im, $opt_warn_include ],
-	    [ "Overlap", $over, $om, $opt_warn_overlap ],
-	    ) {
-	    my($kind, $list, $match, $show) = @$warn;
-	    $show and @$list or next;
-	    pairwise {
-		warn sprintf("%s \"%s\" with \"%s\" by #%d /%s/ in %s at %d\n",
-			     $kind,
-			     substr($_, $a->[0], $a->[1] - $a->[0]),
-			     substr($_, $b->[0], $b->[1] - $b->[0]),
-			     $index + 1, $p->string,
-			     $current_file,
-			     $a->[0],
-		    );
-	    } @$list, @$match;
-	}
-
-	$stat{total}++;
-	$stat{hit}++ if @match;
-	next if @match == 0 and $opt_check ne 'all';
-
-	my $hash = $match_list[$index] //= {};
-	my $callback = sub {
-	    my($ms, $me, $i, $matched) = @_;
-	    $stat{$i % 2 ? 'ok' : 'ng'}++;
-	    my $s = $matched =~ s/$ignorechar_re//gr;
-	    $hash->{$s}++;
-	    my $format = @opt_format[ $i % @opt_format ];
-	    sprintf($format,
-		    ($opt_subst && $to ne '' && $s ne $to) ?
-		    $to : $matched);
-	};
-	my(@ok, @ng);
-	for (@match) {
-	    my $matched = substr $text, $_->[0], $_->[1] - $_->[0];
-	    if ($matched =~ s/$ignorechar_re//gr ne $to) {
-		$_->[2] = $index * 2;
-		push @ng, $_;
-	    } else {
-		$_->[2] = $index * 2 + 1;
-		push @ok, $_;
+	    ##
+	    ## Remove all overlapped matches.
+	    ##
+	    my($in, $over, $out, $im, $om) = filter_regions \@match, \@matched;
+	    @match = @$out;
+	    for my $warn (
+		[ "Include", $in,   $im, $opt_warn_include ],
+		[ "Overlap", $over, $om, $opt_warn_overlap ],
+		) {
+		my($kind, $list, $match, $show) = @$warn;
+		$show and @$list or next;
+		pairwise {
+		    warn sprintf("%s \"%s\" with \"%s\" by #%d /%s/ in %s at %d\n",
+				 $kind,
+				 substr($_, $a->[0], $a->[1] - $a->[0]),
+				 substr($_, $b->[0], $b->[1] - $b->[0]),
+				 $index + 1, $p->string,
+				 $current_file,
+				 $a->[0],
+			);
+		} @$list, @$match;
 	    }
-	    $_->[3] = $callback;
-	}
-	$effective[ $index * 2     ] = 1 if $ng || ( @ng && $outstand );
-	$effective[ $index * 2 + 1 ] = 1 if $ok || ( @ng && $outstand );
 
-	@matched = merge_regions { nojoin => 1 }, @matched, @match;
+	    $stat{total}++;
+	    $stat{hit}++ if @match;
+	    next if @match == 0 and $opt_check ne 'all';
+
+	    my $hash = $match_list[$index] //= {};
+	    my $callback = sub {
+		my($ms, $me, $i, $matched) = @_;
+		$stat{$i % 2 ? 'ok' : 'ng'}++;
+		my $s = $matched =~ s/$ignorechar_re//gr;
+		$hash->{$s}++;
+		my $format = @opt_format[ $i % @opt_format ];
+		sprintf($format,
+			($opt_subst && $to ne '' && $s ne $to) ?
+			$to : $matched);
+	    };
+	    my(@ok, @ng);
+	    for (@match) {
+		my $matched = substr $text, $_->[0], $_->[1] - $_->[0];
+		if ($matched =~ s/$ignorechar_re//gr ne $to) {
+		    $_->[2] = $index * 2;
+		    push @ng, $_;
+		} else {
+		    $_->[2] = $index * 2 + 1;
+		    push @ok, $_;
+		}
+		$_->[3] = $callback;
+	    }
+	    $effective[ $index * 2     ] = 1 if $ng || ( @ng && $outstand );
+	    $effective[ $index * 2 + 1 ] = 1 if $ok || ( @ng && $outstand );
+
+	    @matched = merge_regions { nojoin => 1 }, @matched, @match;
+	}
     }
     ##
     ## --select
     ##
     if (my $select = $opt_subst_select) {
-	my $max = $dict->words;
+	my $max = sum map { int $_->words } @dicts;
 	use Getopt::EX::Numbers;
 	my $numbers = Getopt::EX::Numbers->new(min => 1, max => $max);
 	my @select;
