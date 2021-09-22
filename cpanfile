@@ -1,6 +1,6 @@
 requires 'perl', '5.014';
 
-requires 'App::Greple', '8.43';
+requires 'App::Greple', '8.4601';
 requires 'Getopt::EX';
 requires 'Getopt::EX::termcolor', '1.07';
 requires 'File::Share';
@@ -19,5 +19,6 @@ on 'develop' => sub {
 
 on 'test' => sub {
     requires 'Test::More', '0.98';
+    requires 'Command::Runner';
 };
 
