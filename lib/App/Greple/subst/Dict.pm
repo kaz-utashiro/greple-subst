@@ -15,12 +15,12 @@ package App::Greple::subst::Dict {
     use Encode qw(decode);
     use Data::Dumper;
 
-    use Mo qw(is default build); {
-	has VERSION => is => 'rw' ;
-	has NAME    => is => 'rw' ;
-	has FILE    => is => 'rw' ;
-	has LIST    => is => 'rw' , default => [] ;
-	has CONFIG  => is => 'rw' , default => {} ;
+    use Mo qw(default build); {
+	has VERSION => ;
+	has NAME    => ;
+	has FILE    => ;
+	has LIST    => default => [] ;
+	has CONFIG  => default => {} ;
 	sub BUILD {
 	    my($obj, $args) = @_;
 	    if (my $file = $obj->FILE) {
