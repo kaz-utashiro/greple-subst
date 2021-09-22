@@ -146,6 +146,7 @@ are:
     number=1
     ng=1
     ok=1
+    dict=0
 
 If you don't need to see pattern field, use like this:
 
@@ -377,7 +378,10 @@ our $opt_warn_overlap = 1;
 our $opt_warn_include = 0;
 our $opt_stat_style = "default";
 our @opt_stat_item;
-our %opt_stat_item = map { $_ => 1 } qw(match expect number ng ok);
+our %opt_stat_item = (
+    map( { $_ => 1 } qw(match expect number ng ok) ),
+    map( { $_ => 0 } qw(dict) ),
+    );
 our $opt_show_comment = 0;
 our $opt_show_numbers = 1;
 my %stat;
@@ -410,12 +414,14 @@ sub subst_initialize {
 	@subst_diffcmd = ("diff", "-U$opt_U");
     }
 
+    my $config = { linefold  => $opt_linefold,
+		   dictname  => $opt_dictname,
+		   printdict => $opt_printdict };
     for my $data (@opt_dictdata) {
-	if (utf8::is_utf8 $data) {
-	    $data = encode 'utf8', $data;
-	}
-	open my $fh, "<", \$data;
-	read_dict_fh($fh);
+	push @dicts, App::Greple::subst::Dict->new(
+	    DATA => $data,
+	    CONFIG => $config,
+	    );
     }
     for my $file (@opt_dictfile) {
 	if (-d $file) {
@@ -424,9 +430,7 @@ sub subst_initialize {
 	}
 	push @dicts, App::Greple::subst::Dict->new(
 	    FILE => $file,
-	    CONFIG => { linefold  => $opt_linefold,
-			dictname  => $opt_dictname,
-			printdict => $opt_printdict }
+	    CONFIG => $config,
 	    );
     }
 
@@ -480,30 +484,36 @@ my @match_list;
 
 sub subst_show_stat {
     my %arg = @_;
-    my @fromto = map { $_->words } @dicts;
     my($from_max, $to_max) = (0, 0);
-    my @show;
-    for my $i (0 .. $#fromto) {
-	my $p = $fromto[$i] // next;
-	if ($p->is_comment) {
-	    push @show, [ $i, $p, {} ];
-	    next;
+    my $i = -1;
+    my @show_list;
+    for my $dict (@dicts) {
+	my @fromto = $dict->words;
+	my @show;
+	for my $p (@fromto) {
+	    $i++;
+	    $p // die;
+	    if ($p->is_comment) {
+		push @show, [ $i, $p, {} ] if $opt_show_comment;
+		next;
+	    }
+	    my($from_re, $to) = ($p->string, $p->correct // '');
+	    my $hash = $match_list[$i] // {};
+	    my @keys = keys %{$hash};
+	    my @ng = grep { $_ ne $to } @keys;
+	    my @ok = grep { $_ eq $to } @keys;
+	    if    ($opt_check eq 'none'    ) { next if @keys != 0 }
+	    elsif ($opt_check eq 'any'     ) { next if @keys == 0 }
+	    elsif ($opt_check eq 'ok'      ) { next if @ok   == 0 }
+	    elsif ($opt_check eq 'ng'      ) { next if @ng   == 0 }
+	    elsif ($opt_check eq 'outstand') { next if @ng   == 0 }
+	    elsif ($opt_check eq 'all')      { }
+	    else { die }
+	    $from_max = max $from_max, vwidth $from_re;
+	    $to_max   = max $to_max  , vwidth $to;
+	    push @show, [ $i, $p, $hash ];
 	}
-	my($from_re, $to) = ($p->string, $p->correct // '');
-	my $hash = $match_list[$i] // {};
-	my @keys = keys %{$hash};
-	my @ng = grep { $_ ne $to } @keys;
-	my @ok = grep { $_ eq $to } @keys;
-	if    ($opt_check eq 'none'    ) { next if @keys != 0 }
-	elsif ($opt_check eq 'any'     ) { next if @keys == 0 }
-	elsif ($opt_check eq 'ok'      ) { next if @ok   == 0 }
-	elsif ($opt_check eq 'ng'      ) { next if @ng   == 0 }
-	elsif ($opt_check eq 'outstand') { next if @ng   == 0 }
-	elsif ($opt_check eq 'all')      { }
-	else { die }
-	$from_max = max $from_max, vwidth $from_re;
-	$to_max   = max $to_max  , vwidth $to;
-	push @show, [ $i, $p, $hash ];
+	push @show_list, [ $dict => \@show ];
     }
     if ($opt_show_numbers) {
 	no warnings 'uninitialized';
@@ -511,33 +521,39 @@ sub subst_show_stat {
 	    $stat{hit}, $stat{total},
 	    $stat{ng}, $stat{ok}, $stat{ng} + $stat{ok};
     }
-    for my $show (@show) {
-	my($i, $p, $hash) = @$show;
-	if ($p->is_comment) {
-	    say $p->comment if $opt_show_comment;
-	    next;
-	}
-	my($from_re, $to) = ($p->string, $p->correct // '');
-	my @keys = keys %{$hash};
-	if ($opt_stat_style eq 'dict') {
-	    vprintf("%-${from_max}s // %s", $from_re // '', $to // '');
-	} else {
-	    my @ng = sort { $hash->{$b} <=> $hash->{$a} } grep { $_ ne $to } @keys
-		if $opt_stat_item{ng};
-	    my @ok = grep { $_ eq $to } @keys
-		if $opt_stat_item{ok};
-	    vprintf("%${from_max}s => ", $from_re // '') if $opt_stat_item{match};
-	    vprintf("%-${to_max}s",      $to // '')      if $opt_stat_item{expect};
-	    vprintf(" %4d:",             $i + 1)         if $opt_stat_item{number};
-	    for my $key (@ng, @ok) {
-		my $index = $key eq $to ? $i * 2 + 1 : $i * 2;
-		printf(" %s(%s)",
-		       main::index_color($index, $key),
-		       colorize($key eq $to ? 'DB' : 'DR', $hash->{$key})
-		    );
+    for my $show_list (@show_list) {
+	my($dict, $show) = @{$show_list};
+	next if @$show == 0;
+	my $dict_format = "[ %s ]\n";
+	printf $dict_format, $dict->NAME if $opt_stat_item{dict};
+	for my $item (@$show) {
+	    my($i, $p, $hash) = @$item;
+	    if ($p->is_comment) {
+		say $p->comment if $opt_show_comment;
+		next;
 	    }
+	    my($from_re, $to) = ($p->string, $p->correct // '');
+	    my @keys = keys %{$hash};
+	    if ($opt_stat_style eq 'dict') {
+		vprintf("%-${from_max}s // %s", $from_re // '', $to // '');
+	    } else {
+		my @ng = sort { $hash->{$b} <=> $hash->{$a} } grep { $_ ne $to } @keys
+		    if $opt_stat_item{ng};
+		my @ok = grep { $_ eq $to } @keys
+		    if $opt_stat_item{ok};
+		vprintf("%${from_max}s => ", $from_re // '') if $opt_stat_item{match};
+		vprintf("%-${to_max}s",      $to // '')      if $opt_stat_item{expect};
+		vprintf(" %4d:",             $i + 1)         if $opt_stat_item{number};
+		for my $key (@ng, @ok) {
+		    my $index = $key eq $to ? $i * 2 + 1 : $i * 2;
+		    printf(" %s(%s)",
+			   main::index_color($index, $key),
+			   colorize($key eq $to ? 'DB' : 'DR', $hash->{$key})
+			);
+		}
+	    }
+	    print "\n";
 	}
-	print "\n";
     }
     $_ = "";
 }

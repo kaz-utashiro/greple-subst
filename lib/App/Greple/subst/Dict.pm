@@ -12,19 +12,23 @@ package App::Greple::subst::Dict {
     use warnings;
     use utf8;
     use open IO => ':utf8', ':std';
-    use Encode qw(decode);
+    use Encode qw(encode decode);
     use Data::Dumper;
 
     use Mo qw(default build); {
 	has VERSION => ;
 	has NAME    => ;
 	has FILE    => ;
+	has DATA    => ;
 	has LIST    => default => [] ;
 	has CONFIG  => default => {} ;
 	sub BUILD {
 	    my($obj, $args) = @_;
 	    if (my $file = $obj->FILE) {
 		$obj->read_file($file);
+	    }
+	    elsif (my $data = $obj->DATA) {
+		$obj->read_data($data);
 	    }
 	}
     } no Mo;
@@ -46,10 +50,23 @@ package App::Greple::subst::Dict {
 	$obj;
     }
 
+    sub read_data {
+	my $obj = shift or die;
+	my $data = shift;
+	$obj->NAME("DATA");
+	if (utf8::is_utf8 $data) {
+	    $data = encode 'utf8', $data;
+	}
+	open my $fh, "<", \$data;
+	$obj->read_fh($fh);
+	$obj;
+    }
+
     sub read_file {
 	my $obj = shift or die;
 	my $file = shift;
 	$obj->FILE($file);
+	$obj->NAME($file =~ s[.*/][]r);
 	say $file if $obj->CONFIG->{dictname};
 	open my $fh, "<", $file or die "$file: $!\n";
 	$obj->read_fh($fh);
