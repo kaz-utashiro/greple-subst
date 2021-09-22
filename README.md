@@ -142,6 +142,7 @@ digit depending on terminal background color.
         number=1
         ng=1
         ok=1
+        dict=0
 
     If you don't need to see pattern field, use like this:
 
