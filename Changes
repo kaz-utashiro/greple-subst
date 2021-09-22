@@ -2,6 +2,11 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.29 2021-09-22T10:23:20Z
+
+    - Support --stat-item dict=1 option to show dict name.
+    - Add test cases.
+
 2.28 2021-04-05T15:34:23Z
 
     - Update internal implementation to use App::Greple::Regions::filter_regions().
