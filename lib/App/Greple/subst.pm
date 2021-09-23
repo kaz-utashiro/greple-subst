@@ -524,8 +524,10 @@ sub subst_show_stat {
     for my $show_list (@show_list) {
 	my($dict, $show) = @{$show_list};
 	next if @$show == 0;
-	my $dict_format = "[ %s ]\n";
-	printf $dict_format, $dict->NAME if $opt_stat_item{dict};
+	my $dict_format = ">>> %s <<<\n";
+	if ($opt_stat_item{dict}) {
+	    print colorize('000/L24E', sprintf($dict_format, $dict->NAME));
+	}
 	for my $item (@$show) {
 	    my($i, $p, $hash) = @$item;
 	    if ($p->is_comment) {
