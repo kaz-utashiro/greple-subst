@@ -14,23 +14,25 @@ sub line {
     like($text, qr/\A(.*\n){$line}\z/, $comment//'');
 }
 
-is( subst(qw(--dict t/JA.dict t/JA-bad.txt))->{result}, 0);
-line( subst(qw(--dict t/JA.dict t/JA-bad.txt))->{stdout}, 9, "--dict");
-line( subst(qw(--dict t/JA.dict t/JA-bad.txt --stat))->{stdout}, 11, "--stat");
-line( subst(qw(--dict t/JA.dict t/JA-bad.txt --with-stat))->{stdout}, 20, "--with-stat");
-line( subst(qw(--dict t/JA.dict t/JA-bad.txt --with-stat --stat-item dict=1))->{stdout}, 21, "dict=1");
+is(subst(qw(--dict t/JA.dict t/JA-bad.txt))->{result}, 0);
 
-line( subst(qw(--dict t/JA.dict t/JA-bad.txt --diff))->{stdout}, 28, "--diff");
+line(subst(qw(--dict t/JA.dict t/JA-bad.txt))->{stdout}, 9, "--dict");
+line(subst(qw(--dict t/JA.dict t/JA-bad.txt --stat))->{stdout}, 11, "--stat");
+line(subst(qw(--dict t/JA.dict t/JA-bad.txt --with-stat))->{stdout}, 20, "--with-stat");
+line(subst(qw(--dict t/JA.dict t/JA-bad.txt --with-stat --stat-item dict=1))->{stdout}, 21, "dict=1");
 
-line( subst(
-	'--dictdata',
-	"イーハトー(ヴォ|ボ)	イーハトーヴォ\n",
-	't/JA-bad.txt')->{stdout}, 2, "--dictdata");
+line(subst(qw(--dict t/JA.dict t/JA-bad.txt --diff))->{stdout}, 28, "--diff");
 
-line( subst(
-	'--dictdata',
-	"イーハトー(ヴォ|ボ)	イーハトーヴォ\n".
-	"デストゥ?パーゴ	デストゥパーゴ\n",
-	't/JA-bad.txt')->{stdout}, 3, "--dictdata (2)");
+line(subst('--dictdata', <<'END', 't/JA-bad.txt')->{stdout}, 2, "--dictdata");
+イーハトー(ヴォ|ボ)	イーハトーヴォ
+END
+
+line(subst('--dictdata', <<'END', 't/JA-bad.txt')->{stdout}, 3, "--dictdata");
+イーハトー(ヴォ|ボ)	イーハトーヴォ
+デストゥ?パーゴ		デストゥパーゴ
+END
+
+is(subst(qw(--dict t/JA.dict t/JA-bad.txt --subst --all --no-color))->{stdout},
+   `cat t/JA.txt`, "--subst");
 
 done_testing;
