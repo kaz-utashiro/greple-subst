@@ -33,6 +33,6 @@ line(subst('--dictdata', <<'END', 't/JA-bad.txt')->{stdout}, 3, "--dictdata");
 END
 
 is(subst(qw(--dict t/JA.dict t/JA-bad.txt --subst --all --no-color))->{stdout},
-   `cat t/JA.txt`, "--subst");
+   decode('utf8', `cat t/JA.txt`), "--subst");
 
 done_testing;
