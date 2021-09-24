@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.2902 2021-09-24T05:54:16Z
+
+    - Elimiate Command::Runner because it does not work on WSL.
+
 2.2901 2021-09-23T08:17:22Z
 
     - Support test env which does not install command in path.
