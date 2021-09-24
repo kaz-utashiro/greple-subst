@@ -21,7 +21,7 @@ greple -Msubst --dict I<dictionary> [ options ]
   --stat
   --with-stat
   --stat-style=[default,dict]
-  --stat-item={match,expect,number,ok,ng}=[0,1]
+  --stat-item={match,expect,number,ok,ng,dict}=[0,1]
   --subst
   --diff
   --diffcmd command
@@ -734,7 +734,7 @@ sub subst_update {
 	    $newname;
 	}
     };
-	
+
     open my $fh, ">", $create or die "open: $create $!\n";
     $fh->print($divert_buffer);
     $fh->close;
