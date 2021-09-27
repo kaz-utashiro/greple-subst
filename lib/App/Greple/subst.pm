@@ -471,7 +471,7 @@ sub subst_begin {
 
 use Text::VisualWidth::PP;
 use Text::VisualPrintf qw(vprintf vsprintf);
-use List::Util qw(max any sum);
+use List::Util qw(max any sum first);
 
 sub vwidth {
     if (not defined $_[0] or length $_[0] == 0) {
@@ -663,8 +663,9 @@ sub subst_search {
 sub subst_diff {
     my $orig = $current_file;
     my $io;
+    state $fdpath = first { -d $_ } qw(/dev/fd /proc/self/fd);
 
-    if ($remember_data) {
+    if ($fdpath and $remember_data) {
 	use IO::Pipe;
 	$io = IO::Pipe->new;
 	my $pid = fork() // die "fork: $!\n";
@@ -682,7 +683,7 @@ sub subst_diff {
 	use Fcntl;
 	my $fd = $io->fcntl(F_GETFD, 0) or die "fcntl F_GETFD: $!\n";
 	$io->fcntl(F_SETFD, $fd & ~FD_CLOEXEC) or die "fcntl F_SETFD: $!\n";
-	$orig = sprintf "/dev/fd/%d", $io->fileno;
+	$orig = sprintf "$fdpath/%d", $io->fileno;
     }
 
     @subst_diffcmd or confess "Empty diff command";
