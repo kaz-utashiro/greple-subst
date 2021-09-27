@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.2903 2021-09-27T08:06:48Z
+
+    - Search fd directory from /dev/fd and /proc/self/fd.
+
 2.2902 2021-09-24T05:54:16Z
 
     - Elimiate Command::Runner because it does not work on WSL.
