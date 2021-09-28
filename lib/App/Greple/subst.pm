@@ -663,7 +663,7 @@ sub subst_search {
 sub subst_diff {
     my $orig = $current_file;
     my $io;
-    state $fdpath = first { -d $_ } qw(/dev/fd /proc/self/fd);
+    state $fdpath = first { -r "$_/0" } qw(/dev/fd /proc/self/fd);
 
     if ($fdpath and $remember_data) {
 	use IO::Pipe;
