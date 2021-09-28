@@ -662,28 +662,19 @@ sub subst_search {
 
 sub subst_diff {
     my $orig = $current_file;
-    my $io;
-    state $fdpath = first { -r "$_/0" } qw(/dev/fd /proc/self/fd);
+    my $fh;
+    state $fdpath = first { -r "$_/0" } qw( /dev/fd /proc/self/fd );
 
-    if ($fdpath and $remember_data) {
-	use IO::Pipe;
-	$io = IO::Pipe->new;
-	my $pid = fork() // die "fork: $!\n";
-	if ($pid == 0) {
-	    $io->writer;
-	    binmode $io, ":encoding(utf8)";
-	    print $io $contents;
-	    exit;
-	}
-	$io->reader;
-    }
-
-    # clear close-on-exec flag
-    if ($io) {
+    if (!-r $orig and $fdpath and $remember_data) {
+	use IO::File;
 	use Fcntl;
-	my $fd = $io->fcntl(F_GETFD, 0) or die "fcntl F_GETFD: $!\n";
-	$io->fcntl(F_SETFD, $fd & ~FD_CLOEXEC) or die "fcntl F_SETFD: $!\n";
-	$orig = sprintf "$fdpath/%d", $io->fileno;
+	$fh = new_tmpfile IO::File or die "new_tmpfile: $!\n";
+	$fh->binmode(':encoding(utf8)');
+	my $fd = $fh->fcntl(F_GETFD, 0) or die "fcntl F_GETFD: $!\n";
+	$fh->fcntl(F_SETFD, $fd & ~FD_CLOEXEC) or die "fcntl F_SETFD: $!\n";
+	$fh->printflush($contents);
+	$fh->seek(0, 0);
+	$orig = sprintf "%s/%d", $fdpath, $fh->fileno;
     }
 
     @subst_diffcmd or confess "Empty diff command";
