@@ -281,6 +281,28 @@ practical use.
 
 =back
 
+=head1 JAPANESE
+
+This module is originaly made for Japanese text editing support.
+
+=head2 KATAKANA
+
+Japanese KATAKANA word have a lot of variants to describe same word,
+and unification is important but tiresome.  In the next example,
+
+    イ[エー]ハトー?([ヴブボ]ォ?)  //  イーハトーヴォ
+
+left pattern matches all following words.
+
+    イエハトブ
+    イーハトヴ
+    イーハトーヴ
+    イーハトーヴォ
+    イーハトーボ
+    イーハトーブ
+
+This module helps to detect and correct them.
+
 =head1 INSTALL
 
 =head2 CPANMINUS

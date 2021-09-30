@@ -39,12 +39,12 @@ line(subst(qw(--dict t/JA.dict --diff))
      ->run->{stdout}, 28, "--diff (stdin)");
 
 line(subst('--dictdata', <<'END', 't/JA-bad.txt')->run->{stdout}, 2, "--dictdata");
-イーハトー(ヴォ|ボ)	イーハトーヴォ
+イ[エー]ハトー?([ヴブボ]ォ?)	イーハトーヴォ
 END
 
 line(subst('--dictdata', <<'END', 't/JA-bad.txt')->run->{stdout}, 3, "--dictdata");
-イーハトー(ヴォ|ボ)	イーハトーヴォ
-デストゥ?パーゴ		デストゥパーゴ
+イ[エー]ハトー?([ヴブボ]ォ?)	イーハトーヴォ
+デストゥ?パーゴ			デストゥパーゴ
 END
 
 is(subst(qw(--dict t/JA.dict t/JA-bad.txt --subst --all --no-color))
