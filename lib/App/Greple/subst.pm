@@ -685,7 +685,8 @@ sub subst_search {
 sub subst_diff {
     my $orig = $current_file;
     my $fh;
-    state $fdpath = first { -r "$_/0" } qw( /dev/fd /proc/self/fd );
+    # test /dev/fd/3 because some system only have /dev/{0,1,2}
+    state $fdpath = first { -r "$_/3" } qw( /dev/fd /proc/self/fd );
 
     if (!-r $orig and $fdpath and $remember_data) {
 	use IO::File;
