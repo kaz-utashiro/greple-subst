@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.2905 2021-10-13T12:27:01Z
+
+    - Skip stdin test if /dev/fd is not available.
+
 2.2904 2021-09-28T16:40:57Z
 
     - Test -r /dev/fd/0 rather than -d /dev/fd.
