@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.2905
+Version 2.2906
 
 =head1 SYNOPSIS
 
@@ -347,7 +347,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.2905';
+our $VERSION = '2.2906';
 
 use warnings;
 use utf8;
@@ -690,7 +690,7 @@ sub subst_diff {
 	first { -r "$_/$fd" } qw( /dev/fd /proc/self/fd );
     };
 
-    if (!-r $orig and $fdpath and $remember_data) {
+    if ($fdpath and $remember_data) {
 	use IO::File;
 	use Fcntl;
 	$fh = new_tmpfile IO::File or die "new_tmpfile: $!\n";

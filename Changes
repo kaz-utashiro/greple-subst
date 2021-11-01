@@ -2,6 +2,11 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.2906 2021-11-01T02:51:39Z
+
+    - Use /dev/fd always in --diff if its available.
+      This is necessary to deal with msdoc or pdf files.
+
 2.2905 2021-10-13T12:27:01Z
 
     - Skip stdin test if /dev/fd is not available.
