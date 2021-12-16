@@ -6,23 +6,8 @@ use utf8;
 use Test::More;
 use Data::Dumper;
 
-use lib 't/runner';
+use lib 't';
 use Util;
-
-sub subst {
-    greple '-Msubst', @_;
-}
-
-sub slurp {
-    my $file = shift;
-    open my $fh, "<:utf8", $file or die "open: $!";
-    do { local $/; <$fh> };
-}
-
-sub line {
-    my($text, $line, $comment) = @_;
-    like($text, qr/\A(.*\n){$line}\z/, $comment//'');
-}
 
 my $has_devfd = -r sprintf "/dev/fd/%d", DATA->fileno;
 
