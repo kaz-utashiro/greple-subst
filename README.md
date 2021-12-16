@@ -5,7 +5,7 @@ subst - Greple module for text search and substitution
 
 # VERSION
 
-Version 2.2906
+Version 2.30
 
 # SYNOPSIS
 

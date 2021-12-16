@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.2906
+Version 2.30
 
 =head1 SYNOPSIS
 
@@ -347,7 +347,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.2906';
+our $VERSION = '2.30';
 
 use warnings;
 use utf8;
@@ -786,7 +786,7 @@ option default \
 	--begin subst_begin \
 	--le +&subst_search --no-regioncolor
 
-expand ++dump      --all --need 0 -h --color=never
+expand ++dump      --all --need 0 -h --color=never --no-newline
 option --diff      --subst ++dump --of &subst_diff
 option --create    --subst ++dump --begin subst_divert --end subst_update(suffix=.new)
 option --replace   --subst ++dump --begin subst_divert --end subst_update(replace,suffix=.bak)
