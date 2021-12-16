@@ -6,8 +6,12 @@ use utf8;
 use Test::More;
 use Data::Dumper;
 
-use lib '.';
-use t::Util;
+use lib 't/runner';
+use Util;
+
+sub subst {
+    greple '-Msubst', @_;
+}
 
 sub slurp {
     my $file = shift;
