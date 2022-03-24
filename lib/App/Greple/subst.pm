@@ -583,7 +583,6 @@ sub subst_show_stat {
 }
 
 use App::Greple::Regions qw(match_regions merge_regions filter_regions);
-use List::MoreUtils qw(pairwise);
 
 sub subst_search {
     my $text = $_;
@@ -615,7 +614,8 @@ sub subst_search {
 		) {
 		my($kind, $list, $match, $show) = @$warn;
 		$show and @$list or next;
-		pairwise {
+		for my $i (0 .. @$list - 1) {
+		    my($a, $b) = ($list->[$i], $match->[$i]);
 		    warn sprintf("%s \"%s\" with \"%s\" by #%d /%s/ in %s at %d\n",
 				 $kind,
 				 substr($_, $a->[0], $a->[1] - $a->[0]),
@@ -624,7 +624,7 @@ sub subst_search {
 				 $current_file,
 				 $a->[0],
 			);
-		} @$list, @$match;
+		}
 	    }
 
 	    $stat{total}++;

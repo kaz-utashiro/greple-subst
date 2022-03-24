@@ -6,7 +6,6 @@ requires 'Getopt::EX::termcolor', '1.07';
 requires 'File::Share';
 requires 'Regexp::Assemble';
 requires 'List::Util';
-requires 'List::MoreUtils';
 requires 'Mo';
 
 requires 'Text::VisualWidth::PP', '0.05';

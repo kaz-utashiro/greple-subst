@@ -48,7 +48,6 @@
             "File::Share" : "0",
             "Getopt::EX" : "0",
             "Getopt::EX::termcolor" : "1.07",
-            "List::MoreUtils" : "0",
             "List::Util" : "0",
             "Mo" : "0",
             "Regexp::Assemble" : "0",
@@ -80,6 +79,6 @@
    "x_contributors" : [
       "Kazumasa Utashiro <kaz@utashiro.com>"
    ],
-   "x_serialization_backend" : "JSON::PP version 4.04",
+   "x_serialization_backend" : "JSON::PP version 4.07",
    "x_static_install" : 1
 }
