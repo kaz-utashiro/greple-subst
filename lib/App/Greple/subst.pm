@@ -325,10 +325,11 @@ L<https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf>
 L<https://www.microsoft.com/ja-jp/language/styleguides>,
 L<https://www.atmarkit.co.jp/news/200807/25/microsoft.html>
 
-文化庁 国語施策・日本語教育 国語施策情報 内閣告示・内閣訓令 外来語の表記
-L<https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai/index.html>
+L<文化庁 国語施策・日本語教育 国語施策情報 内閣告示・内閣訓令 外来語の表記|https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai/index.html>
 
 L<https://qiita.com/kaz-utashiro/items/85add653a71a7e01c415>
+
+L<イーハトーブ|https://ja.wikipedia.org/wiki/%E3%82%A4%E3%83%BC%E3%83%8F%E3%83%88%E3%83%BC%E3%83%96>
 
 =head1 AUTHOR
 
@@ -336,7 +337,7 @@ Kazumasa Utashiro
 
 =head1 LICENSE
 
-Copyright 2017-2021 Kazumasa Utashiro.
+Copyright 2017-2022 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
