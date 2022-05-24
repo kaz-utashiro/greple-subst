@@ -266,6 +266,10 @@ directory and accessed by **--exdict** option.
     generated from published data.  This dictionary is customized for
     practical use.
 
+    Amendment dictionary can be found
+    [here](https://github.com/kaz-utashiro/greple-subst/blob/master/share/ms-amend.dict).
+    Please raise an issue or send a pull-request if you have request to update.
+
 # JAPANESE
 
 This module is originaly made for Japanese text editing support.
