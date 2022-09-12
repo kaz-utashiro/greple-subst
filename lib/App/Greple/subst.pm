@@ -12,24 +12,28 @@ Version 2.3002
 
 greple -Msubst --dict I<dictionary> [ options ]
 
-  --dict      dictionary file
-  --dictdata  dictionary data
+  Dictionary:
+    --dict      dictionary file
+    --dictdata  dictionary data
 
-  --check=[ng,ok,any,outstand,all,none]
-  --select=N
-  --linefold
-  --stat
-  --with-stat
-  --stat-style=[default,dict]
-  --stat-item={match,expect,number,ok,ng,dict}=[0,1]
-  --subst
-  --diff
-  --diffcmd command
-  --create
-  --replace
-  --overwrite
-  --[no-]warn-overlap
-  --[no-]warn-include
+  Check:
+    --check=[ng,ok,any,outstand,all,none]
+    --select=N
+    --linefold
+    --stat
+    --with-stat
+    --stat-style=[default,dict]
+    --stat-item={match,expect,number,ok,ng,dict}=[0,1]
+    --subst
+    --[no-]warn-overlap
+    --[no-]warn-include
+
+  File Update:
+    --diff
+    --diffcmd command
+    --create
+    --replace
+    --overwrite
 
 =head1 DESCRIPTION
 
@@ -93,27 +97,35 @@ digit depending on terminal background color.
 
 =over 7
 
-=item B<--check>=I<outstand>|I<ng>|I<ok>|I<any>|I<all>|I<none>
+=item B<--dict>=I<file>
 
-Option B<--check> takes argument from I<ng>, I<ok>, I<any>,
-I<outstand>, I<all> and I<none>.
+Specify dictionary file.
 
-With default value I<outstand>, command will show information about
+=item B<--dictdata>=I<data>
+
+Specify dictionary data by text.
+
+=item B<--check>=C<outstand>|C<ng>|C<ok>|C<any>|C<all>|C<none>
+
+Option B<--check> takes argument from C<ng>, C<ok>, C<any>,
+C<outstand>, C<all> and C<none>.
+
+With default value C<outstand>, command will show information about
 both expected and unexpected words only when unexpected word was found
 in the same file.
 
-With value I<ng>, command will show information about unexpected
-words.  With value I<ok>, you will get information about expected
-words.  Both with value I<any>.
+With value C<ng>, command will show information about unexpected
+words.  With value C<ok>, you will get information about expected
+words.  Both with value C<any>.
 
-Value I<all> and I<none> make sense only when used with B<--stat>
+Value C<all> and C<none> make sense only when used with B<--stat>
 option, and display information about never matched pattern.
 
 =item B<--select>=I<N>
 
 Select I<N>th entry from the dictionary.  Argument is interpreted by
 L<Getopt::EX::Numbers> module.  Range can be defined like
-B<--select>=I<1:3,7:9>.  You can get numbers by B<--stat> option.
+B<--select>=C<1:3,7:9>.  You can get numbers by B<--stat> option.
 
 =item B<--linefold>
 
@@ -131,7 +143,7 @@ Print statistical information.  Works with B<--check> option.
 Option B<--with-stat> print statistics after normal output, while
 B<--stat> print only statistics.
 
-=item B<--stat-style> [I<default>|I<dict>]
+=item B<--stat-style>=C<default>|C<dict>
 
 Using B<--stat-style=dict> option with B<--stat> and B<--check=any>,
 you can get dictionary style output for your working document.
@@ -162,11 +174,27 @@ Substitute unexpected matched pattern to expected string.  Newline
 character in the matched string is ignored.  Pattern without
 replacement string is not changed.
 
+=item B<--[no-]warn-overlap>
+
+Warn overlapped pattern.
+Default on.
+
+=item B<--[no-]warn-include>
+
+Warn included pattern.
+Default off.
+
+=back
+
+=head2 FILE UPDATE OPTIONS
+
+=over 7
+
 =item B<--diff>
 
 =item B<--diffcmd>=I<command>
 
-Option B<-diff> produce diff output of original and converted text.
+Option B<--diff> produce diff output of original and converted text.
 
 Specify diff command name used by B<--diff> option.  Default is "diff
 -u".
@@ -184,16 +212,6 @@ to backup name with ".bak" suffix.
 =item B<--overwrite>
 
 Overwrite the target file by converted result with no backup.
-
-=item B<--[no-]warn-overlap>
-
-Warn overlapped pattern.
-Default on.
-
-=item B<--[no-]warn-include>
-
-Warn included pattern.
-Default off.
 
 =back
 
@@ -393,8 +411,6 @@ our @opt_dictfile;
 our @opt_dictdata;
 our $opt_printdict;
 our $opt_dictname;
-our $opt_subst_diffcmd = "diff -u";
-our $opt_U;
 our $opt_check = 'outstand';
 our @opt_format;
 our @default_opt_format = ( '%s' );
@@ -415,7 +431,6 @@ my %stat;
 
 my $current_file;
 my $contents;
-my @subst_diffcmd;
 my $ignorechar_re;
 my @dicts;
 
@@ -431,15 +446,9 @@ sub subst_initialize {
 	->new(HASH => \%opt_stat_item)
 	->load_params(@opt_stat_item);
 
-    @subst_diffcmd = shellwords $opt_subst_diffcmd;
-
     @opt_format = @default_opt_format if @opt_format == 0;
 
     $ignorechar_re = $opt_ignore_space ? qr/\s+/ : qr/\R+/;
-
-    if (defined $opt_U) {
-	@subst_diffcmd = ("diff", "-U$opt_U");
-    }
 
     my $config = { linefold  => $opt_linefold,
 		   dictname  => $opt_dictname,
@@ -687,31 +696,6 @@ sub subst_search {
     grep $effective[$_->[2]], @matched;
 }
 
-sub subst_diff {
-    my $orig = $current_file;
-    my $fh;
-    state $fdpath = do {
-	my $fd = DATA->fileno;
-	first { -r "$_/$fd" } qw( /dev/fd /proc/self/fd );
-    };
-
-    if ($fdpath and $remember_data) {
-	use IO::File;
-	use Fcntl;
-	$fh = new_tmpfile IO::File or die "new_tmpfile: $!\n";
-	$fh->binmode(':encoding(utf8)');
-	my $fd = $fh->fcntl(F_GETFD, 0) or die "fcntl F_GETFD: $!\n";
-	$fh->fcntl(F_SETFD, $fd & ~FD_CLOEXEC) or die "fcntl F_SETFD: $!\n";
-	$fh->printflush($contents);
-	$fh->seek(0, 0);
-	$orig = sprintf "%s/%d", $fdpath, $fh->fileno;
-    }
-
-    @subst_diffcmd or confess "Empty diff command";
-    exec @subst_diffcmd, $orig, "-";
-    die "exec: $!\n";
-}
-
 my $divert_buffer;
 
 sub subst_divert {
@@ -720,46 +704,6 @@ sub subst_divert {
 
     $divert_buffer = '';
     divert_stdout(\$divert_buffer);
-}
-
-sub subst_update {
-    my %arg = @_;
-    my $filename = delete $arg{&FILELABEL};
-    my $newname = '';
-
-    recover_stdout() or die;
-    $divert_buffer = decode 'utf8', $divert_buffer;
-
-    if ($_ eq $divert_buffer) {
-	return;
-    }
-
-    if (my $suffix = $arg{suffix}) {
-	$newname = $filename . $suffix;
-	for (my $i = 1; -f $newname; $i++) {
-	    $newname = $filename . $suffix . "_$i";
-	}
-    }
-
-    my $create = do {
-	if ($arg{replace}) {
-	    if ($newname ne '') {
-		warn "rename $filename -> $newname\n";
-		rename $filename, $newname or die "rename: $!\n";
-		die if -f $filename;
-	    } else {
-		warn "overwrite $filename\n";
-	    }
-	    $filename;
-	} else {
-	    warn "create $newname\n";
-	    $newname;
-	}
-    };
-
-    open my $fh, ">", $create or die "open: $create $!\n";
-    $fh->print($divert_buffer);
-    $fh->close;
 }
 
 1;
@@ -774,8 +718,6 @@ builtin printdict!     $opt_printdict
 builtin dictname!      $opt_dictname
 builtin subst-format=s @opt_format
 builtin subst!         $opt_subst
-builtin diffcmd=s      $opt_subst_diffcmd
-builtin U=i            $opt_U
 builtin check=s        $opt_check
 builtin select=s       $opt_subst_select
 builtin linefold!      $opt_linefold
@@ -791,11 +733,15 @@ option default \
 	--begin subst_begin \
 	--le +&subst_search --no-regioncolor
 
-expand ++dump      --all --need 0 -h --color=never --no-newline
-option --diff      --subst ++dump --of &subst_diff
-option --create    --subst ++dump --begin subst_divert --end subst_update(suffix=.new)
-option --replace   --subst ++dump --begin subst_divert --end subst_update(replace,suffix=.bak)
-option --overwrite --subst ++dump --begin subst_divert --end subst_update(replace,suffix=)
+##
+## Now these options are implemented by -Mudpate module
+## --diffcmd, -U are built-in options
+##
+autoload -Mupdate --update::diff --update::create --update::update
+option --diff      --subst --update::diff
+option --create    --subst --update::create
+option --replace   --subst --update::update --with-backup
+option --overwrite --subst --update::update
 
 option --divert-stdout --prologue __PACKAGE__::divert_stdout \
 		       --epilogue __PACKAGE__::recover_stdout

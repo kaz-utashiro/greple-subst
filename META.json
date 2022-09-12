@@ -4,7 +4,7 @@
       "Kazumasa Utashiro"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.1.12, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "Minilla/v3.1.19, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
@@ -45,6 +45,7 @@
       "runtime" : {
          "requires" : {
             "App::Greple" : "8.53",
+            "App::Greple::update" : "0.02",
             "File::Share" : "0",
             "Getopt::EX" : "0",
             "Getopt::EX::termcolor" : "1.07",
@@ -70,7 +71,7 @@
       "homepage" : "https://github.com/kaz-utashiro/greple-subst",
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/kaz-utashiro/greple-subst.git",
+         "url" : "https://github.com/kaz-utashiro/greple-subst.git",
          "web" : "https://github.com/kaz-utashiro/greple-subst"
       }
    },
