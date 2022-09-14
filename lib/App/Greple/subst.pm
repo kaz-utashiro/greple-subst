@@ -778,7 +778,7 @@ option --microsoft --exdict ms-amend.dict --exdict ms-style-guide.dict
 # deprecated. don't use.
 option --ms --microsoft
 
-option --all-sample-dict --jtf --jtca --ms
+option --all-sample-dict --jtf --jtca --microsoft
 
 option --all-katakana	     --exdict all-katakana.dict
 
