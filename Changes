@@ -2,6 +2,11 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.3101 2022-09-14T08:40:40Z
+
+    - Update ms-amend.dict
+    - Update test code
+
 2.31 2022-09-12T10:04:00Z
 
     - File handling part has now spun off to Greple::update module.
