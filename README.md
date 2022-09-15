@@ -40,7 +40,7 @@ This **greple** module supports check and substitution of text files
 based on dictionary data.
 
 Dictionary file is given by **--dict** option and each line contains
-pattern and expected string pairs.
+matching pattern and expected string pairs.
 
     greple -Msubst --dict DICT
 
@@ -49,17 +49,17 @@ If the dictionary file contains following data:
     colou?r      color
     cent(er|re)  center
 
-above command find the first pattern which does not match the second
+above command finds the first pattern which does not match the second
 string, that is "colour" and "centre" in this case.
 
-Field "//" in dictionary data is ignored, so this file can be written
+Field `//` in dictionary data is ignored, so this file can be written
 like this:
 
     colou?r      //  color
     cent(er|re)  //  center
 
 You can use same file by **greple**'s **-f** option and string after
-"//" is ignored as a comment in that case.
+`//` is ignored as a comment in that case.
 
     greple -f DICT ...
 
@@ -68,15 +68,15 @@ line.
 
     greple --dictdata $'colou?r color\ncent(er|re) center\n'
 
-Dictionary entry starting with a sharp sign (`#`) is comment and
+Dictionary entry starting with a sharp sign (`#`) is a comment and
 ignored.
 
 ## Overlapped pattern
 
 When the matched string is same or shorter than previously matched
 string by another pattern, it is simply ignored (**--no-warn-include**
-by default).  So, if you have to declare conflicted patterns, put the
-longer pattern in front.
+by default).  So, if you have to declare conflicted patterns, place
+the longer pattern earlier.
 
 If the matched string overlaps with previously matched string, it is
 warned (**--warn-overlap** by default) and ignored.
@@ -291,7 +291,8 @@ This module is originaly made for Japanese text editing support.
 ## KATAKANA
 
 Japanese KATAKANA word have a lot of variants to describe same word,
-and unification is important but tiresome.  In the next example,
+so unification is important but it's quite tiresome work.  In the next
+example,
 
     イ[エー]ハトー?([ヴブボ]ォ?)  //  イーハトーヴォ
 
@@ -311,14 +312,14 @@ This module helps to detect and correct them.
 ## CPANMINUS
 
     $ cpanm App::Greple::subst
-    or
-    $ curl -sL http://cpanmin.us | perl - App::Greple::subst
 
 # SEE ALSO
 
 [https://github.com/kaz-utashiro/greple](https://github.com/kaz-utashiro/greple)
 
 [https://github.com/kaz-utashiro/greple-subst](https://github.com/kaz-utashiro/greple-subst)
+
+[https://github.com/kaz-utashiro/greple-update](https://github.com/kaz-utashiro/greple-update)
 
 [https://www.jtca.org/standardization/katakana\_guide\_3\_20171222.pdf](https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf)
 
