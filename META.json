@@ -44,11 +44,11 @@
       },
       "runtime" : {
          "requires" : {
-            "App::Greple" : "8.53",
-            "App::Greple::update" : "0.02",
+            "App::Greple" : "8.58",
+            "App::Greple::update" : "0.03",
             "File::Share" : "0",
             "Getopt::EX" : "0",
-            "Getopt::EX::termcolor" : "1.07",
+            "Getopt::EX::termcolor" : "1.08",
             "List::Util" : "0",
             "Mo" : "0",
             "Regexp::Assemble" : "0",

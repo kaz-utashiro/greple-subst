@@ -1,9 +1,9 @@
 requires 'perl', '5.014';
 
-requires 'App::Greple', '8.53';
-requires 'App::Greple::update', '0.02';
+requires 'App::Greple', '8.58';
+requires 'App::Greple::update', '0.03';
 requires 'Getopt::EX';
-requires 'Getopt::EX::termcolor', '1.07';
+requires 'Getopt::EX::termcolor', '1.08';
 requires 'File::Share';
 requires 'Regexp::Assemble';
 requires 'List::Util';
