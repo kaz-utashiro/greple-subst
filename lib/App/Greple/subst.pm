@@ -711,18 +711,18 @@ sub subst_divert {
 
 __DATA__
 
-builtin dict=s         @opt_dictfile
-builtin dictdata=s     @opt_dictdata
-builtin stat-style=s   $opt_stat_style
-builtin stat-item=s    @opt_stat_item
-builtin printdict!     $opt_printdict
-builtin dictname!      $opt_dictname
+builtin         dict=s @opt_dictfile
+builtin     dictdata=s @opt_dictdata
+builtin   stat-style=s $opt_stat_style
+builtin    stat-item=s @opt_stat_item
+builtin    printdict!  $opt_printdict
+builtin     dictname!  $opt_dictname
 builtin subst-format=s @opt_format
-builtin subst!         $opt_subst
-builtin check=s        $opt_check
-builtin select=s       $opt_subst_select
-builtin linefold!      $opt_linefold
-builtin remember!      $remember_data
+builtin        subst!  $opt_subst
+builtin        check=s $opt_check
+builtin       select=s $opt_subst_select
+builtin     linefold!  $opt_linefold
+builtin     remember!  $remember_data
 builtin warn-overlap!  $opt_warn_overlap
 builtin warn-include!  $opt_warn_include
 builtin ignore-space!  $opt_ignore_space
@@ -781,7 +781,7 @@ option --ms --microsoft
 
 option --all-sample-dict --jtf --jtca --microsoft
 
-option --all-katakana	     --exdict all-katakana.dict
+option --all-katakana --exdict all-katakana.dict
 
 option --dumpdict --printdict --prologue 'sub{exit}'
 
