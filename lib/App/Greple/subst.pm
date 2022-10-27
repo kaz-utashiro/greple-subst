@@ -735,7 +735,7 @@ option default \
 	--le +&subst_search --no-regioncolor
 
 ##
-## Now these options are implemented by -Mudpate module
+## Now these options are implemented by -Mupdate module
 ## --diffcmd, -U are built-in options
 ##
 autoload -Mupdate --update::diff --update::create --update::update
