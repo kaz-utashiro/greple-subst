@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-subst - Greple module for text search and substitution
+subst - テキスト検索と置換のための Greple モジュール
 
 =head1 VERSION
 
@@ -10,7 +10,7 @@ Version 2.3104
 
 =head1 SYNOPSIS
 
-greple -Msubst --dict I<dictionary> [ options ]
+greple -Msubst --dict I<dictionary> [ オプション ]。
 
   Dictionary:
     --dict      dictionary file
@@ -37,61 +37,45 @@ greple -Msubst --dict I<dictionary> [ options ]
 
 =head1 DESCRIPTION
 
-This B<greple> module supports check and substitution of text files
-based on dictionary data.
+この B<greple> モジュールは、辞書データに基づくテキストファイルのチェックと置換をサポートする。
 
-Dictionary file is given by B<--dict> option and each line contains
-matching pattern and expected string pairs.
+辞書ファイルはB<--dict>オプションで与えられ、各行にはマッチするパターンと期待される文字列のペアが含まれる。
 
     greple -Msubst --dict DICT
 
-If the dictionary file contains following data:
+辞書ファイルが以下のようなデータを含んでいる場合
 
     colou?r      color
     cent(er|re)  center
 
-above command finds the first pattern which does not match the second
-string, that is "colour" and "centre" in this case.
+上記のコマンドは、2番目の文字列にマッチしない最初のパターン、つまり、この場合、"color "と "center "を見つける。
 
-Field C<//> in dictionary data is ignored, so this file can be written
-like this:
+辞書データのフィールドC<//>は無視されるので、このファイルはこのように書くことができる。
 
     colou?r      //  color
     cent(er|re)  //  center
 
-You can use same file by B<greple>'s B<-f> option and string after
-C<//> is ignored as a comment in that case.
+B<greple>のB<-f>オプションで同じファイルを使うこともでき、その場合はC<//>の後ろの文字列はコメントとして無視される。
 
     greple -f DICT ...
 
-Option B<--dictdata> can be used to provide dictionary data in command
-line.
+B<--dictdata>オプションは、コマンドラインで辞書データを提供するために使用することができる。
 
     greple --dictdata $'colou?r color\ncent(er|re) center\n'
 
-Dictionary entry starting with a sharp sign (C<#>) is a comment and
-ignored.
+シャープ記号(C<#>)で始まる辞書項目はコメントとなり、無視される。
 
 =head2 Overlapped pattern
 
-When the matched string is same or shorter than previously matched
-string by another pattern, it is simply ignored (B<--no-warn-include>
-by default).  So, if you have to declare conflicted patterns, place
-the longer pattern earlier.
+マッチした文字列が、以前に別のパターンでマッチした文字列と同じか短い場合は、単に無視される (デフォルトでは B<--no-warn-include>)。したがって、矛盾するパターンを宣言する必要がある場合は、長い方のパターンを先に配置する。
 
-If the matched string overlaps with previously matched string, it is
-warned (B<--warn-overlap> by default) and ignored.
+マッチした文字列が前にマッチした文字列と重なる場合、警告を出し (デフォルトでは B<--warn-overlap)、無視される。
 
 =head2 Terminal color
 
-This version uses L<Getopt::EX::termcolor> module.  It sets option
-B<--light-screen> or B<--dark-screen> depending on the terminal on
-which the command run, or B<TERM_BGCOLOR> environment variable.
+このバージョンでは、L<Getopt::EX::termcolor> モジュールを使用する。これは、コマンドを実行した端末、または環境変数B<TERM_BGCOLOR>に応じて、B<--light-screen>またはB<--dark-screen>オプションを設定する。
 
-Some terminals (eg: "Apple_Terminal" or "iTerm") are detected
-automatically and no action is required.  Otherwise set
-B<TERM_BGCOLOR> environment to #000000 (black) to #FFFFFF (white)
-digit depending on terminal background color.
+一部の端末 (例: "Apple_Terminal" や "iTerm") は自動的に検出され、何もする必要はない。それ以外の場合は、B<TERM_BGCOLOR>環境変数に#000000（黒）〜#FFFFFF（白）の数字を設定し、端末の背景色に依存する。
 
 =head1 OPTIONS
 
@@ -99,59 +83,45 @@ digit depending on terminal background color.
 
 =item B<--dict>=I<file>
 
-Specify dictionary file.
+辞書ファイルを指定する。
 
 =item B<--dictdata>=I<data>
 
-Specify dictionary data by text.
+辞書データをテキストで指定する。
 
 =item B<--check>=C<outstand>|C<ng>|C<ok>|C<any>|C<all>|C<none>
 
-Option B<--check> takes argument from C<ng>, C<ok>, C<any>,
-C<outstand>, C<all> and C<none>.
+オプションB<--check>は、C<ng>, C<ok>, C<any>, C<outstand>, C<all>, C<none>から引数を取る。
 
-With default value C<outstand>, command will show information about
-both expected and unexpected words only when unexpected word was found
-in the same file.
+デフォルトのC<outstand>では、同じファイルに予想外の単語があった場合のみ、予想外の単語と予想外の単語の両方についての情報を表示する。
 
-With value C<ng>, command will show information about unexpected
-words.  With value C<ok>, you will get information about expected
-words.  Both with value C<any>.
+C<ng>を指定すると、予期しない単語についての情報を表示する。値C<ok>を指定すると、予想される単語についての情報を表示する。値C<any>の場合は両方である。
 
-Value C<all> and C<none> make sense only when used with B<--stat>
-option, and display information about never matched pattern.
+C<all>とC<none>はB<--stat>オプションと一緒に使われたときだけ意味があり、マッチしなかったパターンに関する情報を表示する。
 
 =item B<--select>=I<N>
 
-Select I<N>th entry from the dictionary.  Argument is interpreted by
-L<Getopt::EX::Numbers> module.  Range can be defined like
-B<--select>=C<1:3,7:9>.  You can get numbers by B<--stat> option.
+I<N>番目のエントリを辞書から選択する。引数はL<Getopt::EX::Numbers>モジュールによって解釈される。範囲はB<--select>=C<1:3,7:9>のように定義することができる。B<--stat>オプションで数値を取得することができる。
 
 =item B<--linefold>
 
-If the target data is folded in the middle of text, use B<--linefold>
-option.  It creates regex patterns which matches string spread across
-lines.  Substituted text does not include newline, though.  Because it
-confuses regex behavior somewhat, avoid to use if possible.
+B<--linefold>オプションは、対象データがテキストの途中で折り返されている場合に使用する。行をまたぐ文字列にマッチする正規表現パターンが作成される。ただし、置換される文字列には改行が含まれない。正規表現の動作を多少混乱させるので、なるべく使わないでください。
 
 =item B<--stat>
 
 =item B<--with-stat>
 
-Print statistical information.  Works with B<--check> option.
+統計情報を表示する。B<--check>オプションと併用する。
 
-Option B<--with-stat> print statistics after normal output, while
-B<--stat> print only statistics.
+B<--with-stat>オプションは通常の出力の後に統計情報を出力し、B<--stat>は統計情報のみを出力する。
 
 =item B<--stat-style>=C<default>|C<dict>
 
-Using B<--stat-style=dict> option with B<--stat> and B<--check=any>,
-you can get dictionary style output for your working document.
+B<--stat>とB<--check=any>にB<--stat-style=dict>オプションを併用すると、作業文書に対して辞書風の出力を行うことができる。
 
 =item B<--stat-item> I<item>=[0,1]
 
-Specify which item is shown up in stat information.  Default values
-are:
+統計情報に表示される項目を指定する。デフォルト値は
 
     match=1
     expect=1
@@ -160,29 +130,25 @@ are:
     ok=1
     dict=0
 
-If you don't need to see pattern field, use like this:
+patternフィールドを表示する必要がない場合は、このように使用する。
 
     --stat-item match=0
 
-Multiple parameters can be set at once:
+複数のパラメータを一度に設定することができる。
 
     --stat-item match=number=0,ng=1,ok=1
 
 =item B<--subst>
 
-Substitute unexpected matched pattern to expected string.  Newline
-character in the matched string is ignored.  Pattern without
-replacement string is not changed.
+マッチしたパターンを期待される文字列に置き換える。マッチした文字列の改行文字は無視される。置換文字列のないパターンは変更されない。
 
 =item B<--[no-]warn-overlap>
 
-Warn overlapped pattern.
-Default on.
+オーバーラップしたパターンを警告する。デフォルトはonである。
 
 =item B<--[no-]warn-include>
 
-Warn included pattern.
-Default off.
+含まれるパターンを警告する。デフォルトはオフ。
 
 =back
 
@@ -194,31 +160,27 @@ Default off.
 
 =item B<--diffcmd>=I<command>
 
-Option B<--diff> produce diff output of original and converted text.
+B<--diff>オプションは、変換前のテキストと変換後のテキストの差分を出力する。
 
-Specify diff command name used by B<--diff> option.  Default is "diff
--u".
+B<--diff>オプションで使用するdiffコマンド名を指定する。デフォルトは "diff -u "である。
 
 =item B<--create>
 
-Create new file and write the result.  Suffix ".new" is appended to
-original filename.
+新規ファイルを作成し、結果を書き込む。元のファイル名の末尾に".new "が付加される。
 
 =item B<--replace>
 
-Replace the target file by converted result.  Original file is renamed
-to backup name with ".bak" suffix.
+対象ファイルを変換後の結果で置き換える。元ファイルはバックアップ名に".bak "を付けてリネームされる。
 
 =item B<--overwrite>
 
-Overwrite the target file by converted result with no backup.
+バックアップを取らずに、変換後のファイルを上書きする。
 
 =back
 
 =head1 DICTIONARY
 
-This module includes example dictionaries.  They are installed share
-directory and accessed by B<--exdict> option.
+本モジュールには、サンプル辞書が含まれている。これらは共有ディレクトリにインストールされ、B<--exdict>オプションでアクセスすることができる。
 
     greple -Msubst --exdict jtca-katakana-guide-3.dict
 
@@ -226,17 +188,17 @@ directory and accessed by B<--exdict> option.
 
 =item B<--exdict> I<dictionary>
 
-Use I<dictionary> flie in the distribution as a dictionary file.
+辞書ファイルとしては、配布されているI<dictionary> flieを使用する。
 
 =item B<--exdictdir>
 
-Show dictionary directory.
+辞書ディレクトリを表示する。
 
 =item B<--exdict> jtca-katakana-guide-3.dict
 
 =item B<--jtca-katakana-guide>
 
-Created from following guideline document.
+以下のガイドラインに基づいて作成されている。
 
     外来語（カタカナ）表記ガイドライン 第3版
     制定：2015年8月
@@ -247,15 +209,13 @@ Created from following guideline document.
 
 =item B<--jtca>
 
-Customized B<--jtca-katakana-guide>.  Original dictionary is
-automatically generated from published data.  This dictionary is
-customized for practical use.
+B<--jtca-katakana-guide>をカスタマイズしたもの。オリジナルの辞書は公開されたデータから自動生成されたものである。この辞書は、実用のためにカスタマイズされている。
 
 =item B<--exdict> jtf-style-guide-3.dict
 
 =item B<--jtf-style-guide>
 
-Created from following guideline document.
+以下のガイドラインに基づいて作成されている。
 
     JTF日本語標準スタイルガイド（翻訳用）
     第3.0版
@@ -266,16 +226,13 @@ Created from following guideline document.
 
 =item B<--jtf>
 
-Customized B<--jtf-style-guide>.  Original dictionary is automatically
-generated from published data.  This dictionary is customized for
-practical use.
+カスタマイズB<--jtf-style-guide>。オリジナル辞書は公開データから自動生成される。この辞書は、実用に耐えるようにカスタマイズされている。
 
 =item B<--exdict> sccc2.dict
 
 =item B<--sccc2>
 
-Dictionary used for "C/C++ セキュアコーディング 第2版" published in
-2014.
+2014年に出版された「C/C++ セキュアコーディング 第2版」で使用された辞書。
 
     https://www.jpcert.or.jp/securecoding_book_2nd.html
 
@@ -283,39 +240,33 @@ Dictionary used for "C/C++ セキュアコーディング 第2版" published in
 
 =item B<--ms-style-guide>
 
-Dictionary generated from Microsoft localization style guide.
+Microsoftのローカライズスタイルガイドから生成された辞書。
 
     https://www.microsoft.com/ja-jp/language/styleguides
 
-Data is generated from this article:
+本記事から生成されたデータである。
 
     https://www.atmarkit.co.jp/news/200807/25/microsoft.html
 
 =item B<--microsoft>
 
-Customized B<--ms-style-guide>.  Original dictionary is automatically
-generated from published data.  This dictionary is customized for
-practical use.
+カスタマイズされたB<--ms-style-guide>。オリジナルの辞書は、公開されたデータから自動生成されたものである。本辞書は、実用化に向けてカスタマイズしたものである。
 
-Amendment dictionary can be found
-L<here|https://github.com/kaz-utashiro/greple-subst/blob/master/share/ms-amend.dict>.
-Please raise an issue or send a pull-request if you have request to update.
+修正辞書は、L<こちら|https://github.com/kaz-utashiro/greple-subst/blob/master/share/ms-amend.dict>で見ることができる。更新の要望があれば、issueを送るか、pull-requestを送信してください。
 
 =back
 
 =head1 JAPANESE
 
-This module is originaly made for Japanese text editing support.
+このモジュールは、日本語のテキスト編集をサポートするためにオリジナルで作成された。
 
 =head2 KATAKANA
 
-Japanese KATAKANA word have a lot of variants to describe same word,
-so unification is important but it's quite tiresome work.  In the next
-example,
+日本語のカタカナ語は、同じ言葉を表すのにいくつものバリエーションがあるので、統一することが重要だが、かなり面倒な作業である。次の例では
 
     イ[エー]ハトー?([ヴブボ]ォ?)  //  イーハトーヴォ
 
-left pattern matches all following words.
+左のパターンは、次の単語全てにマッチする。
 
     イエハトブ
     イーハトヴ
@@ -324,7 +275,7 @@ left pattern matches all following words.
     イーハトーボ
     イーハトーブ
 
-This module helps to detect and correct them.
+このモジュールは、これらの単語を検出し、修正するのに役立つ。
 
 =head1 INSTALL
 
@@ -342,13 +293,11 @@ L<https://github.com/kaz-utashiro/greple-update>
 
 L<https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf>
 
-L<https://www.jtf.jp/jp/style_guide/styleguide_top.html>,
-L<https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf>
+L<https://www.jtf.jp/jp/style_guide/styleguide_top.html>, L<https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf>
 
-L<https://www.microsoft.com/ja-jp/language/styleguides>,
-L<https://www.atmarkit.co.jp/news/200807/25/microsoft.html>
+L<https://www.microsoft.com/ja-jp/language/styleguides>，L<https://www.atmarkit.co.jp/news/200807/25/microsoft.html>。
 
-L<文化庁 国語施策・日本語教育 国語施策情報 内閣告示・内閣訓令 外来語の表記|https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai/index.html>
+L＜文化庁 国語施策・日本語教育 国語施策情報 内閣告示・内閣訓 外来語の表記|https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai/index.html>
 
 L<https://qiita.com/kaz-utashiro/items/85add653a71a7e01c415>
 

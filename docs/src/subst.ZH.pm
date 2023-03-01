@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-subst - Greple module for text search and substitution
+subst - 用于文本搜索和替换的Greple模块
 
 =head1 VERSION
 
@@ -10,7 +10,7 @@ Version 2.3104
 
 =head1 SYNOPSIS
 
-greple -Msubst --dict I<dictionary> [ options ]
+greple -Msubst --dict I<dictionary> [ 选项 ]。
 
   Dictionary:
     --dict      dictionary file
@@ -37,61 +37,45 @@ greple -Msubst --dict I<dictionary> [ options ]
 
 =head1 DESCRIPTION
 
-This B<greple> module supports check and substitution of text files
-based on dictionary data.
+这个B<greple>模块支持基于字典数据的文本文件的检查和替换。
 
-Dictionary file is given by B<--dict> option and each line contains
-matching pattern and expected string pairs.
+字典文件由B<-dict>选项给出，每一行都包含匹配的模式和预期的字符串对。
 
     greple -Msubst --dict DICT
 
-If the dictionary file contains following data:
+如果字典文件包含以下数据。
 
     colou?r      color
     cent(er|re)  center
 
-above command finds the first pattern which does not match the second
-string, that is "colour" and "centre" in this case.
+上述命令找到第一个与第二个字符串不匹配的模式，即本例中的 "颜色 "和 "中心"。
 
-Field C<//> in dictionary data is ignored, so this file can be written
-like this:
+字典数据中的字段C<//>被忽略，所以这个文件可以这样写。
 
     colou?r      //  color
     cent(er|re)  //  center
 
-You can use same file by B<greple>'s B<-f> option and string after
-C<//> is ignored as a comment in that case.
+你可以通过B<greple>的B<-f>选项使用同一个文件，在这种情况下，C</>后面的字符串作为注释被忽略。
 
     greple -f DICT ...
 
-Option B<--dictdata> can be used to provide dictionary data in command
-line.
+选项B<--dictdata>可以用来在命令行中提供字典数据。
 
     greple --dictdata $'colou?r color\ncent(er|re) center\n'
 
-Dictionary entry starting with a sharp sign (C<#>) is a comment and
-ignored.
+以尖锐符号（C<#>）开始的字典条目是一个注释，被忽略。
 
 =head2 Overlapped pattern
 
-When the matched string is same or shorter than previously matched
-string by another pattern, it is simply ignored (B<--no-warn-include>
-by default).  So, if you have to declare conflicted patterns, place
-the longer pattern earlier.
+当匹配的字符串与之前被另一个模式匹配的字符串相同或更短时，它将被简单地忽略（默认为B<--no-warn-include>）。因此，如果你必须声明冲突的模式，请将较长的模式放在前面。
 
-If the matched string overlaps with previously matched string, it is
-warned (B<--warn-overlap> by default) and ignored.
+如果匹配的字符串与先前匹配的字符串重叠，则会被警告（默认为B<--warn-overlap>）并被忽略。
 
 =head2 Terminal color
 
-This version uses L<Getopt::EX::termcolor> module.  It sets option
-B<--light-screen> or B<--dark-screen> depending on the terminal on
-which the command run, or B<TERM_BGCOLOR> environment variable.
+这个版本使用L<Getopt::EX::termcolor>模块。它设置选项B<--light-screen>或B<--dark-screen>，这取决于运行命令的终端，或B<TERM_BGCOLOR>环境变量。
 
-Some terminals (eg: "Apple_Terminal" or "iTerm") are detected
-automatically and no action is required.  Otherwise set
-B<TERM_BGCOLOR> environment to #000000 (black) to #FFFFFF (white)
-digit depending on terminal background color.
+一些终端（例如："Apple_Terminal "或 "iTerm"）会被自动检测，不需要任何操作。否则，根据终端的背景颜色，将B<TERM_BGCOLOR>环境设置为#000000（黑色）至#FFFFFF（白色）的数字。
 
 =head1 OPTIONS
 
@@ -99,59 +83,45 @@ digit depending on terminal background color.
 
 =item B<--dict>=I<file>
 
-Specify dictionary file.
+指定字典文件。
 
 =item B<--dictdata>=I<data>
 
-Specify dictionary data by text.
+用文本指定字典数据。
 
 =item B<--check>=C<outstand>|C<ng>|C<ok>|C<any>|C<all>|C<none>
 
-Option B<--check> takes argument from C<ng>, C<ok>, C<any>,
-C<outstand>, C<all> and C<none>.
+选项B<--检查>的参数来自C<ng>、C<ok>、C<any>、C<outstand>、C<all>和C<none>。
 
-With default value C<outstand>, command will show information about
-both expected and unexpected words only when unexpected word was found
-in the same file.
+在默认值C<outstand>下，只有在同一文件中发现意外字词时，命令才会显示预期和意外字词的信息。
 
-With value C<ng>, command will show information about unexpected
-words.  With value C<ok>, you will get information about expected
-words.  Both with value C<any>.
+如果默认值为C<ng>，命令将显示意外字词的信息。当值为C<ok>时，你将得到关于预期词的信息。用值C<any>时都是如此。
 
-Value C<all> and C<none> make sense only when used with B<--stat>
-option, and display information about never matched pattern.
+值C<all>和C<none>只有在与B<--stat>选项一起使用时才有意义，并显示从未匹配的模式的信息。
 
 =item B<--select>=I<N>
 
-Select I<N>th entry from the dictionary.  Argument is interpreted by
-L<Getopt::EX::Numbers> module.  Range can be defined like
-B<--select>=C<1:3,7:9>.  You can get numbers by B<--stat> option.
+从字典中选择第I<N>个条目。参数由L<Getopt::EX::Numbers>模块解释。范围可以像B<--select>=C<1:3,7:9>那样定义。你可以通过B<--stat>选项获得数字。
 
 =item B<--linefold>
 
-If the target data is folded in the middle of text, use B<--linefold>
-option.  It creates regex patterns which matches string spread across
-lines.  Substituted text does not include newline, though.  Because it
-confuses regex behavior somewhat, avoid to use if possible.
+如果目标数据被折叠在文本中间，使用B<--linefold>选项。它可以创建与跨行的字符串相匹配的反义词模式。但是，被替换的文本不包括换行。因为它在一定程度上混淆了regex行为，如果可能的话，请避免使用。
 
 =item B<--stat>
 
 =item B<--with-stat>
 
-Print statistical information.  Works with B<--check> option.
+打印统计信息。与B<--check>选项一起工作。
 
-Option B<--with-stat> print statistics after normal output, while
-B<--stat> print only statistics.
+选项B<--with-stat>在正常输出后打印统计信息，而B<--stat>只打印统计信息。
 
 =item B<--stat-style>=C<default>|C<dict>
 
-Using B<--stat-style=dict> option with B<--stat> and B<--check=any>,
-you can get dictionary style output for your working document.
+将B<--stat-style=dict>选项与B<--stat>和B<--check=any>一起使用，你可以为你的工作文件获得字典式输出。
 
 =item B<--stat-item> I<item>=[0,1]
 
-Specify which item is shown up in stat information.  Default values
-are:
+指定在统计信息中显示哪个项目。默认值是。
 
     match=1
     expect=1
@@ -160,29 +130,25 @@ are:
     ok=1
     dict=0
 
-If you don't need to see pattern field, use like this:
+如果你不需要看到模式字段，就像这样使用。
 
     --stat-item match=0
 
-Multiple parameters can be set at once:
+可以同时设置多个参数。
 
     --stat-item match=number=0,ng=1,ok=1
 
 =item B<--subst>
 
-Substitute unexpected matched pattern to expected string.  Newline
-character in the matched string is ignored.  Pattern without
-replacement string is not changed.
+将意外匹配的模式替换为预期的字符串。匹配字符串中的换行符被忽略。没有替换字符串的模式不会被改变。
 
 =item B<--[no-]warn-overlap>
 
-Warn overlapped pattern.
-Default on.
+警告重叠的模式。默认打开。
 
 =item B<--[no-]warn-include>
 
-Warn included pattern.
-Default off.
+警告包含的模式。默认为关闭。
 
 =back
 
@@ -194,31 +160,27 @@ Default off.
 
 =item B<--diffcmd>=I<command>
 
-Option B<--diff> produce diff output of original and converted text.
+选项B<--diff>产生原始文本和转换后文本的差异输出。
 
-Specify diff command name used by B<--diff> option.  Default is "diff
--u".
+指定B<--diff>选项使用的diff命令名称。默认为 "diff -u"。
 
 =item B<--create>
 
-Create new file and write the result.  Suffix ".new" is appended to
-original filename.
+创建新文件并写入结果。后缀".new "将附加到原始文件名上。
 
 =item B<--replace>
 
-Replace the target file by converted result.  Original file is renamed
-to backup name with ".bak" suffix.
+用转换后的结果替换目标文件。原始文件被重命名为后缀为".bak "的备份名。
 
 =item B<--overwrite>
 
-Overwrite the target file by converted result with no backup.
+用转换后的结果覆盖目标文件，没有备份。
 
 =back
 
 =head1 DICTIONARY
 
-This module includes example dictionaries.  They are installed share
-directory and accessed by B<--exdict> option.
+这个模块包括字典的例子。它们被安装在共享目录中，通过B<--exdict>选项访问。
 
     greple -Msubst --exdict jtca-katakana-guide-3.dict
 
@@ -226,17 +188,17 @@ directory and accessed by B<--exdict> option.
 
 =item B<--exdict> I<dictionary>
 
-Use I<dictionary> flie in the distribution as a dictionary file.
+使用分布中的I<dictionary> flie作为字典文件。
 
 =item B<--exdictdir>
 
-Show dictionary directory.
+显示字典目录。
 
 =item B<--exdict> jtca-katakana-guide-3.dict
 
 =item B<--jtca-katakana-guide>
 
-Created from following guideline document.
+从以下指导性文件中创建。
 
     外来語（カタカナ）表記ガイドライン 第3版
     制定：2015年8月
@@ -247,15 +209,13 @@ Created from following guideline document.
 
 =item B<--jtca>
 
-Customized B<--jtca-katakana-guide>.  Original dictionary is
-automatically generated from published data.  This dictionary is
-customized for practical use.
+定制的B<--jtca-katakana-guide>。原始字典是由已发表的数据自动生成的。本词典是为实际使用而定制的。
 
 =item B<--exdict> jtf-style-guide-3.dict
 
 =item B<--jtf-style-guide>
 
-Created from following guideline document.
+从以下指导性文件中创建。
 
     JTF日本語標準スタイルガイド（翻訳用）
     第3.0版
@@ -266,16 +226,13 @@ Created from following guideline document.
 
 =item B<--jtf>
 
-Customized B<--jtf-style-guide>.  Original dictionary is automatically
-generated from published data.  This dictionary is customized for
-practical use.
+定制的B<--jtf-style-guide>。原始字典是由公布的数据自动生成的。这个字典是为实际使用而定制的。
 
 =item B<--exdict> sccc2.dict
 
 =item B<--sccc2>
 
-Dictionary used for "C/C++ セキュアコーディング 第2版" published in
-2014.
+词典用于2014年出版的 "C/C++ セキュアコーディング 第2版"。
 
     https://www.jpcert.or.jp/securecoding_book_2nd.html
 
@@ -283,39 +240,33 @@ Dictionary used for "C/C++ セキュアコーディング 第2版" published in
 
 =item B<--ms-style-guide>
 
-Dictionary generated from Microsoft localization style guide.
+词典根据微软本地化风格指南生成。
 
     https://www.microsoft.com/ja-jp/language/styleguides
 
-Data is generated from this article:
+数据从这篇文章中生成。
 
     https://www.atmarkit.co.jp/news/200807/25/microsoft.html
 
 =item B<--microsoft>
 
-Customized B<--ms-style-guide>.  Original dictionary is automatically
-generated from published data.  This dictionary is customized for
-practical use.
+Customized B<--ms-style-guide>。原始词典是由已发表的数据自动生成的。本词典是为实际使用而定制的。
 
-Amendment dictionary can be found
-L<here|https://github.com/kaz-utashiro/greple-subst/blob/master/share/ms-amend.dict>.
-Please raise an issue or send a pull-request if you have request to update.
+修正后的字典可以找到L<这里|https://github.com/kaz-utashiro/greple-subst/blob/master/share/ms-amend.dict>。如果你有更新的要求，请提出问题或发送pull-request。
 
 =back
 
 =head1 JAPANESE
 
-This module is originaly made for Japanese text editing support.
+本模块是为支持日语文本编辑而制作的。
 
 =head2 KATAKANA
 
-Japanese KATAKANA word have a lot of variants to describe same word,
-so unification is important but it's quite tiresome work.  In the next
-example,
+日本的KATAKANA词有很多变体来描述同一个词，所以统一很重要，但这是很累人的工作。在下一个例子中。
 
     イ[エー]ハトー?([ヴブボ]ォ?)  //  イーハトーヴォ
 
-left pattern matches all following words.
+左边的模式匹配了所有下面的词。
 
     イエハトブ
     イーハトヴ
@@ -324,7 +275,7 @@ left pattern matches all following words.
     イーハトーボ
     イーハトーブ
 
-This module helps to detect and correct them.
+这个模块有助于检测和纠正它们。
 
 =head1 INSTALL
 
@@ -342,13 +293,11 @@ L<https://github.com/kaz-utashiro/greple-update>
 
 L<https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf>
 
-L<https://www.jtf.jp/jp/style_guide/styleguide_top.html>,
-L<https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf>
+L<https://www.jtf.jp/jp/style_guide/styleguide_top.html>, L<https://www.jtf.jp/jp/style_guide/pdf/jtf_style_guide.pdf>
 
-L<https://www.microsoft.com/ja-jp/language/styleguides>,
-L<https://www.atmarkit.co.jp/news/200807/25/microsoft.html>
+L<https://www.microsoft.com/ja-jp/language/styleguides>, L<https://www.atmarkit.co.jp/news/200807/25/microsoft.html>
 
-L<文化庁 国語施策・日本語教育 国語施策情報 内閣告示・内閣訓令 外来語の表記|https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai/index.html>
+L<文化庁 國語施策・日本語教育 國語施策情報 內閣告示・內閣訓令 外來語の表記|https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/gairai/index.html>
 
 L<https://qiita.com/kaz-utashiro/items/85add653a71a7e01c415>
 
