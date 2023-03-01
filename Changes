@@ -2,6 +2,11 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.32 2023-03-01T08:20:02Z
+
+    - Update ms-amend.dict
+    - Add multilingual document.
+
 2.3104 2022-10-08T12:01:22Z
 
     - require File::Share@0.27
