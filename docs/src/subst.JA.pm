@@ -6,7 +6,7 @@ subst - テキスト検索と置換のための Greple モジュール
 
 =head1 VERSION
 
-Version 2.3104
+Version 2.32
 
 =head1 SYNOPSIS
 
@@ -320,7 +320,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.3104';
+our $VERSION = '2.32';
 
 use warnings;
 use utf8;

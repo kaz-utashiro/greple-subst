@@ -4,7 +4,7 @@ subst - 텍스트 검색 및 대체를 위한 Greple 모듈
 
 # VERSION
 
-Version 2.3104
+Version 2.32
 
 # SYNOPSIS
 
