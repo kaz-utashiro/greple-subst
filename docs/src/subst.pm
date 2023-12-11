@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.33
+Version 2.3302
 
 =head1 SYNOPSIS
 
@@ -371,7 +371,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.33';
+our $VERSION = '2.3302';
 
 use warnings;
 use utf8;
@@ -382,7 +382,6 @@ our @EXPORT      = qw(
     &subst_initialize
     &subst_begin
     &subst_diff
-    &subst_divert
     &subst_update
     &subst_show_stat
     &subst_search
@@ -404,7 +403,6 @@ use File::Share qw(:all);
 $ENV{GREPLE_SUBST_DICT} //= dist_dir 'App-Greple-subst';
 
 our $debug = 0;
-our $remember_data = 1;
 our $opt_subst = 0;
 our @opt_subst_from;
 our @opt_subst_to;
@@ -431,7 +429,6 @@ our $opt_show_numbers = 1;
 my %stat;
 
 my $current_file;
-my $contents;
 my $ignorechar_re;
 my @dicts;
 
@@ -481,29 +478,6 @@ sub subst_initialize {
 sub subst_begin {
     my %arg = @_;
     $current_file = delete $arg{&FILELABEL} or die;
-    $contents = $_ if $remember_data;
-}
-
-#
-# define &divert_stdout and &recover_stdout
-#
-{
-    my $diverted = 0;
-    my $buffer;
-
-    sub divert_stdout {
-	$buffer = @_ ? shift : '/dev/null';
-	$diverted = $diverted == 0 ? 1 : return;
-	open  SUBST_STDOUT, '>&', \*STDOUT or die "open: $!";
-	close STDOUT;
-	open  STDOUT, '>', $buffer or die "open: $!";
-    }
-
-    sub recover_stdout {
-	$diverted = $diverted == 1 ? 0 : return;
-	close STDOUT;
-	open  STDOUT, '>&', \*SUBST_STDOUT or die "open: $!";
-    }
 }
 
 use Text::VisualWidth::PP;
@@ -697,16 +671,6 @@ sub subst_search {
     grep $effective[$_->[2]], @matched;
 }
 
-my $divert_buffer;
-
-sub subst_divert {
-    my %arg = @_;
-    my $filename = delete $arg{&FILELABEL};
-
-    $divert_buffer = '';
-    divert_stdout(\$divert_buffer);
-}
-
 1;
 
 __DATA__
@@ -720,13 +684,15 @@ builtin     dictname!  $opt_dictname
 builtin subst-format=s @opt_format
 builtin        subst!  $opt_subst
 builtin        check=s $opt_check
-builtin       select=s $opt_subst_select
+builtin subst-select=s $opt_subst_select
 builtin     linefold!  $opt_linefold
-builtin     remember!  $remember_data
 builtin warn-overlap!  $opt_warn_overlap
 builtin warn-include!  $opt_warn_include
 builtin ignore-space!  $opt_ignore_space
 builtin show-comment!  $opt_show_comment
+
+# override greple's original option
+option --select --subst-select
 
 option default \
 	-Mtermcolor::bg(default=100,light=--subst-color-light,dark=--subst-color-dark) \
@@ -738,16 +704,19 @@ option default \
 ## Now these options are implemented by -Mupdate module
 ## --diffcmd, -U are built-in options
 ##
-autoload -Mupdate --update::diff --update::create --update::update
+autoload -Mupdate \
+	--update::diff   \
+	--update::create \
+	--update::update \
+	--update::discard
+
 option --diff      --subst --update::diff
 option --create    --subst --update::create
 option --replace   --subst --update::update --with-backup
 option --overwrite --subst --update::update
 
-option --divert-stdout --prologue __PACKAGE__::divert_stdout \
-		       --epilogue __PACKAGE__::recover_stdout
-option --with-stat     --epilogue subst_show_stat
-option --stat          --divert-stdout --with-stat
+option --with-stat --epilogue subst_show_stat
+option --stat      --update::discard --with-stat
 
 autoload -Msubst::dyncmap --dyncmap
 
