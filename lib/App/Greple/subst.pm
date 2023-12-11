@@ -403,7 +403,6 @@ use File::Share qw(:all);
 $ENV{GREPLE_SUBST_DICT} //= dist_dir 'App-Greple-subst';
 
 our $debug = 0;
-our $remember_data = 1;
 our $opt_subst = 0;
 our @opt_subst_from;
 our @opt_subst_to;
@@ -430,7 +429,6 @@ our $opt_show_numbers = 1;
 my %stat;
 
 my $current_file;
-my $contents;
 my $ignorechar_re;
 my @dicts;
 
@@ -480,7 +478,6 @@ sub subst_initialize {
 sub subst_begin {
     my %arg = @_;
     $current_file = delete $arg{&FILELABEL} or die;
-    $contents = $_ if $remember_data;
 }
 
 use Text::VisualWidth::PP;
@@ -687,13 +684,15 @@ builtin     dictname!  $opt_dictname
 builtin subst-format=s @opt_format
 builtin        subst!  $opt_subst
 builtin        check=s $opt_check
-builtin       select=s $opt_subst_select
+builtin subst-select=s $opt_subst_select
 builtin     linefold!  $opt_linefold
-builtin     remember!  $remember_data
 builtin warn-overlap!  $opt_warn_overlap
 builtin warn-include!  $opt_warn_include
 builtin ignore-space!  $opt_ignore_space
 builtin show-comment!  $opt_show_comment
+
+# override greple's original option
+option --select --subst-select
 
 option default \
 	-Mtermcolor::bg(default=100,light=--subst-color-light,dark=--subst-color-dark) \
