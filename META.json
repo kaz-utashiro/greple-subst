@@ -45,7 +45,7 @@
       },
       "runtime" : {
          "requires" : {
-            "App::Greple" : "9.08",
+            "App::Greple" : "9.0902",
             "App::Greple::update" : "1.01",
             "File::Share" : "0.27",
             "Getopt::EX" : "0",
@@ -53,7 +53,7 @@
             "Getopt::Long" : "0",
             "List::Util" : "0",
             "Mo" : "0",
-            "Text::VisualPrintf" : "4.01",
+            "Text::VisualPrintf" : "4.03",
             "Text::VisualWidth::PP" : "0.05",
             "perl" : "v5.14.0"
          }
@@ -76,7 +76,7 @@
          "web" : "https://github.com/kaz-utashiro/greple-subst"
       }
    },
-   "version" : "2.3302",
+   "version" : "2.3303",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Kazumasa Utashiro <kaz@utashiro.com>"

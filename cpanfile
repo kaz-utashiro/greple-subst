@@ -1,6 +1,6 @@
 requires 'perl', '5.014';
 
-requires 'App::Greple', '9.08';
+requires 'App::Greple', '9.0902';
 requires 'App::Greple::update', '1.01';
 requires 'Getopt::Long';
 requires 'Getopt::EX';
@@ -10,7 +10,7 @@ requires 'List::Util';
 requires 'Mo';
 
 requires 'Text::VisualWidth::PP', '0.05';
-requires 'Text::VisualPrintf', '4.01';
+requires 'Text::VisualPrintf', '4.03';
 
 on 'develop' => sub {
     requires 'Regexp::Assemble';

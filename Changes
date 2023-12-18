@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.3303 2023-12-18T08:21:35Z
+
+    - update ms-amend.dict
+
 2.3302 2023-12-11T03:25:46Z
 
     - make --select option not builtin and define alias
