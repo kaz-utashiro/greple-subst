@@ -603,7 +603,7 @@ sub subst_search {
 		) {
 		my($kind, $list, $match, $show) = @$warn;
 		$show and @$list or next;
-		for my $i (0 .. @$list - 1) {
+		for my $i (keys @$list) {
 		    my($a, $b) = ($list->[$i], $match->[$i]);
 		    warn sprintf("%s \"%s\" with \"%s\" by #%d /%s/ in %s at %d\n",
 				 $kind,
