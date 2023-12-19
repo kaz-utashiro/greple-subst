@@ -6,7 +6,7 @@ subst - 텍스트 검색 및 대체를 위한 Greple 모듈
 
 =head1 VERSION
 
-Version 2.3303
+Version 2.3304
 
 =head1 SYNOPSIS
 
@@ -320,7 +320,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.3303';
+our $VERSION = '2.3304';
 
 use warnings;
 use utf8;
@@ -552,7 +552,7 @@ sub subst_search {
 		) {
 		my($kind, $list, $match, $show) = @$warn;
 		$show and @$list or next;
-		for my $i (0 .. @$list - 1) {
+		for my $i (keys @$list) {
 		    my($a, $b) = ($list->[$i], $match->[$i]);
 		    warn sprintf("%s \"%s\" with \"%s\" by #%d /%s/ in %s at %d\n",
 				 $kind,
