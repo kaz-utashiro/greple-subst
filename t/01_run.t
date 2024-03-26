@@ -57,6 +57,14 @@ SKIP: {
        slurp("t/JA.txt"), "--subst (stdin)");
 }
 
+is(subst(qw(--dict share/macos.dict t/macos-short.txt --subst --all --no-color))
+   ->run->{stdout},
+   slurp("t/macos-list.txt"), "macos.dict (short)");
+
+is(subst(qw(--dict share/macos.dict t/macos-wrong.txt --subst --all --no-color))
+   ->run->{stdout},
+   slurp("t/macos-correct.txt"), "macos.dict (wrong)");
+
 done_testing;
 
 __DATA__

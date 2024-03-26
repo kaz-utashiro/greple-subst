@@ -89,7 +89,12 @@ package App::Greple::subst::Dict {
 		$obj->add_comment($_);
 		next;
 	    }
-	    my @param = grep { not m{^//+$} } split ' ';
+	    my @param;
+	    if ((@param = split(m{\s+//\s+}, $_, 2)) == 2) {
+		$param[0] =~ s/^\s+//;
+	    } else {
+		@param = split ' ';
+	    }
 	    splice @param, 0, -2; # leave last one or two
 	    my($pattern, $correct) = @param;
 	    $obj->add($pattern, $correct, flag => $flag);
