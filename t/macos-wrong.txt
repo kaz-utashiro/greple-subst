@@ -2,6 +2,7 @@ OS X v10.0 (Cheetah)
 Mac OS X v10.1 (Puma)
 Mac OS X 10.1 (Puma)
 Mac OS X v10.2 Puma
+Mac X v10.2 Puma
 Mac OS X v10.2 (Puma)
 macOS v10.2 (Puma)
 Mac OS v10.2 (Jaguar)
