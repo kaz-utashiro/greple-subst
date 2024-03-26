@@ -6,7 +6,7 @@ subst - 用于文本搜索和替换的Greple模块
 
 =head1 VERSION
 
-Version 2.3305
+Version 2.33_99
 
 =head1 SYNOPSIS
 
@@ -50,10 +50,14 @@ greple -Msubst --dict I<dictionary> [ 选项 ]。
 
 上述命令找到第一个与第二个字符串不匹配的模式，即本例中的 "颜色 "和 "中心"。
 
-字典数据中的字段C<//>被忽略，所以这个文件可以这样写。
+实际上，空格分隔字符串的最后两个元素分别被视为模式和替换字符串。
+
+字典数据也可以如下写法用 C<//> 分隔：
 
     colou?r      //  color
     cent(er|re)  //  center
+
+C<//> 前后必须有空格。在这种格式中，其前后的字符串被视为模式和替换字符串，而不是最后两个元素。前导空格和 C<//> 前后的空格将被忽略，但所有其他空白均有效。
 
 你可以通过B<greple>的B<-f>选项使用同一个文件，在这种情况下，C</>后面的字符串作为注释被忽略。
 
@@ -309,7 +313,7 @@ Kazumasa Utashiro
 
 =head1 LICENSE
 
-Copyright 2017-2023 Kazumasa Utashiro.
+Copyright 2017-2024 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -320,7 +324,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.3305';
+our $VERSION = '2.33_99';
 
 use warnings;
 use utf8;
@@ -364,7 +368,7 @@ our @opt_format;
 our @default_opt_format = ( '%s' );
 our $opt_subst_select;
 our $opt_linefold;
-our $opt_ignore_space = 1;
+our $opt_ignore_space = 0;
 our $opt_warn_overlap = 1;
 our $opt_warn_include = 0;
 our $opt_stat_style = "default";

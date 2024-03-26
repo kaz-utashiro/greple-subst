@@ -6,7 +6,7 @@ subst - 텍스트 검색 및 대체를 위한 Greple 모듈
 
 =head1 VERSION
 
-Version 2.3305
+Version 2.33_99
 
 =head1 SYNOPSIS
 
@@ -50,10 +50,14 @@ greple -Msubst --dict I<사전> [ 옵션 ]을 입력하세요.
 
 위의 명령은 두 번째 문자열과 일치하지 않는 첫 번째 패턴, 즉 이 경우 "색상"과 "가운데"를 찾습니다.
 
-사전 데이터의 필드 C<//>는 무시되므로 이 파일은 다음과 같이 작성할 수 있습니다:
+실제로 공백으로 구분된 문자열의 마지막 두 요소는 각각 패턴과 대체 문자열로 취급됩니다.
+
+사전 데이터는 다음과 같이 C<//>로 구분하여 작성할 수도 있습니다:
 
     colou?r      //  color
     cent(er|re)  //  center
+
+C<//> 앞뒤에 공백이 있어야 합니다. 이 형식에서는 앞뒤의 문자열이 마지막 두 요소가 아닌 패턴과 대체 문자열로 취급됩니다. 선행 공백과 C<//> 앞뒤의 공백은 무시되지만 다른 모든 공백은 유효합니다.
 
 B<greple>의 B<-f> 옵션으로 동일한 파일을 사용할 수 있으며, 이 경우 C<//> 뒤의 문자열은 주석으로 무시됩니다.
 
@@ -309,7 +313,7 @@ Kazumasa Utashiro
 
 =head1 LICENSE
 
-Copyright 2017-2023 Kazumasa Utashiro.
+Copyright 2017-2024 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -320,7 +324,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.3305';
+our $VERSION = '2.33_99';
 
 use warnings;
 use utf8;
@@ -364,7 +368,7 @@ our @opt_format;
 our @default_opt_format = ( '%s' );
 our $opt_subst_select;
 our $opt_linefold;
-our $opt_ignore_space = 1;
+our $opt_ignore_space = 0;
 our $opt_warn_overlap = 1;
 our $opt_warn_include = 0;
 our $opt_stat_style = "default";

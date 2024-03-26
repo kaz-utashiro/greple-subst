@@ -4,7 +4,7 @@ subst - テキスト検索と置換のための Greple モジュール
 
 # VERSION
 
-Version 2.3305
+Version 2.33\_99
 
 # SYNOPSIS
 
@@ -48,10 +48,14 @@ greple -Msubst --dict _dictionary_ \[ オプション \]。
 
 上記のコマンドは、2番目の文字列にマッチしない最初のパターン、つまり、この場合、"color "と "center "を見つける。
 
-辞書データのフィールド`//`は無視されるので、このファイルはこのように書くことができる。
+実際には、スペースで区切られた文字列の最後の2つの要素は、それぞれパターンと置換文字列として扱われる。
+
+辞書データは、次のように`//`で区切って書くこともできます：
 
     colou?r      //  color
     cent(er|re)  //  center
+
+`//`の前後には空白を入れなければならない。この形式では、その前後の文字列は、最後の2つの要素ではなく、パターン文字列と置換文字列として扱われる。先頭の空白と`//`の前後の空白は無視されますが、その他の空白はすべて有効である。
 
 **greple**の**-f**オプションで同じファイルを使うこともでき、その場合は`//`の後ろの文字列はコメントとして無視される。
 
@@ -289,7 +293,7 @@ Kazumasa Utashiro
 
 # LICENSE
 
-Copyright 2017-2023 Kazumasa Utashiro.
+Copyright 2017-2024 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -298,6 +302,6 @@ it under the same terms as Perl itself.
 
 Hey! **The above document had some coding errors, which are explained below:**
 
-- Around line 72:
+- Around line 76:
 
     Unterminated B<...> sequence

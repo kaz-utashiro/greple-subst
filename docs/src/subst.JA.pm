@@ -6,7 +6,7 @@ subst - テキスト検索と置換のための Greple モジュール
 
 =head1 VERSION
 
-Version 2.3305
+Version 2.33_99
 
 =head1 SYNOPSIS
 
@@ -50,10 +50,14 @@ greple -Msubst --dict I<dictionary> [ オプション ]。
 
 上記のコマンドは、2番目の文字列にマッチしない最初のパターン、つまり、この場合、"color "と "center "を見つける。
 
-辞書データのフィールドC<//>は無視されるので、このファイルはこのように書くことができる。
+実際には、スペースで区切られた文字列の最後の2つの要素は、それぞれパターンと置換文字列として扱われる。
+
+辞書データは、次のようにC<//>で区切って書くこともできます：
 
     colou?r      //  color
     cent(er|re)  //  center
+
+C<//>の前後には空白を入れなければならない。この形式では、その前後の文字列は、最後の2つの要素ではなく、パターン文字列と置換文字列として扱われる。先頭の空白とC<//>の前後の空白は無視されますが、その他の空白はすべて有効である。
 
 B<greple>のB<-f>オプションで同じファイルを使うこともでき、その場合はC<//>の後ろの文字列はコメントとして無視される。
 
@@ -309,7 +313,7 @@ Kazumasa Utashiro
 
 =head1 LICENSE
 
-Copyright 2017-2023 Kazumasa Utashiro.
+Copyright 2017-2024 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -320,7 +324,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.3305';
+our $VERSION = '2.33_99';
 
 use warnings;
 use utf8;
@@ -364,7 +368,7 @@ our @opt_format;
 our @default_opt_format = ( '%s' );
 our $opt_subst_select;
 our $opt_linefold;
-our $opt_ignore_space = 1;
+our $opt_ignore_space = 0;
 our $opt_warn_overlap = 1;
 our $opt_warn_include = 0;
 our $opt_stat_style = "default";

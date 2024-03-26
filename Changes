@@ -2,6 +2,11 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.33_99 2024-03-26T12:15:36Z
+
+    - change dictionary format with // separator
+    - now pattern/replacement can include spaces with // format
+
 2.3305 2024-03-15T04:08:35Z
 
     - update ms-amend.dict

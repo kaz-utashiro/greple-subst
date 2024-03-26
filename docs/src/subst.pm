@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.3305
+Version 2.33_99
 
 =head1 SYNOPSIS
 
@@ -53,11 +53,18 @@ If the dictionary file contains following data:
 above command finds the first pattern which does not match the second
 string, that is "colour" and "centre" in this case.
 
-Field C<//> in dictionary data is ignored, so this file can be written
-like this:
+In practice, the last two elements of a space-separated string are
+treated as a pattern and a replacement string, respectively.
+
+Dictionary data can also be written separated by C<//> as follows:
 
     colou?r      //  color
     cent(er|re)  //  center
+
+There must be spaces before and after the C<//>.  In this format,
+strings before and after it are treated as a pattern and replacement
+string, rather than last two element.  Leading spaces and spaces
+before and after C<//> are ignored, but all other whitespace is valid.
 
 You can use same file by B<greple>'s B<-f> option and string after
 C<//> is ignored as a comment in that case.
@@ -360,7 +367,7 @@ Kazumasa Utashiro
 
 =head1 LICENSE
 
-Copyright 2017-2023 Kazumasa Utashiro.
+Copyright 2017-2024 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -371,7 +378,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.3305';
+our $VERSION = '2.33_99';
 
 use warnings;
 use utf8;
@@ -415,7 +422,7 @@ our @opt_format;
 our @default_opt_format = ( '%s' );
 our $opt_subst_select;
 our $opt_linefold;
-our $opt_ignore_space = 1;
+our $opt_ignore_space = 0;
 our $opt_warn_overlap = 1;
 our $opt_warn_include = 0;
 our $opt_stat_style = "default";
