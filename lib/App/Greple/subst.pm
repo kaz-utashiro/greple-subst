@@ -757,6 +757,7 @@ option --sccc2     --exdict sccc2.dict
 option --jtca      --exdict jtca.dict
 option --jtf       --exdict jtf.dict
 option --microsoft --exdict ms-amend.dict --exdict ms-style-guide.dict
+option --macos     --exdict macos.dict
 
 # deprecated. don't use.
 option --ms --microsoft
