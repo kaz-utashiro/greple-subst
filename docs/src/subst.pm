@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.33_99
+Version 2.33_9901
 
 =head1 SYNOPSIS
 
@@ -378,7 +378,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.33_99';
+our $VERSION = '2.33_9901';
 
 use warnings;
 use utf8;
@@ -433,6 +433,8 @@ our %opt_stat_item = (
     );
 our $opt_show_comment = 0;
 our $opt_show_numbers = 1;
+our $opt_show_dictdir = 0;
+
 my %stat;
 
 my $current_file;
@@ -446,6 +448,11 @@ sub debug {
 sub subst_initialize {
 
     state $once_called++ and return;
+
+    if ($opt_show_dictdir) {
+	say "$ENV{GREPLE_SUBST_DICT}";
+	exit;
+    }
 
     Getopt::EX::LabeledParam
 	->new(HASH => \%opt_stat_item)
@@ -697,6 +704,7 @@ builtin warn-overlap!  $opt_warn_overlap
 builtin warn-include!  $opt_warn_include
 builtin ignore-space!  $opt_ignore_space
 builtin show-comment!  $opt_show_comment
+builtin    exdictdir!  $opt_show_dictdir
 
 # override greple's original option
 option --select --subst-select
@@ -741,8 +749,6 @@ option	--subst-color-dark --colormap --dyncmap \
 
 option --exdict  --dict $ENV{GREPLE_SUBST_DICT}/$<shift>
 
-option --exdictdir --prologue 'sub{ say "$ENV{GREPLE_SUBST_DICT}"; exit }'
-
 option --jtca-katakana-guide --exdict jtca-katakana-guide-3.dict
 option --jtf-style-guide     --exdict jtf-style-guide-3.dict
 option --ms-style-guide      --exdict ms-style-guide.dict
@@ -751,6 +757,7 @@ option --sccc2     --exdict sccc2.dict
 option --jtca      --exdict jtca.dict
 option --jtf       --exdict jtf.dict
 option --microsoft --exdict ms-amend.dict --exdict ms-style-guide.dict
+option --macos     --exdict macos.dict
 
 # deprecated. don't use.
 option --ms --microsoft

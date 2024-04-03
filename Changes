@@ -2,6 +2,12 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.33_9901 2024-04-03T13:14:26Z
+
+    - introduce --macos option
+    - implement --exdictdir option by builtin
+    - update share/macos.dict
+
 2.33_99 2024-03-26T12:15:36Z
 
     - change dictionary format with // separator
