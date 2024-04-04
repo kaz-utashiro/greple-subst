@@ -39,7 +39,7 @@
    "Some terminals (eg: \"Apple_Terminal\" or \"iTerm\") are detected automatically and no action is required. Otherwise set B<TERM_BGCOLOR> environment to #000000 (black) to #FFFFFF (white) digit depending on terminal background color.\n" : "一些终端（例如：\"Apple_Terminal \"或 \"iTerm\"）会被自动检测，不需要任何操作。否则，根据终端的背景颜色，将B<TERM_BGCOLOR>环境设置为#000000（黑色）至#FFFFFF（白色）的数字。\n",
    "Specify dictionary data by text.\n" : "用文本指定字典数据。\n",
    "Specify dictionary file.\n" : "指定字典文件。\n",
-   "Specify diff command name used by B<--diff> option. Default is \"diff -u\".\n" : "指定B<--diff>选项使用的diff命令名称。默认为 \"diff -u\"。\n",
+   "Specify diff command name used by B<--diff> option. Default is \"diff\n" : "指定 B<--diff> 选项使用的 diff 命令名称。默认为 \"diff\n",
    "Specify which item is shown up in stat information. Default values are:\n" : "指定在统计信息中显示哪个项目。默认值是。\n",
    "Substitute unexpected matched pattern to expected string. Newline character in the matched string is ignored. Pattern without replacement string is not changed.\n" : "将意外匹配的模式替换为预期的字符串。匹配字符串中的换行符被忽略。没有替换字符串的模式不会被改变。\n",
    "There must be spaces before and after the C<//>. In this format, strings before and after it are treated as a pattern and replacement string, rather than last two element. Leading spaces and spaces before and after C<//> are ignored, but all other whitespace is valid.\n" : "C<//> 前后必须有空格。在这种格式中，其前后的字符串被视为模式和替换字符串，而不是最后两个元素。前导空格和 C<//> 前后的空格将被忽略，但所有其他空白均有效。\n",

@@ -1,21 +1,43 @@
+.DELETE_ON_ERROR:
+
 LANGS    := JA KO ZH
-RM_LANGS := JA KO ZH
-IGNORE   := VERSION AUTHOR LICENSE
+RM_LANGS ?= $(LANGS)
+ENGINES  := deepl
+XLANGS   :=
+XENGINES := gpt4
 
-MOD_NAME := $(shell perl -MJSON -0777nE 'say decode_json($$_)->{name}' ../META.json)
-MOD_PATH := ../lib/$(subst -,/,$(MOD_NAME)).pm
-MOD_FILE := $(notdir $(MOD_PATH))
-MOD_DIR  := $(dir $(MOD_PATH))
-MOD_NAME := $(MOD_FILE:.pm=)
+GET_README  := perl -MTOML -0777E 'say from_toml(<>)->{readme_from}'
+README_FROM := $(shell $(GET_README) ../minil.toml)
+ifneq ($(README_FROM),)
+  MOD_PATH := ../$(README_FROM)
+  MOD_NAME := $(notdir $(MOD_PATH))
+  ORIGIN   := $(MOD_PATH)
+  POD      := $(MOD_NAME).pod
+else
+  MOD_NAME := $(shell perl -MJSON -0777E 'say decode_json(<>)->{name}' ../META.json)
+  MOD_PATH := ../lib/$(subst -,/,$(MOD_NAME)).pm
+  MOD_FILE := $(notdir $(MOD_PATH))
+  MOD_DIR  := $(dir $(MOD_PATH))
+  MOD_NAME := $(MOD_FILE:.pm=)
+  ORIGIN   := $(MOD_PATH)
+  PM       := $(notdir $(ORIGIN))
+  POD      := $(PM:.pm=.pod)
+endif
+
 SRC_DIR  := src
-
-ORIGIN   := $(wildcard $(MOD_DIR)*.pm)
-PM       := $(notdir $(ORIGIN))
-SRC      := $(PM:%=$(if $(SRC_DIR),$(SRC_DIR)/,)%)
-PMS      := $(foreach lang,$(LANGS),$(SRC:.pm=.$(lang).pm))
-MDS      := $(foreach lang,$(LANGS),$(PM:.pm=.$(lang).md))
-READMES  := $(RM_LANGS:%=../README.%.md)
-ALL      := $(PMS) $(MDS) README.md $(READMES)
+SRC      := $(POD:%=$(if $(SRC_DIR),$(SRC_DIR)/,)%)
+NAMES    := $(POD:%=$(notdir %))
+PODS     := $(foreach engin,$(ENGINES),$(foreach lang,$(LANGS),$(SRC:.pod=.$(engin)-$(lang).pod)))
+MDS      := $(foreach engin,$(ENGINES),$(foreach lang,$(LANGS),$(NAMES:.pod=.$(engin)-$(lang).md)))
+READMES  := $(foreach engin,$(ENGINES),$(RM_LANGS:%=../README.$(engin)-%.md))
+###########
+# Translate only JA by gpt-4
+#----------
+PODS     += $(foreach engin,$(XENGINES),$(foreach lang,$(XLANGS),$(SRC:.pod=.$(engin)-$(lang).pod)))
+MDS      += $(foreach engin,$(XENGINES),$(foreach lang,$(XLANGS),$(NAMES:.pod=.$(engin)-$(lang).md)))
+READMES  += $(foreach engin,$(XENGINES),$(XLANGS:%=../README.$(engin)-%.md))
+###########
+ALL      := $(PODS) $(MDS) README.md $(READMES)
 
 all: $(ALL)
 
@@ -25,46 +47,48 @@ ifdef SRC_DIR
 endif
 SRCPATH := $(if $(SRC_DIR),$(SRC_DIR)/,)
 
-$(foreach mod,$(ORIGIN),$(eval $(SRCPATH)$(notdir $(mod)): $(mod) $(SRC_DIR); cp $$< $(if $(SRCPATH),$(SRCPATH),.)))
+GREPLE := perl -I../lib -S greple
 
-XLATE := greple -Mxlate::deepl
-XLATE += $(if $(XLATE_LABOR),--xlate-labor,--xlate)
-XLATE += --xlate-cache=$(if $(XLATE_INIT),clear,yes)
-XLATE += --match-podtext --xlate-format=none --all --need=0
-
-ifdef IGNORE
-$(foreach ignore,$(IGNORE),$(eval \
-  XLATE += --exclude '^=head\d[ ]+$(ignore)\b(?s:.*?)(?=^=|\z)'\
+PODIFY := $(GREPLE) -Mperl --nocolor --le :pod
+$(foreach mod,$(ORIGIN),$(eval \
+  $(if $(filter .pm,$(suffix $(mod))),\
+    $(SRCPATH)$(subst .pm,.pod,$(notdir $(mod))): $(mod) Makefile; $(PODIFY) $$< > $$@,\
+    $(SRCPATH)$(notdir $(mod)).pod: $(mod) Makefile; $(PODIFY) $$< > $$@ \
+  )\
 ))
-endif
 
-JA_FORM   ?= dearu
-JA_DICT   := $(wildcard *.dict)
-JA_FILTER := greple -Mperl -Msubst::desumasu \
-	$(if $(findstring $(JA_FORM).dict,$(JA_DICT)), --dict $(JA_FORM).dict) \
+XLATE := xlate
+XLATE += $(if $(XLATE_LABOR),,-a)
+XLATE += $(if $(XLATE_INIT),-r)
+
+deepl_JA_FORM   ?= desumasu
+deepl_JA_DICT   := $(wildcard *.dict)
+deepl_JA_FILTER := $(GREPLE) -Mperl -Msubst::desumasu \
+	$(if $(findstring $(deepl_JA_FORM).dict,$(deepl_JA_DICT)),--dict $(deepl_JA_FORM).dict) \
 	--pod --subst --all --no-color --need=0 \
-	--$(JA_FORM) 
+	--$(deepl_JA_FORM) 
 
-define LANG_PM
-  $(SRCPATH)%.$1.pm: $(SRCPATH)%.pm Makefile
-  ifdef $1_FILTER
-	$$(XLATE) --xlate-to $1 $$< | $$($1_FILTER) > $$@
+define LANG_POD
+  $(SRCPATH)%.$2-$1.pod: $(SRCPATH)%.pod Makefile
+  ifdef $2_$1_FILTER
+	$$(XLATE) -e $2 -t $1 $$< | $$($2_$1_FILTER) > $$@
   else
-	$$(XLATE) --xlate-to $1 $$< > $$@
+	$$(XLATE) -e $2 -t $1 $$< > $$@
   endif
 endef
 
-$(foreach lang,$(LANGS),$(eval $(call LANG_PM,$(lang))))
+ENGINES+=$(XENGINES)
+$(foreach engin,$(ENGINES),$(foreach lang,$(LANGS),$(eval $(call LANG_POD,$(lang),$(engin)))))
 
-%.md: $(SRCPATH)%.pm
+%.md: $(SRCPATH)%.pod
 	pod2markdown $< > $@
 
 define LANG_README
-  ../README.$1.md: $(MOD_NAME).$1.md
+  ../README.$2-$1.md: $(MOD_NAME).$2-$1.md
 	cp $$< $$@
 endef
 
-$(foreach lang,$(RM_LANGS),$(eval $(call LANG_README,$(lang))))
+$(foreach engin,$(ENGINES),$(foreach lang,$(RM_LANGS),$(eval $(call LANG_README,$(lang),$(engin)))))
 
 README.md: Makefile
 	exec > $@ && \

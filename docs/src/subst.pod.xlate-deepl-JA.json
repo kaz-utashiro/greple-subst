@@ -39,7 +39,7 @@
    "Some terminals (eg: \"Apple_Terminal\" or \"iTerm\") are detected automatically and no action is required. Otherwise set B<TERM_BGCOLOR> environment to #000000 (black) to #FFFFFF (white) digit depending on terminal background color.\n" : "一部の端末 (例: \"Apple_Terminal\" や \"iTerm\") は自動的に検出され、何もする必要はない。それ以外の場合は、B<TERM_BGCOLOR>環境変数に#000000（黒）〜#FFFFFF（白）の数字を設定し、端末の背景色に依存する。\n",
    "Specify dictionary data by text.\n" : "辞書データをテキストで指定する。\n",
    "Specify dictionary file.\n" : "辞書ファイルを指定する。\n",
-   "Specify diff command name used by B<--diff> option. Default is \"diff -u\".\n" : "B<--diff>オプションで使用するdiffコマンド名を指定します。デフォルトは \"diff -u \"です。\n",
+   "Specify diff command name used by B<--diff> option. Default is \"diff\n" : "B<--diff>オプションで使用するdiffコマンド名を指定する。デフォルトは \"diff\n",
    "Specify which item is shown up in stat information. Default values are:\n" : "統計情報に表示される項目を指定する。デフォルト値は\n",
    "Substitute unexpected matched pattern to expected string. Newline character in the matched string is ignored. Pattern without replacement string is not changed.\n" : "マッチしたパターンを期待される文字列に置き換えます。マッチした文字列の改行文字は無視されます。置換文字列のないパターンは変更されません。\n",
    "There must be spaces before and after the C<//>. In this format, strings before and after it are treated as a pattern and replacement string, rather than last two element. Leading spaces and spaces before and after C<//> are ignored, but all other whitespace is valid.\n" : "C<//>の前後には空白を入れなければなりません。この形式では、その前後の文字列は、最後の2つの要素ではなく、パターン文字列と置換文字列として扱われます。先頭の空白とC<//>の前後の空白は無視されますが、その他の空白はすべて有効です。\n",

@@ -39,7 +39,7 @@
    "Some terminals (eg: \"Apple_Terminal\" or \"iTerm\") are detected automatically and no action is required. Otherwise set B<TERM_BGCOLOR> environment to #000000 (black) to #FFFFFF (white) digit depending on terminal background color.\n" : "일부 터미널(예: \"Apple_Terminal\" 또는 \"iTerm\")은 자동으로 감지되므로 별도의 조치가 필요하지 않습니다. 그렇지 않으면 단말기 배경색에 따라 B<TERM_BGCOLOR> 환경을 #000000(검은색) ~ #FFFFFF(흰색) 숫자로 설정합니다.\n",
    "Specify dictionary data by text.\n" : "사전 데이터를 텍스트로 지정합니다.\n",
    "Specify dictionary file.\n" : "사전 파일을 지정합니다.\n",
-   "Specify diff command name used by B<--diff> option. Default is \"diff -u\".\n" : "B<--diff> 옵션에서 사용할 diff 명령 이름을 지정합니다. 기본값은 \"diff -u\"입니다.\n",
+   "Specify diff command name used by B<--diff> option. Default is \"diff\n" : "B<--diff> 옵션에서 사용하는 diff 명령 이름을 지정합니다. 기본값은 'diff\n",
    "Specify which item is shown up in stat information. Default values are:\n" : "통계 정보에 표시할 항목을 지정합니다. 기본값은 다음과 같습니다:\n",
    "Substitute unexpected matched pattern to expected string. Newline character in the matched string is ignored. Pattern without replacement string is not changed.\n" : "예상치 못한 일치 패턴을 예상 문자열로 대체합니다. 일치하는 문자열의 개행 문자는 무시됩니다. 대체 문자열이 없는 패턴은 변경되지 않습니다.\n",
    "There must be spaces before and after the C<//>. In this format, strings before and after it are treated as a pattern and replacement string, rather than last two element. Leading spaces and spaces before and after C<//> are ignored, but all other whitespace is valid.\n" : "C<//> 앞뒤에 공백이 있어야 합니다. 이 형식에서는 앞뒤의 문자열이 마지막 두 요소가 아닌 패턴과 대체 문자열로 취급됩니다. 선행 공백과 C<//> 앞뒤의 공백은 무시되지만 다른 모든 공백은 유효합니다.\n",
