@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.33_9901
+Version 2.33_9902
 
 =head1 SYNOPSIS
 

@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.33_9902 2024-04-04T01:11:36Z
+
+    - include docs/ directory in the distribtion
+
 2.33_9901 2024-04-03T13:14:26Z
 
     - introduce --macos option
