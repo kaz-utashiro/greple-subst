@@ -24,7 +24,7 @@ else
   POD      := $(PM:.pm=.pod)
 endif
 
-SRC_DIR  := src
+SRC_DIR  :=
 SRC      := $(POD:%=$(if $(SRC_DIR),$(SRC_DIR)/,)%)
 NAMES    := $(POD:%=$(notdir %))
 PODS     := $(foreach engin,$(ENGINES),$(foreach lang,$(LANGS),$(SRC:.pod=.$(engin)-$(lang).pod)))
