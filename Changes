@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.34 2024-05-08T05:13:36Z
+
+    - release 2.34
+
 2.33_9902 2024-04-04T01:11:36Z
 
     - include docs/ directory in the distribtion
