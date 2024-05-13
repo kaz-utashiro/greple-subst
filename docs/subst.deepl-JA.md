@@ -4,7 +4,7 @@ subst - テキスト検索と置換のための Greple モジュール
 
 # VERSION
 
-Version 2.34
+Version 2.35
 
 # SYNOPSIS
 
@@ -13,6 +13,7 @@ greple -Msubst --dict _dictionary_ \[ オプション \]。
     Dictionary:
       --dict      dictionary file
       --dictdata  dictionary data
+      --dictpair  dictionary entry pair
 
     Check:
       --check=[ng,ok,any,outstand,all,none]
@@ -61,11 +62,18 @@ greple -Msubst --dict _dictionary_ \[ オプション \]。
 
     greple -f DICT ...
 
-**--dictdata**オプションは、コマンドラインで辞書データを提供するために使用することができます。
+オプション**--dictdata**は、コマンド行で辞書データを提供するために使用できます。
 
-    greple --dictdata $'colou?r color\ncent(er|re) center\n'
+    greple -Msubst \
+           --dictdata $'colou?r color\ncent(er|re) center\n'
 
 シャープ記号(`#`)で始まる辞書項目はコメントとなり、無視されます。
+
+オプション**--dictpair**は、生の辞書項目をコマンド行で提供するために使用できます。この場合、空白やコメントに関する処理は行われないです。
+
+    greple -Msubst \
+           --dictpair 'colou?r' color \
+           --dictpair 'cent(er|re)' center
 
 ## Overlapped pattern
 
@@ -88,6 +96,10 @@ greple -Msubst --dict _dictionary_ \[ オプション \]。
 - **--dictdata**=_data_
 
     辞書データをテキストで指定します。
+
+- **--dictpair** _pattern_ _replacement_
+
+    辞書項目ペアを指定します。このオプションは2つのパラメータをとます。1つ目はパターンで、2つ目は置換文字列です。
 
 - **--check**=`outstand`|`ng`|`ok`|`any`|`all`|`none`
 
@@ -305,6 +317,6 @@ it under the same terms as Perl itself.
 
 Hey! **The above document had some coding errors, which are explained below:**
 
-- Around line 76:
+- Around line 84:
 
     Unterminated B<...> sequence

@@ -45,7 +45,7 @@
       },
       "runtime" : {
          "requires" : {
-            "App::Greple" : "9.0902",
+            "App::Greple" : "9.12",
             "App::Greple::update" : "1.01",
             "File::Share" : "0.27",
             "Getopt::EX" : "v2.1.6",
@@ -76,7 +76,7 @@
          "web" : "https://github.com/kaz-utashiro/greple-subst"
       }
    },
-   "version" : "2.34",
+   "version" : "2.35",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Kazumasa Utashiro <kaz@utashiro.com>"

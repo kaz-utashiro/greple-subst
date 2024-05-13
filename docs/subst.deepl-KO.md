@@ -4,7 +4,7 @@ subst - 텍스트 검색 및 대체를 위한 Greple 모듈
 
 # VERSION
 
-Version 2.34
+Version 2.35
 
 # SYNOPSIS
 
@@ -13,6 +13,7 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
     Dictionary:
       --dict      dictionary file
       --dictdata  dictionary data
+      --dictpair  dictionary entry pair
 
     Check:
       --check=[ng,ok,any,outstand,all,none]
@@ -61,11 +62,18 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
 
     greple -f DICT ...
 
-옵션 **--dictdata**는 명령줄에서 사전 데이터를 제공하는 데 사용할 수 있습니다.
+옵션 **--dictdata**는 명령줄에 사전 데이터를 제공하는 데 사용할 수 있습니다.
 
-    greple --dictdata $'colou?r color\ncent(er|re) center\n'
+    greple -Msubst \
+           --dictdata $'colou?r color\ncent(er|re) center\n'
 
 날카로운 기호(`#`)로 시작하는 사전 항목은 주석이며 무시됩니다.
+
+옵션 **--dictpair**는 명령줄에 원시 딕셔너리 항목을 제공하는 데 사용할 수 있습니다. 이 경우 공백이나 주석에 대한 처리는 수행되지 않습니다.
+
+    greple -Msubst \
+           --dictpair 'colou?r' color \
+           --dictpair 'cent(er|re)' center
 
 ## Overlapped pattern
 
@@ -88,6 +96,10 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
 - **--dictdata**=_data_
 
     사전 데이터를 텍스트로 지정합니다.
+
+- **--dictpair** _pattern_ _replacement_
+
+    사전 항목 쌍을 지정합니다. 이 옵션에는 두 개의 매개 변수가 필요합니다. 첫 번째는 패턴이고 두 번째는 대체 문자열입니다.
 
 - **--check**=`outstand`|`ng`|`ok`|`any`|`all`|`none`
 

@@ -2,6 +2,11 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.35 2024-05-13T09:44:55Z
+
+    - introduce --dictpair option to specify raw dictionary entry
+    - add test for comment and // separator in dictionary data
+
 2.34 2024-05-08T05:13:36Z
 
     - release 2.34

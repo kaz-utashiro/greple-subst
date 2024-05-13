@@ -6,7 +6,7 @@ subst - テキスト検索と置換のための Greple モジュール
 
 =head1 VERSION
 
-Version 2.34
+Version 2.35
 
 =head1 SYNOPSIS
 
@@ -15,6 +15,7 @@ greple -Msubst --dict I<dictionary> [ オプション ]。
   Dictionary:
     --dict      dictionary file
     --dictdata  dictionary data
+    --dictpair  dictionary entry pair
 
   Check:
     --check=[ng,ok,any,outstand,all,none]
@@ -63,11 +64,18 @@ B<greple>のB<-f>オプションで同じファイルを使うこともでき、
 
     greple -f DICT ...
 
-B<--dictdata>オプションは、コマンドラインで辞書データを提供するために使用することができます。
+オプションB<--dictdata>は、コマンド行で辞書データを提供するために使用できます。
 
-    greple --dictdata $'colou?r color\ncent(er|re) center\n'
+    greple -Msubst \
+           --dictdata $'colou?r color\ncent(er|re) center\n'
 
 シャープ記号(C<#>)で始まる辞書項目はコメントとなり、無視されます。
+
+オプションB<--dictpair>は、生の辞書項目をコマンド行で提供するために使用できます。この場合、空白やコメントに関する処理は行われないです。
+
+    greple -Msubst \
+           --dictpair 'colou?r' color \
+           --dictpair 'cent(er|re)' center
 
 =head2 Overlapped pattern
 
@@ -92,6 +100,10 @@ B<--dictdata>オプションは、コマンドラインで辞書データを提�
 =item B<--dictdata>=I<data>
 
 辞書データをテキストで指定します。
+
+=item B<--dictpair> I<pattern> I<replacement>
+
+辞書項目ペアを指定します。このオプションは2つのパラメータをとます。1つ目はパターンで、2つ目は置換文字列です。
 
 =item B<--check>=C<outstand>|C<ng>|C<ok>|C<any>|C<all>|C<none>
 

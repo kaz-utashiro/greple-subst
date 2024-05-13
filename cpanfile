@@ -1,6 +1,6 @@
 requires 'perl', '5.014';
 
-requires 'App::Greple', '9.0902';
+requires 'App::Greple', '9.12';
 requires 'App::Greple::update', '1.01';
 requires 'Getopt::Long';
 requires 'Getopt::EX', '2.1.6';

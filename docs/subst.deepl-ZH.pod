@@ -6,7 +6,7 @@ subst - 用于文本搜索和替换的Greple模块
 
 =head1 VERSION
 
-Version 2.34
+Version 2.35
 
 =head1 SYNOPSIS
 
@@ -15,6 +15,7 @@ greple -Msubst --dict I<dictionary> [ 选项 ]。
   Dictionary:
     --dict      dictionary file
     --dictdata  dictionary data
+    --dictpair  dictionary entry pair
 
   Check:
     --check=[ng,ok,any,outstand,all,none]
@@ -63,11 +64,18 @@ C<//> 前后必须有空格。在这种格式中，其前后的字符串被视�
 
     greple -f DICT ...
 
-选项B<--dictdata>可以用来在命令行中提供字典数据。
+选项 B<--dictdata> 可用于在命令行中提供字典数据。
 
-    greple --dictdata $'colou?r color\ncent(er|re) center\n'
+    greple -Msubst \
+           --dictdata $'colou?r color\ncent(er|re) center\n'
 
 以尖锐符号（C<#>）开始的字典条目是一个注释，被忽略。
+
+选项 B<--dictpair> 可用于在命令行中提供原始字典条目。在这种情况下，不会对空白或注释进行处理。
+
+    greple -Msubst \
+           --dictpair 'colou?r' color \
+           --dictpair 'cent(er|re)' center
 
 =head2 Overlapped pattern
 
@@ -92,6 +100,10 @@ C<//> 前后必须有空格。在这种格式中，其前后的字符串被视�
 =item B<--dictdata>=I<data>
 
 用文本指定字典数据。
+
+=item B<--dictpair> I<pattern> I<replacement>
+
+指定字典条目对。该选项需要两个参数。第一个参数是模式，第二个参数是替换字符串。
 
 =item B<--check>=C<outstand>|C<ng>|C<ok>|C<any>|C<all>|C<none>
 

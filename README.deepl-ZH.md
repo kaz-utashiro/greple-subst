@@ -4,7 +4,7 @@ subst - 用于文本搜索和替换的Greple模块
 
 # VERSION
 
-Version 2.34
+Version 2.35
 
 # SYNOPSIS
 
@@ -13,6 +13,7 @@ greple -Msubst --dict _dictionary_ \[ 选项 \]。
     Dictionary:
       --dict      dictionary file
       --dictdata  dictionary data
+      --dictpair  dictionary entry pair
 
     Check:
       --check=[ng,ok,any,outstand,all,none]
@@ -61,11 +62,18 @@ greple -Msubst --dict _dictionary_ \[ 选项 \]。
 
     greple -f DICT ...
 
-选项**--dictdata**可以用来在命令行中提供字典数据。
+选项 **--dictdata** 可用于在命令行中提供字典数据。
 
-    greple --dictdata $'colou?r color\ncent(er|re) center\n'
+    greple -Msubst \
+           --dictdata $'colou?r color\ncent(er|re) center\n'
 
 以尖锐符号（`#`）开始的字典条目是一个注释，被忽略。
+
+选项 **--dictpair** 可用于在命令行中提供原始字典条目。在这种情况下，不会对空白或注释进行处理。
+
+    greple -Msubst \
+           --dictpair 'colou?r' color \
+           --dictpair 'cent(er|re)' center
 
 ## Overlapped pattern
 
@@ -88,6 +96,10 @@ greple -Msubst --dict _dictionary_ \[ 选项 \]。
 - **--dictdata**=_data_
 
     用文本指定字典数据。
+
+- **--dictpair** _pattern_ _replacement_
+
+    指定字典条目对。该选项需要两个参数。第一个参数是模式，第二个参数是替换字符串。
 
 - **--check**=`outstand`|`ng`|`ok`|`any`|`all`|`none`
 
