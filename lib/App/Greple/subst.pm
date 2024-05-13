@@ -415,6 +415,7 @@ use Carp;
 use Data::Dumper;
 use Text::ParseWords qw(shellwords);
 use Encode;
+use List::Util qw(max sum mesh);
 use Getopt::EX::Colormap qw(colorize);
 use Getopt::EX::LabeledParam;
 use App::Greple::Common;
@@ -482,7 +483,6 @@ sub subst_initialize {
 		   printdict => $opt_printdict };
     if (@opt_subst_from) {
 	die if @opt_subst_from != @opt_subst_to;
-	use List::Util 'mesh';
 	push @dicts, App::Greple::subst::Dict->new(
 	    DATA => [ mesh \@opt_subst_from, \@opt_subst_to ],
 	    CONFIG => $config,
@@ -519,7 +519,6 @@ sub subst_begin {
 
 use Text::VisualWidth::PP;
 use Text::VisualPrintf qw(vprintf vsprintf);
-use List::Util qw(max any sum first);
 
 sub vwidth {
     if (not defined $_[0] or length $_[0] == 0) {

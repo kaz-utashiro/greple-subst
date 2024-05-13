@@ -51,7 +51,7 @@
             "Getopt::EX" : "v2.1.6",
             "Getopt::EX::termcolor" : "1.08",
             "Getopt::Long" : "0",
-            "List::Util" : "0",
+            "List::Util" : "1.56",
             "Mo" : "0",
             "Text::VisualPrintf" : "4.03",
             "Text::VisualWidth::PP" : "0.05",

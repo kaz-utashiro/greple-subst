@@ -6,7 +6,7 @@ requires 'Getopt::Long';
 requires 'Getopt::EX', '2.1.6';
 requires 'Getopt::EX::termcolor', '1.08';
 requires 'File::Share', '0.27';
-requires 'List::Util';
+requires 'List::Util', '1.56';
 requires 'Mo';
 
 requires 'Text::VisualWidth::PP', '0.05';
