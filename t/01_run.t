@@ -45,6 +45,15 @@ line(subst('--dictdata', <<'END', 't/JA-bad.txt')->run->{stdout}, 3, "--dictdata
 デストゥ?パーゴ			デストゥパーゴ
 END
 
+line(subst(
+    qw"--dictpair イ[エー]ハトー?([ヴブボ]ォ?) イーハトーヴォ",
+    't/JA-bad.txt')->run->{stdout}, 2, "--dictpair");
+
+line(subst(
+    qw"--dictpair イ[エー]ハトー?([ヴブボ]ォ?) イーハトーヴォ",
+    qw"--dictpair デストゥ?パーゴ              デストゥパーゴ",
+    't/JA-bad.txt')->run->{stdout}, 3, "--dictpair");
+
 is(subst(qw(--dict t/JA.dict t/JA-bad.txt --subst --all --no-color))
    ->run->{stdout},
    slurp("t/JA.txt"), "--subst");

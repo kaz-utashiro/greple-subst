@@ -15,6 +15,7 @@ greple -Msubst --dict I<dictionary> [ options ]
   Dictionary:
     --dict      dictionary file
     --dictdata  dictionary data
+    --dictpair  dictionary entry pair
 
   Check:
     --check=[ng,ok,any,outstand,all,none]
@@ -71,13 +72,22 @@ C<//> is ignored as a comment in that case.
 
     greple -f DICT ...
 
-Option B<--dictdata> can be used to provide dictionary data in command
-line.
+Option B<--dictdata> can be used to provide dictionary data in the
+command line.
 
-    greple --dictdata $'colou?r color\ncent(er|re) center\n'
+    greple -Msubst \
+           --dictdata $'colou?r color\ncent(er|re) center\n'
 
 Dictionary entry starting with a sharp sign (C<#>) is a comment and
 ignored.
+
+Option B<--dictpair> can be used to provide raw dictionary entries in
+the command line.  In this case, no processing is done regarding
+whitespace or comments.
+
+    greple -Msubst \
+           --dictpair 'colou?r' color \
+           --dictpair 'cent(er|re)' center
 
 =head2 Overlapped pattern
 
@@ -111,6 +121,11 @@ Specify dictionary file.
 =item B<--dictdata>=I<data>
 
 Specify dictionary data by text.
+
+=item B<--dictpair> I<pattern> I<replacement>
+
+Specify dictionary entry pair.  This option takes two parameters.  The
+first is a pattern and the second is a substitution string.
 
 =item B<--check>=C<outstand>|C<ng>|C<ok>|C<any>|C<all>|C<none>
 
@@ -465,6 +480,14 @@ sub subst_initialize {
     my $config = { linefold  => $opt_linefold,
 		   dictname  => $opt_dictname,
 		   printdict => $opt_printdict };
+    if (@opt_subst_from) {
+	die if @opt_subst_from != @opt_subst_to;
+	use List::Util 'mesh';
+	push @dicts, App::Greple::subst::Dict->new(
+	    DATA => [ mesh \@opt_subst_from, \@opt_subst_to ],
+	    CONFIG => $config,
+	    );
+    }
     for my $data (@opt_dictdata) {
 	push @dicts, App::Greple::subst::Dict->new(
 	    DATA => $data,
@@ -691,6 +714,8 @@ __DATA__
 
 builtin         dict=s @opt_dictfile
 builtin     dictdata=s @opt_dictdata
+builtin   subst-from=s @opt_subst_from
+builtin     subst-to=s @opt_subst_to
 builtin   stat-style=s $opt_stat_style
 builtin    stat-item=s @opt_stat_item
 builtin    printdict!  $opt_printdict
@@ -714,6 +739,9 @@ option default \
 	--prologue subst_initialize \
 	--begin subst_begin \
 	--le +&subst_search --no-regioncolor
+
+option --dictpair \
+	--subst-from $<shift> --subst-to $<shift>
 
 ##
 ## Now these options are implemented by -Mupdate module

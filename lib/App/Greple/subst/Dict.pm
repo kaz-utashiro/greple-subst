@@ -53,12 +53,17 @@ package App::Greple::subst::Dict {
     sub read_data {
 	my $obj = shift or die;
 	my $data = shift;
-	$obj->NAME("DATA");
-	if (utf8::is_utf8 $data) {
-	    $data = encode 'utf8', $data;
+	if (ref $data eq 'ARRAY') {
+	    $obj->NAME("PAIRS");
+	    $obj->load_pairs(@$data) if @$data;
+	} else {
+	    $obj->NAME("DATA");
+	    if (utf8::is_utf8 $data) {
+		$data = encode 'utf8', $data;
+	    }
+	    open my $fh, "<", \$data;
+	    $obj->read_fh($fh);
 	}
-	open my $fh, "<", \$data;
-	$obj->read_fh($fh);
 	$obj;
     }
 
@@ -90,13 +95,24 @@ package App::Greple::subst::Dict {
 		next;
 	    }
 	    my @param;
-	    if ((@param = split(m{\s+//\s+}, $_, 2)) == 2) {
-		$param[0] =~ s/^\s+//;
+	    if ((@param = split(m{\h+//\h+}, $_, 2)) == 2) {
+		$param[0] =~ s/^\h+//;
 	    } else {
 		@param = split ' ';
 	    }
 	    splice @param, 0, -2; # leave last one or two
 	    my($pattern, $correct) = @param;
+	    $obj->add($pattern, $correct, flag => $flag);
+	}
+	$obj;
+    }
+
+    sub load_pairs {
+	my $obj = shift or die;
+	my $conf = $obj->CONFIG;
+	my $flag = FLAG_REGEX;
+	$flag |= FLAG_COOK if $conf->{linefold};
+	while (my($pattern, $correct) = splice @_, 0, 2) {
 	    $obj->add($pattern, $correct, flag => $flag);
 	}
 	$obj;

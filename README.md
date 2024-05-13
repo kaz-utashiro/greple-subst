@@ -14,6 +14,7 @@ greple -Msubst --dict _dictionary_ \[ options \]
     Dictionary:
       --dict      dictionary file
       --dictdata  dictionary data
+      --dictpair  dictionary entry pair
 
     Check:
       --check=[ng,ok,any,outstand,all,none]
@@ -70,13 +71,22 @@ You can use same file by **greple**'s **-f** option and string after
 
     greple -f DICT ...
 
-Option **--dictdata** can be used to provide dictionary data in command
-line.
+Option **--dictdata** can be used to provide dictionary data in the
+command line.
 
-    greple --dictdata $'colou?r color\ncent(er|re) center\n'
+    greple -Msubst \
+           --dictdata $'colou?r color\ncent(er|re) center\n'
 
 Dictionary entry starting with a sharp sign (`#`) is a comment and
 ignored.
+
+Option **--dictpair** can be used to provide raw dictionary entries in
+the command line.  In this case, no processing is done regarding
+whitespace or comments.
+
+    greple -Msubst \
+           --dictpair 'colou?r' color \
+           --dictpair 'cent(er|re)' center
 
 ## Overlapped pattern
 
@@ -108,6 +118,11 @@ digit depending on terminal background color.
 - **--dictdata**=_data_
 
     Specify dictionary data by text.
+
+- **--dictpair** _pattern_ _replacement_
+
+    Specify dictionary entry pair.  This option takes two parameters.  The
+    first is a pattern and the second is a substitution string.
 
 - **--check**=`outstand`|`ng`|`ok`|`any`|`all`|`none`
 
