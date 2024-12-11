@@ -88,7 +88,7 @@ package App::Greple::subst::Dict {
 	my $flag = FLAG_REGEX;
 	$flag |= FLAG_COOK if $conf->{linefold};
 	while (<$fh>) {
-	    chomp;
+	    s/\R\z//;
 	    say if $conf->{printdict};
 	    if (not /^\s*[^#]/) {
 		$obj->add_comment($_);
