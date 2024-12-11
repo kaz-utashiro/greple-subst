@@ -2,6 +2,10 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.36 2024-12-11T10:47:18Z
+
+    - use s/\R\z// to remove linebreaks
+
 2.35 2024-05-13T09:44:55Z
 
     - introduce --dictpair option to specify raw dictionary entry

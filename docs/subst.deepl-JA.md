@@ -4,7 +4,7 @@ subst - テキスト検索と置換のための Greple モジュール
 
 # VERSION
 
-Version 2.35
+Version 2.36
 
 # SYNOPSIS
 
@@ -168,8 +168,7 @@ greple -Msubst --dict _dictionary_ \[ オプション \]。
 
     **--diff**オプションは、変換前のテキストと変換後のテキストの差分を出力します。
 
-    **--diff**オプションで使用するdiffコマンド名を指定します。デフォルトは "diff
-    \-u".
+    **--diff**オプションで使用するdiffコマンド名を指定します。デフォルトは "diff -u" です。
 
 - **--create**
 

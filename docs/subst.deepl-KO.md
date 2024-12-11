@@ -4,7 +4,7 @@ subst - 텍스트 검색 및 대체를 위한 Greple 모듈
 
 # VERSION
 
-Version 2.35
+Version 2.36
 
 # SYNOPSIS
 
@@ -168,8 +168,7 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
 
     옵션 **--diff**는 원본 텍스트와 변환된 텍스트의 diff 출력을 생성합니다.
 
-    **--diff** 옵션에서 사용하는 diff 명령 이름을 지정합니다. 기본값은 'diff
-    \-u".
+    **--diff** 옵션에서 사용하는 diff 명령 이름을 지정합니다. 기본값은 "diff -u"입니다.
 
 - **--create**
 

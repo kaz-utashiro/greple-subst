@@ -4,7 +4,7 @@ subst - 用于文本搜索和替换的Greple模块
 
 # VERSION
 
-Version 2.35
+Version 2.36
 
 # SYNOPSIS
 
@@ -168,8 +168,7 @@ greple -Msubst --dict _dictionary_ \[ 选项 \]。
 
     选项**--diff**产生原始文本和转换后文本的差异输出。
 
-    指定 **--diff** 选项使用的 diff 命令名称。默认为 "diff
-    \-u".
+    指定 **--diff** 选项使用的 diff 命令名称。默认为 "diff -u"。
 
 - **--create**
 
