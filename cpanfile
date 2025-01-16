@@ -1,7 +1,7 @@
 requires 'perl', 'v5.18.2';
 
-requires 'App::Greple', '9.12';
-requires 'App::Greple::update', '1.01';
+requires 'App::Greple', '9.18';
+requires 'App::Greple::update', '1.04';
 requires 'Getopt::Long';
 requires 'Getopt::EX', '2.1.6';
 requires 'Getopt::EX::termcolor', '1.08';

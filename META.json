@@ -45,8 +45,8 @@
       },
       "runtime" : {
          "requires" : {
-            "App::Greple" : "9.12",
-            "App::Greple::update" : "1.01",
+            "App::Greple" : "9.18",
+            "App::Greple::update" : "1.04",
             "File::Share" : "0.27",
             "Getopt::EX" : "v2.1.6",
             "Getopt::EX::termcolor" : "1.08",
