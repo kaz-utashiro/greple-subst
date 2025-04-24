@@ -265,7 +265,7 @@ Created from following guideline document.
     発行：2015年9月
     一般財団法人テクニカルコミュニケーター協会 
     Japan Technical Communicators Association
-    https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf
+    https://jtca.org/tcwp/wp-content/uploads/2023/06/katakana_guide_3_20171222.pdf
 
 =item B<--jtca>
 
