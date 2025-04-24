@@ -57,7 +57,7 @@
    ],
    [
       "If the matched string overlaps with previously matched string, it is warned (B<--warn-overlap> by default) and ignored.\n",
-      "マッチした文字列が前にマッチした文字列と重なる場合、警告を出し (デフォルトでは B<--warn-overlap)、無視される。\n"
+      "マッチした文字列が前にマッチした文字列と重なる場合、警告 (B<--warn-overlap> がデフォルト) が出され、無視されます。\n"
    ],
    [
       "This version uses L<Getopt::EX::termcolor> module. It sets option B<--light-screen> or B<--dark-screen> depending on the terminal on which the command run, or B<TERM_BGCOLOR> environment variable.\n",

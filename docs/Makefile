@@ -58,6 +58,7 @@ $(foreach mod,$(ORIGIN),$(eval \
 ))
 
 XLATE := xlate
+XLATE += -x PATTERN_MASK
 XLATE += $(if $(XLATE_LABOR),,-a)
 XLATE += $(if $(XLATE_INIT),-r)
 

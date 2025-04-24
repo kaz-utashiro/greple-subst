@@ -81,7 +81,7 @@ B<greple>のB<-f>オプションで同じファイルを使うこともでき、
 
 マッチした文字列が、以前に別のパターンでマッチした文字列と同じか短い場合は、単に無視される (デフォルトでは B<--no-warn-include>)。したがって、矛盾するパターンを宣言する必要がある場合は、長い方のパターンを先に配置します。
 
-マッチした文字列が前にマッチした文字列と重なる場合、警告を出し (デフォルトでは B<--warn-overlap)、無視されます。
+マッチした文字列が前にマッチした文字列と重なる場合、警告 (B<--warn-overlap> がデフォルト) が出され、無視されます。
 
 =head2 Terminal color
 
@@ -221,7 +221,7 @@ B<--diff>オプションで使用するdiffコマンド名を指定します。�
     発行：2015年9月
     一般財団法人テクニカルコミュニケーター協会 
     Japan Technical Communicators Association
-    https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf
+    https://jtca.org/tcwp/wp-content/uploads/2023/06/katakana_guide_3_20171222.pdf
 
 =item B<--jtca>
 

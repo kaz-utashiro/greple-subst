@@ -1,6 +1,6 @@
 # NAME
 
-subst - 텍스트 검색 및 대체를 위한 Greple 모듈
+subst - 텍스트 검색 및 치환을 위한 Greple 모듈
 
 # VERSION
 
@@ -8,7 +8,7 @@ Version 2.36
 
 # SYNOPSIS
 
-greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
+greple -Msubst --dict _dictionary_ \[ 옵션 \]을 실행합니다.
 
     Dictionary:
       --dict      dictionary file
@@ -38,16 +38,16 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
 
 이 **greple** 모듈은 사전 데이터를 기반으로 텍스트 파일의 확인 및 치환을 지원합니다.
 
-사전 파일은 **--dict** 옵션으로 지정되며 각 줄에는 일치하는 패턴과 예상 문자열 쌍이 포함됩니다.
+사전 파일은 **--dict** 옵션으로 지정되며 각 줄에는 일치하는 패턴과 예상 문자열 쌍이 포함되어 있습니다.
 
     greple -Msubst --dict DICT
 
-사전 파일에 다음과 같은 데이터가 포함되어 있다면
+사전 파일에 다음과 같은 데이터가 포함된 경우
 
     colou?r      color
     cent(er|re)  center
 
-위의 명령은 두 번째 문자열과 일치하지 않는 첫 번째 패턴, 즉 이 경우 "색상"과 "가운데"를 찾습니다.
+위의 명령은 두 번째 문자열과 일치하지 않는 첫 번째 패턴, 즉 이 경우 "color"와 "center"를 찾습니다.
 
 실제로 공백으로 구분된 문자열의 마지막 두 요소는 각각 패턴과 대체 문자열로 취급됩니다.
 
@@ -56,20 +56,20 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
     colou?r      //  color
     cent(er|re)  //  center
 
-`//` 앞뒤에 공백이 있어야 합니다. 이 형식에서는 앞뒤의 문자열이 마지막 두 요소가 아닌 패턴과 대체 문자열로 취급됩니다. 선행 공백과 `//` 앞뒤의 공백은 무시되지만 다른 모든 공백은 유효합니다.
+`//`의 앞뒤에 공백이 있어야 합니다. 이 형식에서는 앞뒤의 문자열이 마지막 두 요소가 아닌 패턴 및 대체 문자열로 취급됩니다. 선행 공백과 `//` 앞뒤의 공백은 무시되지만 다른 모든 공백은 유효합니다.
 
 **greple**의 **-f** 옵션으로 동일한 파일을 사용할 수 있으며, 이 경우 `//` 뒤의 문자열은 주석으로 무시됩니다.
 
     greple -f DICT ...
 
-옵션 **--dictdata**는 명령줄에 사전 데이터를 제공하는 데 사용할 수 있습니다.
+**--dictdata** 옵션을 사용하여 명령줄에 사전 데이터를 제공할 수 있습니다.
 
     greple -Msubst \
            --dictdata $'colou?r color\ncent(er|re) center\n'
 
-날카로운 기호(`#`)로 시작하는 사전 항목은 주석이며 무시됩니다.
+날카로운 기호(`#`)로 시작하는 사전 항목은 주석으로 무시됩니다.
 
-옵션 **--dictpair**는 명령줄에 원시 딕셔너리 항목을 제공하는 데 사용할 수 있습니다. 이 경우 공백이나 주석에 대한 처리는 수행되지 않습니다.
+옵션 **--dictpair**를 사용하여 명령줄에 원시 사전 항목을 제공할 수 있습니다. 이 경우 공백이나 주석에 대한 처리는 수행되지 않습니다.
 
     greple -Msubst \
            --dictpair 'colou?r' color \
@@ -77,15 +77,15 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
 
 ## Overlapped pattern
 
-일치하는 문자열이 다른 패턴으로 이전에 일치한 문자열과 같거나 더 짧으면 무시됩니다(기본적으로 **--no-warn-include**). 따라서 충돌하는 패턴을 선언해야 하는 경우 더 긴 패턴을 더 앞에 배치하세요.
+일치된 문자열이 다른 패턴으로 이전에 일치된 문자열과 같거나 짧으면 단순히 무시됩니다(기본적으로 **--no-warn-include**). 따라서 충돌하는 패턴을 선언해야 하는 경우 더 긴 패턴을 더 앞에 배치하세요.
 
-일치된 문자열이 이전에 일치된 문자열과 겹치면 경고(기본적으로 **--warn-overlap**)가 표시되고 무시됩니다.
+일치된 문자열이 이전에 일치된 문자열과 겹치는 경우 경고(**--warn-overlap** 기본적으로)가 표시되고 무시됩니다.
 
 ## Terminal color
 
-이 버전은 [Getopt::EX::termcolor](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3Atermcolor) 모듈을 사용합니다. 이 모듈은 명령이 실행되는 터미널에 따라 옵션 **--밝은 화면** 또는 **--어두운 화면** 또는 **TERM\_BGCOLOR** 환경 변수를 설정합니다.
+이 버전은 [Getopt::EX::termcolor](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3Atermcolor) 모듈을 사용합니다. 명령이 실행되는 터미널에 따라 **--light-screen** 또는 **--dark-screen** 옵션 또는 **TERM\_BGCOLOR** 환경 변수를 설정합니다.
 
-일부 터미널(예: "Apple\_Terminal" 또는 "iTerm")은 자동으로 감지되므로 별도의 조치가 필요하지 않습니다. 그렇지 않으면 단말기 배경색에 따라 **TERM\_BGCOLOR** 환경을 #000000(검은색) ~ #FFFFFF(흰색) 숫자로 설정합니다.
+일부 터미널(예: "Apple\_Terminal" 또는 "iTerm")은 자동으로 감지되므로 별도의 조치가 필요하지 않습니다. 그렇지 않으면 터미널 배경색에 따라 **TERM\_BGCOLOR** 환경을 #000000(검은색)~#FFFFFF(흰색) 숫자로 설정합니다.
 
 # OPTIONS
 
@@ -103,28 +103,28 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
 
 - **--check**=`outstand`|`ng`|`ok`|`any`|`all`|`none`
 
-    옵션 **--check**는 `ng`, `ok`, `any`, `outstand`, `all`, `none`에서 인수를 받습니다.
+    옵션 **--check**은 `ng`, `ok`, `any`, `outstand`, `all` 및 `none`에서 인수를 받습니다.
 
-    기본값 `outstand`를 사용하면 명령은 동일한 파일에서 예기치 않은 단어가 발견된 경우에만 예상 단어와 예기치 않은 단어에 대한 정보를 모두 표시합니다.
+    기본값 `outstand`을 사용하면 명령은 동일한 파일에서 예기치 않은 단어가 발견된 경우에만 예상 단어와 예기치 않은 단어에 대한 정보를 모두 표시합니다.
 
-    `ng` 값을 사용하면 명령은 예기치 않은 단어에 대한 정보를 표시합니다. `ok` 값을 사용하면 예상 단어에 대한 정보를 얻을 수 있습니다. 둘 다 `any` 값을 사용합니다.
+    `ng` 값을 사용하면 명령은 예기치 않은 단어에 대한 정보를 표시합니다. `ok` 값을 사용하면 예상 단어에 대한 정보를 얻을 수 있습니다. 둘 다 `any` 값과 함께.
 
-    `모두` 및 `없음` 값은 **--stat** 옵션과 함께 사용할 때만 의미가 있으며 일치하지 않는 패턴에 대한 정보를 표시합니다.
+    `all` 및 `none` 값은 **--stat** 옵션과 함께 사용할 때만 의미가 있으며, 일치하지 않는 패턴에 대한 정보를 표시합니다.
 
 - **--select**=_N_
 
-    사전에서 _N_번째 항목을 선택합니다. 인자는 [Getopt::EX::Numbers](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3ANumbers) 모듈에 의해 해석됩니다. 범위는 **--선택**=`1:3,7:9`처럼 정의할 수 있습니다. **--stat** 옵션으로 숫자를 가져올 수 있습니다.
+    사전에서 _N_번째 항목을 선택합니다. 인수는 [Getopt::EX::Numbers](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3ANumbers) 모듈에 의해 해석됩니다. 범위는 **--select**=`1:3,7:9`처럼 정의할 수 있습니다. **--stat** 옵션으로 숫자를 가져올 수 있습니다.
 
 - **--linefold**
 
-    대상 데이터가 텍스트 중간에 접혀있는 경우 **--linefold** 옵션을 사용합니다. 줄에 걸쳐 펼쳐진 문자열과 일치하는 정규식 패턴을 생성합니다. 하지만 대체된 텍스트에는 개행이 포함되지 않습니다. 정규식 동작에 다소 혼란을 줄 수 있으므로 가급적 사용하지 마세요.
+    대상 데이터가 텍스트 중간에 접혀 있는 경우 **--linefold** 옵션을 사용합니다. 줄에 걸쳐 펼쳐진 문자열과 일치하는 정규식 패턴을 생성합니다. 하지만 대체된 텍스트에는 개행이 포함되지 않습니다. 정규식 동작에 다소 혼란을 줄 수 있으므로 가능하면 사용하지 마세요.
 
 - **--stat**
 - **--with-stat**
 
-    통계 정보를 인쇄합니다. **--체크** 옵션과 함께 작동합니다.
+    통계 정보를 인쇄합니다. **--check** 옵션과 함께 작동합니다.
 
-    **--with-stat** 옵션은 일반 출력 후 통계를 인쇄하고, **--stat**은 통계만 인쇄합니다.
+    **--with-stat** 옵션은 일반 출력 후 통계를 인쇄하고, **--stat** 옵션은 통계만 인쇄합니다.
 
 - **--stat-style**=`default`|`dict`
 
@@ -155,7 +155,7 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
 
 - **--\[no-\]warn-overlap**
 
-    중복된 패턴 경고. 기본값은 켜짐입니다.
+    중복된 패턴 경고. 기본값이 켜져 있습니다.
 
 - **--\[no-\]warn-include**
 
@@ -166,17 +166,17 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
 - **--diff**
 - **--diffcmd**=_command_
 
-    옵션 **--diff**는 원본 텍스트와 변환된 텍스트의 diff 출력을 생성합니다.
+    옵션 **--diff**은 원본 텍스트와 변환된 텍스트의 diff 출력을 생성합니다.
 
     **--diff** 옵션에서 사용하는 diff 명령 이름을 지정합니다. 기본값은 "diff -u"입니다.
 
 - **--create**
 
-    새 파일을 생성하고 결과를 씁니다. 원본 파일 이름에 접미사 ".new"가 추가됩니다.
+    새 파일을 만들고 결과를 씁니다. 접미사 ".new"가 원본 파일 이름에 추가됩니다.
 
 - **--replace**
 
-    대상 파일을 변환된 결과로 바꿉니다. 원본 파일에 접미사 ".bak"이 붙은 백업 이름으로 이름이 바뀝니다.
+    대상 파일을 변환된 결과로 바꿉니다. 원본 파일 이름이 접미사 ".bak"가 붙은 백업 이름으로 바뀝니다.
 
 - **--overwrite**
 
@@ -184,17 +184,17 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
 
 # DICTIONARY
 
-이 모듈에는 예제 딕셔너리가 포함되어 있습니다. 예제 사전은 공유 디렉터리에 설치되며 **--exdict** 옵션으로 액세스합니다.
+이 모듈에는 예제 딕셔너리가 포함되어 있습니다. 이 사전은 공유 디렉터리에 설치되며 **--exdict** 옵션으로 액세스합니다.
 
     greple -Msubst --exdict jtca-katakana-guide-3.dict
 
 - **--exdict** _dictionary_
 
-    배포에서 _사전_ 플라이를 사전 파일로 사용합니다.
+    배포에서 _dictionary_ flie를 사전 파일로 사용합니다.
 
 - **--exdictdir**
 
-    사전 디렉토리를 표시합니다.
+    사전 디렉터리 표시.
 
 - **--exdict** jtca-katakana-guide-3.dict
 - **--jtca-katakana-guide**
@@ -206,11 +206,11 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
         発行：2015年9月
         一般財団法人テクニカルコミュニケーター協会 
         Japan Technical Communicators Association
-        https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf
+        https://jtca.org/tcwp/wp-content/uploads/2023/06/katakana_guide_3_20171222.pdf
 
 - **--jtca**
 
-    사용자 지정 **--jtca-katakana-guide**. 원본 사전은 게시된 데이터에서 자동으로 생성됩니다. 이 사전은 실제 사용을 위해 사용자 정의됩니다.
+    사용자 지정 **--jtca-katakana-guide**. 원본 사전은 게시된 데이터에서 자동으로 생성됩니다. 이 사전은 실제 사용에 맞게 사용자 지정됩니다.
 
 - **--exdict** jtf-style-guide-3.dict
 - **--jtf-style-guide**
@@ -226,12 +226,12 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
 
 - **--jtf**
 
-    사용자 정의 **--jtf-style-guide**. 게시된 데이터에서 원본 사전이 자동으로 생성됩니다. 이 사전은 실제 사용에 맞게 사용자 정의됩니다.
+    사용자 지정 **--jtf-style-guide**. 게시된 데이터에서 원본 사전이 자동으로 생성됩니다. 이 사전은 실제 사용에 맞게 사용자 지정되었습니다.
 
 - **--exdict** sccc2.dict
 - **--sccc2**
 
-    2014년에 출간된 "C/C++ セキュアコーディング 第2版"에 사용된 사전입니다.
+    2014년에 게시된 "C/C++ セキュアコーディング 第2版"에 사용된 사전입니다.
 
         https://www.jpcert.or.jp/securecoding_book_2nd.html
 
@@ -242,15 +242,15 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
 
         https://www.microsoft.com/ja-jp/language/styleguides
 
-    이 문서에서 데이터를 생성합니다:
+    데이터는 이 문서에서 생성되었습니다:
 
         https://www.atmarkit.co.jp/news/200807/25/microsoft.html
 
 - **--microsoft**
 
-    사용자 지정 **--ms-style-guide**. 원본 사전은 게시된 데이터에서 자동으로 생성됩니다. 이 사전은 실제 사용을 위해 사용자 지정되었습니다.
+    사용자 지정 **--ms-style-guide**. 원본 사전은 게시된 데이터에서 자동으로 생성됩니다. 이 사전은 실제 사용에 맞게 사용자 지정되었습니다.
 
-    수정 사전은 [여기](https://github.com/kaz-utashiro/greple-subst/blob/master/share/ms-amend.dict)에서 찾을 수 있습니다. 업데이트 요청이 있는 경우 이슈를 제기하거나 풀 리퀘스트를 보내주세요.
+    수정 사전은 [here](https://github.com/kaz-utashiro/greple-subst/blob/master/share/ms-amend.dict)에서 찾을 수 있습니다. 업데이트 요청이 있는 경우 이슈를 제기하거나 풀 리퀘스트를 보내주세요.
 
 # JAPANESE
 
@@ -258,7 +258,7 @@ greple -Msubst --dict _사전_ \[ 옵션 \]을 입력하세요.
 
 ## KATAKANA
 
-일본어 가타카나 단어는 같은 단어를 설명하는 변형이 많기 때문에 통일이 중요하지만 상당히 번거로운 작업입니다. 다음 예제에서는
+일본어 가타카나 단어는 같은 단어를 설명하는 변형이 많기 때문에 통일하는 것이 중요하지만 상당히 번거로운 작업입니다. 다음 예제에서는
 
     イ[エー]ハトー?([ヴブボ]ォ?)  //  イーハトーヴォ
 

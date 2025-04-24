@@ -81,7 +81,7 @@
    ],
    [
       "Option B<--check> takes argument from C<ng>, C<ok>, C<any>, C<outstand>, C<all> and C<none>.\n",
-      "选项B<--检查>的参数来自C<ng>、C<ok>、C<any>、C<outstand>、C<all>和C<none>。\n"
+      "选项 B<--check> 的参数来自 C<ng>、C<ok>、C<any>、C<outstand>、C<all> 和 C<none>。\n"
    ],
    [
       "With default value C<outstand>, command will show information about both expected and unexpected words only when unexpected word was found in the same file.\n",

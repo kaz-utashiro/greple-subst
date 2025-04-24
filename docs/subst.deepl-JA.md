@@ -79,7 +79,7 @@ greple -Msubst --dict _dictionary_ \[ オプション \]。
 
 マッチした文字列が、以前に別のパターンでマッチした文字列と同じか短い場合は、単に無視される (デフォルトでは **--no-warn-include**)。したがって、矛盾するパターンを宣言する必要がある場合は、長い方のパターンを先に配置します。
 
-マッチした文字列が前にマッチした文字列と重なる場合、警告を出し (デフォルトでは **--warn-overlap)、無視されます。**
+マッチした文字列が前にマッチした文字列と重なる場合、警告 (**--warn-overlap** がデフォルト) が出され、無視されます。
 
 ## Terminal color
 
@@ -206,7 +206,7 @@ greple -Msubst --dict _dictionary_ \[ オプション \]。
         発行：2015年9月
         一般財団法人テクニカルコミュニケーター協会 
         Japan Technical Communicators Association
-        https://www.jtca.org/standardization/katakana_guide_3_20171222.pdf
+        https://jtca.org/tcwp/wp-content/uploads/2023/06/katakana_guide_3_20171222.pdf
 
 - **--jtca**
 
@@ -311,11 +311,3 @@ Copyright 2017-2024 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
-
-# POD ERRORS
-
-Hey! **The above document had some coding errors, which are explained below:**
-
-- Around line 84:
-
-    Unterminated B<...> sequence
