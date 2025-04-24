@@ -2,6 +2,12 @@ Revision history for Perl extension App-Greple-subst
 
 {{$NEXT}}
 
+2.37 2025-04-24T01:07:54Z
+
+    - require App::Greple::update@1.04
+    - update dictionary data
+    - Mask POD keywords before translation
+
 2.36 2024-12-11T10:47:18Z
 
     - use s/\R\z// to remove linebreaks

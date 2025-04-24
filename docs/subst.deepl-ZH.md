@@ -4,7 +4,7 @@ subst - 用于文本搜索和替换的Greple模块
 
 # VERSION
 
-Version 2.36
+Version 2.37
 
 # SYNOPSIS
 
@@ -307,7 +307,7 @@ Kazumasa Utashiro
 
 # LICENSE
 
-Copyright 2017-2024 Kazumasa Utashiro.
+Copyright ©︎ 2017-2025 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

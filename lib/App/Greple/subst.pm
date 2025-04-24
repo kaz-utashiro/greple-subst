@@ -6,7 +6,7 @@ subst - Greple module for text search and substitution
 
 =head1 VERSION
 
-Version 2.36
+Version 2.37
 
 =head1 SYNOPSIS
 
@@ -382,7 +382,7 @@ Kazumasa Utashiro
 
 =head1 LICENSE
 
-Copyright 2017-2024 Kazumasa Utashiro.
+Copyright ©︎ 2017-2025 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -393,7 +393,7 @@ it under the same terms as Perl itself.
 use v5.14;
 package App::Greple::subst;
 
-our $VERSION = '2.36';
+our $VERSION = '2.37';
 
 use warnings;
 use utf8;
