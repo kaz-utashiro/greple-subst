@@ -109,11 +109,20 @@ package App::Greple::subst::Dict {
 	    splice @param, 0, -2; # leave last one or two
 	    my($pattern, $correct) = @param;
 	    my %define;
-	    while ($pattern =~ /\(\?&(?<name>[^)]+)\)/g) {
-		my $define = $obj->{DEFINE}->{$+{name}}
-		    // die "undefined pattern: $+{name}\n";
-		$define{$+{name}} //= $define;
-	    }
+	    my $collect_defines;
+	    $collect_defines = sub {
+		my($str, $seen) = @_;
+		$seen //= {};
+		while ($str =~ /\(\?&(?<name>[^)]+)\)/g) {
+		    my $name = $+{name};
+		    next if $seen->{$name}++;
+		    my $def = $obj->{DEFINE}->{$name}
+			// die "undefined pattern: $name\n";
+		    $define{$name} //= $def;
+		    $collect_defines->($def, $seen);
+		}
+	    };
+	    $collect_defines->($pattern);
 	    $pattern .= $_ for values %define;
 	    $obj->add($pattern, $correct, flag => $flag);
 	}

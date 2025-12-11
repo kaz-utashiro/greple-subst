@@ -27,6 +27,13 @@ END
 line(subst(qw(--dict t/JA.dict t/JA-bad.txt))
      ->run->{stdout}, 9, "DEFINE in dict file");
 
+# Nested DEFINE patterns
+line(subst('--dictdata', <<'END', 't/JA-bad.txt')->run->{stdout}, 2, "DEFINE nested");
+(?(DEFINE)(?<vb>[ヴブボ]))
+(?(DEFINE)(?<vo>(?&vb)ォ?))
+イ[エー]ハトー?(?&vo)	イーハトーヴォ
+END
+
 # Undefined pattern error
 {
     my $result = subst('--dictdata', <<'END', 't/JA-bad.txt')->run;
