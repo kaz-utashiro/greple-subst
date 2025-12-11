@@ -406,7 +406,7 @@ it under the same terms as Perl itself.
 =cut
 
 
-use v5.14;
+use v5.18;
 package App::Greple::subst;
 
 our $VERSION = '2.37';

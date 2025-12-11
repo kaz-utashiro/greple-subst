@@ -8,7 +8,7 @@ subst::Dict - Dictionary object for App::Greple::subst
 
 package App::Greple::subst::Dict {
 
-    use v5.14;
+    use v5.18;
     use warnings;
     use utf8;
     use open IO => ':utf8', ':std';
@@ -109,8 +109,7 @@ package App::Greple::subst::Dict {
 	    splice @param, 0, -2; # leave last one or two
 	    my($pattern, $correct) = @param;
 	    my %define;
-	    my $collect_defines;
-	    $collect_defines = sub {
+	    (sub {
 		my($str, $seen) = @_;
 		$seen //= {};
 		while ($str =~ /\(\?&(?<name>[^)]+)\)/g) {
@@ -119,10 +118,9 @@ package App::Greple::subst::Dict {
 		    my $def = $obj->{DEFINE}->{$name}
 			// die "undefined pattern: $name\n";
 		    $define{$name} //= $def;
-		    $collect_defines->($def, $seen);
+		    __SUB__->($def, $seen);
 		}
-	    };
-	    $collect_defines->($pattern);
+	    })->($pattern);
 	    $pattern .= $_ for values %define;
 	    $obj->add($pattern, $correct, flag => $flag);
 	}
@@ -204,7 +202,7 @@ package App::Greple::subst::Dict {
 
 package App::Greple::subst::Dict::Ent {
 
-    use v5.14;
+    use v5.18;
     use warnings;
 
     use Exporter 'import';
