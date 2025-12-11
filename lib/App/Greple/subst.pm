@@ -668,16 +668,17 @@ sub subst_search {
 			$to : $matched);
 	    };
 	    my(@ok, @ng);
+	    bless $_, 'App::Greple::Grep::Match' for @match;
 	    for (@match) {
-		my $matched = substr $text, $_->[0], $_->[1] - $_->[0];
+		my $matched = substr $text, $_->min, $_->max - $_->min;
 		if ($matched =~ s/$ignorechar_re//gr ne $to) {
-		    $_->[2] = $index * 2;
+		    $_->index = $index * 2;
 		    push @ng, $_;
 		} else {
-		    $_->[2] = $index * 2 + 1;
+		    $_->index = $index * 2 + 1;
 		    push @ok, $_;
 		}
-		$_->[3] = $callback;
+		$_->callback = $callback;
 	    }
 	    $effective[ $index * 2     ] = 1 if $ng || ( @ng && $outstand );
 	    $effective[ $index * 2 + 1 ] = 1 if $ok || ( @ng && $outstand );
@@ -685,6 +686,7 @@ sub subst_search {
 	    @matched = merge_regions { nojoin => 1 }, @matched, @match;
 	}
     }
+    bless $_, 'App::Greple::Grep::Match' for @matched;
     ##
     ## --select
     ##
@@ -702,9 +704,9 @@ sub subst_search {
 	}) {
 	    $select[$_] = 1;
 	}
-	@matched = grep $select[$_->[2]], @matched;
+	@matched = grep $select[$_->index], @matched;
     }
-    grep $effective[$_->[2]], @matched;
+    grep $effective[$_->index], @matched;
 }
 
 1;
