@@ -22,6 +22,7 @@ package App::Greple::subst::Dict {
 	has DATA    => ;
 	has LIST    => default => [] ;
 	has CONFIG  => default => {} ;
+	has DEFINE  => default => {} ;
 	sub BUILD {
 	    my($obj, $args) = @_;
 	    if (my $file = $obj->FILE) {
@@ -94,6 +95,11 @@ package App::Greple::subst::Dict {
 		$obj->add_comment($_);
 		next;
 	    }
+	    if (/^\Q(?(DEFINE)(?<\E(?<name>[^>]+)/) {
+		$obj->{DEFINE}->{$+{name}} = $_;
+		$obj->add_comment($_);
+		next;
+	    }
 	    my @param;
 	    if ((@param = split(m{\h+//\h+}, $_, 2)) == 2) {
 		$param[0] =~ s/^\h+//;
@@ -102,6 +108,13 @@ package App::Greple::subst::Dict {
 	    }
 	    splice @param, 0, -2; # leave last one or two
 	    my($pattern, $correct) = @param;
+	    my %define;
+	    while ($pattern =~ /\(\?&(?<name>[^)]+)\)/g) {
+		my $define = $obj->{DEFINE}->{$+{name}}
+		    // die "undefined pattern: $+{name}\n";
+		$define{$+{name}} //= $define;
+	    }
+	    $pattern .= $_ for values %define;
 	    $obj->add($pattern, $correct, flag => $flag);
 	}
 	$obj;
