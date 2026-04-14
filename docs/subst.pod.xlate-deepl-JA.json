@@ -44,12 +44,24 @@
       "オプションB<--dictdata>は、コマンド行で辞書データを提供するために使用できる。\n"
    ],
    [
+      "Option B<--dictpair> can be used to provide raw dictionary entries in the command line. In this case, no processing is done regarding whitespace, comments, or DEFINE expansion.\n",
+      "オプション B<--dictpair> を使用すると、コマンドラインから生の辞書エントリを指定できます。この場合、空白、コメント、または DEFINE の展開に関する処理は一切行われません。\n"
+   ],
+   [
       "Dictionary entry starting with a sharp sign (C<#>) is a comment and ignored.\n",
       "シャープ記号(C<#>)で始まる辞書項目はコメントとなり、無視される。\n"
    ],
    [
-      "Option B<--dictpair> can be used to provide raw dictionary entries in the command line. In this case, no processing is done regarding whitespace or comments.\n",
-      "オプションB<--dictpair>は、生の辞書項目をコマンド行で提供するために使用できる。この場合、空白やコメントに関する処理は行われない。\n"
+      "You can define a named regex pattern in the dictionary file using the Perl's DEFINE syntax:\n",
+      "PerlのDEFINE構文を使用して、辞書ファイル内で名前付き正規表現パターンを定義できます：\n"
+   ],
+   [
+      "The defined pattern can be referenced in the dictionary entries using C<(?&name)> syntax.\n",
+      "定義されたパターンは、C<(?&name)> 構文を使用して辞書エントリ内で参照できます。\n"
+   ],
+   [
+      "You can define multiple patterns and use them in combination. The pattern definition must appear before its reference.\n",
+      "複数のパターンを定義し、それらを組み合わせて使用することができます。パターン定義は、その参照よりも前に記述する必要があります。\n"
    ],
    [
       "When the matched string is same or shorter than previously matched string by another pattern, it is simply ignored (B<--no-warn-include> by default). So, if you have to declare conflicted patterns, place the longer pattern earlier.\n",

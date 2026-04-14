@@ -4,7 +4,7 @@ subst - 用于文本搜索和替换的Greple模块
 
 # VERSION
 
-Version 2.37
+Version 2.3701
 
 # SYNOPSIS
 
@@ -67,13 +67,26 @@ greple -Msubst --dict _dictionary_ \[ 选项 \]。
     greple -Msubst \
            --dictdata $'colou?r color\ncent(er|re) center\n'
 
-以尖锐符号（`#`）开始的字典条目是一个注释，被忽略。
-
-选项 **--dictpair** 可用于在命令行中提供原始字典条目。在这种情况下，不会对空白或注释进行处理。
+选项 **--dictpair** 用于在命令行中提供原始的词典条目。在这种情况下，不会对空格、注释或 DEFINE 展开进行任何处理。
 
     greple -Msubst \
            --dictpair 'colou?r' color \
            --dictpair 'cent(er|re)' center
+
+以尖锐符号（`#`）开始的字典条目是一个注释，被忽略。
+
+## DEFINE
+
+您可以在字典文件中使用 Perl 的 DEFINE 语法定义一个命名正则表达式模式：
+
+    (?(DEFINE)(?<name>pattern))
+
+定义好的模式可在字典条目中通过 `(?&name)` 语法进行引用。
+
+    (?(DEFINE)(?<digit>\d+))
+    (?&digit)/(?&digit)/(?&digit)  //  YYYY/MM/DD
+
+您可以定义多个模式并组合使用。模式定义必须出现在其引用的前面。
 
 ## Overlapped pattern
 

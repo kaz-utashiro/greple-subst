@@ -4,7 +4,7 @@ subst - テキスト検索と置換のための Greple モジュール
 
 # VERSION
 
-Version 2.37
+Version 2.3701
 
 # SYNOPSIS
 
@@ -67,13 +67,26 @@ greple -Msubst --dict _dictionary_ \[ オプション \]。
     greple -Msubst \
            --dictdata $'colou?r color\ncent(er|re) center\n'
 
-シャープ記号(`#`)で始まる辞書項目はコメントとなり、無視されます。
-
-オプション**--dictpair**は、生の辞書項目をコマンド行で提供するために使用できます。この場合、空白やコメントに関する処理は行われないです。
+オプション **--dictpair** を使用すると、コマンドラインから生の辞書エントリを指定できます。この場合、空白、コメント、または DEFINE の展開に関する処理は一切行われません。
 
     greple -Msubst \
            --dictpair 'colou?r' color \
            --dictpair 'cent(er|re)' center
+
+シャープ記号(`#`)で始まる辞書項目はコメントとなり、無視されます。
+
+## DEFINE
+
+PerlのDEFINE構文を使用して、辞書ファイル内で名前付き正規表現パターンを定義できます：
+
+    (?(DEFINE)(?<name>pattern))
+
+定義されたパターンは、`(?&name)` 構文を使用して辞書エントリ内で参照できます。
+
+    (?(DEFINE)(?<digit>\d+))
+    (?&digit)/(?&digit)/(?&digit)  //  YYYY/MM/DD
+
+複数のパターンを定義し、それらを組み合わせて使用することができます。パターン定義は、その参照よりも前に記述する必要があります。
 
 ## Overlapped pattern
 
@@ -85,7 +98,7 @@ greple -Msubst --dict _dictionary_ \[ オプション \]。
 
 このバージョンでは、[Getopt::EX::termcolor](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3Atermcolor) モジュールを使用します。これは、コマンドを実行した端末、または環境変数**TERM\_BGCOLOR**に応じて、**--light-screen**または**--dark-screen**オプションを設定します。
 
-一部の端末 (例: "Apple\_Terminal" や "iTerm") は自動的に検出され、何もする必要はないです。それ以外の場合は、**TERM\_BGCOLOR**環境変数に#000000（黒）〜#FFFFFF（白）の数字を設定し、端末の背景色に依存します。
+一部の端末 (例: "Apple\_Terminal" や "iTerm") は自動的に検出され、何もする必要はありません。それ以外の場合は、**TERM\_BGCOLOR**環境変数に#000000（黒）〜#FFFFFF（白）の数字を設定し、端末の背景色に依存します。
 
 # OPTIONS
 

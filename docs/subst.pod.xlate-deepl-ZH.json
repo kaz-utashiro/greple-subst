@@ -44,12 +44,24 @@
       "选项 B<--dictdata> 可用于在命令行中提供字典数据。\n"
    ],
    [
+      "Option B<--dictpair> can be used to provide raw dictionary entries in the command line. In this case, no processing is done regarding whitespace, comments, or DEFINE expansion.\n",
+      "选项 B<--dictpair> 用于在命令行中提供原始的词典条目。在这种情况下，不会对空格、注释或 DEFINE 展开进行任何处理。\n"
+   ],
+   [
       "Dictionary entry starting with a sharp sign (C<#>) is a comment and ignored.\n",
       "以尖锐符号（C<#>）开始的字典条目是一个注释，被忽略。\n"
    ],
    [
-      "Option B<--dictpair> can be used to provide raw dictionary entries in the command line. In this case, no processing is done regarding whitespace or comments.\n",
-      "选项 B<--dictpair> 可用于在命令行中提供原始字典条目。在这种情况下，不会对空白或注释进行处理。\n"
+      "You can define a named regex pattern in the dictionary file using the Perl's DEFINE syntax:\n",
+      "您可以在字典文件中使用 Perl 的 DEFINE 语法定义一个命名正则表达式模式：\n"
+   ],
+   [
+      "The defined pattern can be referenced in the dictionary entries using C<(?&name)> syntax.\n",
+      "定义好的模式可在字典条目中通过 C<(?&name)> 语法进行引用。\n"
+   ],
+   [
+      "You can define multiple patterns and use them in combination. The pattern definition must appear before its reference.\n",
+      "您可以定义多个模式并组合使用。模式定义必须出现在其引用的前面。\n"
    ],
    [
       "When the matched string is same or shorter than previously matched string by another pattern, it is simply ignored (B<--no-warn-include> by default). So, if you have to declare conflicted patterns, place the longer pattern earlier.\n",

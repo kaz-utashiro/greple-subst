@@ -1,11 +1,11 @@
-[![Actions Status](https://github.com/kaz-utashiro/greple-subst/workflows/test/badge.svg)](https://github.com/kaz-utashiro/greple-subst/actions) [![MetaCPAN Release](https://badge.fury.io/pl/App-Greple-subst.svg)](https://metacpan.org/release/App-Greple-subst)
+[![Actions Status](https://github.com/kaz-utashiro/greple-subst/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/kaz-utashiro/greple-subst/actions?workflow=test) [![MetaCPAN Release](https://badge.fury.io/pl/App-Greple-subst.svg)](https://metacpan.org/release/App-Greple-subst)
 # NAME
 
 subst - Greple module for text search and substitution
 
 # VERSION
 
-Version 2.37
+Version 2.3701
 
 # SYNOPSIS
 
@@ -77,16 +77,32 @@ command line.
     greple -Msubst \
            --dictdata $'colou?r color\ncent(er|re) center\n'
 
-Dictionary entry starting with a sharp sign (`#`) is a comment and
-ignored.
-
 Option **--dictpair** can be used to provide raw dictionary entries in
 the command line.  In this case, no processing is done regarding
-whitespace or comments.
+whitespace, comments, or DEFINE expansion.
 
     greple -Msubst \
            --dictpair 'colou?r' color \
            --dictpair 'cent(er|re)' center
+
+Dictionary entry starting with a sharp sign (`#`) is a comment and
+ignored.
+
+## DEFINE
+
+You can define a named regex pattern in the dictionary file using the
+Perl's DEFINE syntax:
+
+    (?(DEFINE)(?<name>pattern))
+
+The defined pattern can be referenced in the dictionary entries using
+`(?&name)` syntax.
+
+    (?(DEFINE)(?<digit>\d+))
+    (?&digit)/(?&digit)/(?&digit)  //  YYYY/MM/DD
+
+You can define multiple patterns and use them in combination.  The
+pattern definition must appear before its reference.
 
 ## Overlapped pattern
 

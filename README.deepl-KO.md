@@ -4,7 +4,7 @@ subst - 텍스트 검색 및 치환을 위한 Greple 모듈
 
 # VERSION
 
-Version 2.37
+Version 2.3701
 
 # SYNOPSIS
 
@@ -67,13 +67,26 @@ greple -Msubst --dict _dictionary_ \[ 옵션 \]을 실행합니다.
     greple -Msubst \
            --dictdata $'colou?r color\ncent(er|re) center\n'
 
-날카로운 기호(`#`)로 시작하는 사전 항목은 주석으로 무시됩니다.
-
-옵션 **--dictpair**를 사용하여 명령줄에 원시 사전 항목을 제공할 수 있습니다. 이 경우 공백이나 주석에 대한 처리는 수행되지 않습니다.
+Option **--dictpair**을 사용하면 명령줄에서 원시 사전 항목을 제공할 수 있습니다. 이 경우 공백, 주석 또는 DEFINE 확장에 대한 처리가 수행되지 않습니다.
 
     greple -Msubst \
            --dictpair 'colou?r' color \
            --dictpair 'cent(er|re)' center
+
+날카로운 기호(`#`)로 시작하는 사전 항목은 주석으로 무시됩니다.
+
+## DEFINE
+
+Perl의 DEFINE 구문을 사용하여 사전 파일에서 이름이 지정된 정규식 패턴을 정의할 수 있습니다:
+
+    (?(DEFINE)(?<name>pattern))
+
+정의된 패턴은 `(?&name)` 구문을 사용하여 사전 항목에서 참조할 수 있습니다.
+
+    (?(DEFINE)(?<digit>\d+))
+    (?&digit)/(?&digit)/(?&digit)  //  YYYY/MM/DD
+
+여러 패턴을 정의하고 이를 조합하여 사용할 수 있습니다. 패턴 정의는 참조 위치보다 앞에 와야 합니다.
 
 ## Overlapped pattern
 
